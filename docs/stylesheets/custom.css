@@ -1,7 +1,7 @@
-/* 안드로이드 스타일 완벽 적용 */
+/* 안드로이드 개발자 문서 완벽 복제 (1줄 헤더, 라이트/다크 분리) */
 
 :root {
-    /* 상단바 더 좁게 (44px) */
+    /* 헤더 높이를 44px로 좁게 */
     --md-header-height: 44px;
 }
 
@@ -29,7 +29,7 @@ body {
 }
 
 /* =========================================
-   2. 헤더 공통 스타일 & 세로 중앙 정렬
+   2. 헤더 공통 스타일 & 세로 중앙 정렬 (수정완료)
    ========================================= */
 .md-header {
     height: var(--md-header-height) !important;
@@ -43,7 +43,6 @@ body {
     padding: 0 1rem !important;
     display: flex !important;
     align-items: center !important;
-    /* 글자 세로 기준 완벽한 중앙 정렬 */
 }
 
 /* 로고 숨기기 */
@@ -51,42 +50,58 @@ body {
     display: none !important;
 }
 
-/* 로고가 사라진 빈 공간만큼 제목 당기기 및 중앙 정렬 */
+/* 자식 요소의 중앙 정렬을 위한 기준점 설정 */
 .md-header__title {
     height: var(--md-header-height) !important;
-    display: flex !important;
-    align-items: center !important;
     margin-left: 0 !important;
+    position: relative !important;
+    display: block !important;
 }
 
+/* [해결 2] 글씨가 위로 쏠리는 현상 완벽 해결 */
 .md-header__topic {
-    line-height: normal !important;
-    display: inline-block;
+    position: absolute !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    /* 수학적으로 완벽한 세로 중앙 */
+    margin: 0 !important;
+    padding: 0 !important;
+    line-height: 1 !important;
+    display: flex !important;
+    align-items: center !important;
+}
+
+/* 스크롤 시 나타나는 두 번째 타이틀 애니메이션 무력화 */
+.md-header__topic:nth-child(2) {
+    display: none !important;
 }
 
 /* =========================================
-   3. 상단 폴더 메뉴 강제 표시 (숨김 방지)
+   3. 상단 폴더 메뉴 데스크톱 표시 (수정완료)
    ========================================= */
-/* 화면이 약간 좁아도 상단 메뉴가 억지로라도 보이게 브레이크포인트 완화 */
 @media screen and (min-width: 60em) {
     .md-tabs {
-        position: absolute;
-        top: 0;
-        left: 220px;
-        /* uCA Documentation 글씨 바로 옆부터 메뉴 시작 */
+        /* [해결 1] absolute 대신 fixed 사용해서 스크롤/숨김 현상 원천 차단 */
+        position: fixed !important;
+        top: 0 !important;
+        left: 220px !important;
         height: var(--md-header-height) !important;
         background: transparent !important;
         border-bottom: none !important;
-        z-index: 10;
+        z-index: 99 !important;
         display: flex !important;
-        /* MkDocs가 숨겨도 강제로 표시 */
+        visibility: visible !important;
         opacity: 1 !important;
+        pointer-events: auto !important;
+        transform: none !important;
+        /* MkDocs 자동 숨김 애니메이션 무효화 */
     }
 
     .md-tabs__list {
         margin: 0;
         padding: 0;
         display: flex;
+        height: 100%;
     }
 
     .md-tabs__item {
