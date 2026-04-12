@@ -4,15 +4,26 @@ site_dir: site
 theme:
   name: material
   palette:
-    scheme: slate
-    primary: black      
-    accent: white       
-  font: false           
+    # --- dark mode ---
+    - scheme: default
+      primary: black
+      accent: blue         # 사용자가 선호하는 파란색 (#2997ff)
+      toggle:
+        icon: material/brightness-4
+        name: To lightmode
+    # --- light mode ---
+    - scheme: slate
+      primary: white
+      accent: light-green  # 안드로이드 녹색 (#14a275)
+      toggle:
+        icon: material/brightness-7
+        name: To darkmode
+  font: false           # 구글 폰트 로드 안 함 (시스템 폰트 사용)
   features:
-    - navigation.top    
-    - header.autohide   
+    - navigation.top    # 위로 가기 버튼
+    - navigation.tabs   # 상단 탭 내비게이션 (안드로이드 스타일과 유사)
 
-
+# 커스텀 CSS 연결
 extra_css:
   - stylesheets/custom.css
 

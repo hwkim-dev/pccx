@@ -1,40 +1,90 @@
-/* 전체 배경 및 기본 텍스트 색상 강제 지정 (완전한 블랙에 가까운 다크 모드) */
-[data-md-color-scheme="slate"] {
-    --md-default-bg-color: #000000;
-    --md-default-fg-color: #f5f5f7;
-    --md-text-color: #f5f5f7;
-    --md-primary-fg-color: #1d1d1f;
-    --md-typeset-a-color: #2997ff;
-    /* 애플 특유의 링크 파란색 */
-}
+/* 안드로이드 문서 스타일 오버라이드 (라이트 & 다크 모드) */
 
-/* 폰트를 구글 폰트(Roboto)에서 애플/윈도우 시스템 기본 폰트로 변경 */
+/* 공통 스타일 */
 body {
-    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Helvetica, Arial, sans-serif;
     letter-spacing: -0.015em;
 }
 
-/* 상단 헤더 스타일 (그림자 제거, 반투명 + 블러 효과) */
+/* 코드 블록 (모서리 둥글게 감소, 그림자 제거) */
+.md-typeset pre>code {
+    border-radius: 4px;
+    box-shadow: none !important;
+}
+
+/* 상단 헤더 바 (높이 감소, 그림자 제거, 테두리 추가) */
 .md-header {
     box-shadow: none !important;
-    background-color: rgba(0, 0, 0, 0.7) !important;
-    backdrop-filter: saturate(180%) blur(20px);
-    -webkit-backdrop-filter: saturate(180%) blur(20px);
-    border-bottom: 1px solid #333336;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
 
-/* 좌측/우측 사이드바 배경 동기화 및 테두리 */
+/* 헤더 안쪽 여백 줄이기 (높이 감소 효과) */
+.md-header__inner {
+    padding: 0 0.5rem;
+    /* 좌우 여백 감소 */
+}
+
+.md-header__button {
+    padding: 0 0.25rem;
+    /* 버튼 여백 감소 */
+}
+
+/* 로고 크기 조정 */
+.md-logo {
+    height: 1.5rem;
+}
+
+/* 검색창 스타일 조정 (플랫하게) */
+.md-search {
+    padding: 0.25rem;
+}
+
+.md-search__input {
+    border-radius: 4px;
+    background-color: rgba(0, 0, 0, 0.05) !important;
+}
+
+/* 좌측/우측 사이드바 테두리 */
 .md-sidebar {
-    background-color: #000000;
+    border-right: 1px solid rgba(0, 0, 0, 0.1);
 }
 
-/* 본문 영역 위쪽 여백 살짝 추가해서 답답함 해소 */
-.md-main__inner {
-    margin-top: 1.5rem;
+.md-sidebar--secondary {
+    border-right: none;
+    border-left: 1px solid rgba(0, 0, 0, 0.1);
 }
 
-/* 코드 블록(터미널 창) 스타일을 조금 더 다크하게 */
-.md-typeset pre>code {
-    background-color: #1d1d1f;
-    border-radius: 8px;
+/* 팔레트 기반 색상 정의 */
+
+/* --- 라이트 모드 --- */
+[data-md-color-scheme="default"] {
+    /* 안드로이드 라이트 모드 색상 */
+    --md-default-bg-color: #FFFFFF;
+    --md-default-fg-color: #000000;
+    --md-text-color: #000000;
+    --md-primary-fg-color: #FFFFFF;
+    /* 안드로이드 녹색 (#14a275) */
+    --md-accent-fg-color: #14a275;
+}
+
+/* --- 다크 모드 --- */
+[data-md-color-scheme="slate"] {
+    /* 안드로이드 다크 모드 색상 */
+    --md-default-bg-color: #121212;
+    --md-default-fg-color: #E0E0E0;
+    --md-text-color: #E0E0E0;
+    --md-primary-fg-color: #121212;
+    /* 사용자가 선호하는 파란색 (#2997ff) */
+    --md-accent-fg-color: #2997ff;
+}
+
+/* 다크 모드 헤더 바 블러 효과 제거 */
+.md-header[data-md-color-scheme="slate"] {
+    background-color: #121212 !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+/* 다크 모드 사이드바 및 테두리 색상 조정 */
+.md-sidebar[data-md-color-scheme="slate"] {
+    border-color: rgba(255, 255, 255, 0.1);
 }
