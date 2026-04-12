@@ -3,24 +3,22 @@ site_dir: site
 
 theme:
   name: material
-  palette:
-    # 다크 모드를 가장 위로 올려서 기본값으로 설정
-    - scheme: slate
-      primary: black
-      accent: blue
-      toggle:
-        icon: material/brightness-4
-        name: 라이트 모드로 전환
-    - scheme: default
-      primary: white
-      accent: light-green
-      toggle:
-        icon: material/brightness-7
-        name: 다크 모드로 전환
   font: false
   features:
-    - navigation.top
-    # navigation.tabs를 제거하여 메뉴를 왼쪽 사이드바로 고정
+    - navigation.tabs          # 상단 헤더 영역에 메뉴(Architecture 등) 배치
+    - navigation.expand        # 왼쪽 사이드바 항목 접기/펼치기 기능 활성화
+    - navigation.top           # 스크롤 시 맨 위로 가기 버튼
+  palette:
+    # 다크 모드 (기본)
+    - scheme: slate
+      primary: black           # 헤더 배경을 검은색으로
+      accent: blue             # 포인트 컬러 (파란색)
 
 extra_css:
   - stylesheets/custom.css
+
+nav:
+  - HOME: index.md
+  - Architecture: Architecture/Architecture.md 
+  - Devices: Devices/Devices.md
+  - Drivers: Drivers/Drivers.md

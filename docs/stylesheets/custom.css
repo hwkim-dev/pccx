@@ -1,53 +1,92 @@
-/* 상단 헤더 높이 극소화 및 안드로이드 스타일 정밀 튜닝 */
+/* 안드로이드 개발자 문서 스타일 완벽 구현 (Dark Mode 기본) */
 
 :root {
-    /* 머티리얼 테마 기본 헤더 높이 변수 조절 */
-    --md-header-height: 40px;
+    /* 상단 헤더+탭 전체가 차지하는 높이를 얇게 압축 */
+    --md-header-height: 48px;
 }
 
-/* 헤더 높이 및 라인 높이 강제 조정 */
+body {
+    letter-spacing: -0.015em;
+    background-color: #121212 !important;
+    /* 페이지 전체 배경색 */
+}
+
+/* -------------------------------------------
+   1. 헤더 (Header) 및 하얀색 구분선 (Border)
+------------------------------------------- */
 .md-header {
-    height: var(--md-header-height) !important;
+    background-color: #121212 !important;
+    /* 헤더 배경을 페이지와 동일하게 */
+    box-shadow: none !important;
+    /* 머티리얼 특유의 그림자 완전 제거 */
+    /* 안드로이드 스타일의 얇고 하얀 반투명 실선 (이게 핵심!) */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15) !important;
 }
 
+/* 로고 크기 및 헤더 안쪽 여백 최소화 */
 .md-header__inner {
-    height: var(--md-header-height) !important;
-    padding: 0 0.8rem !important;
-    display: flex;
-    align-items: center;
+    padding: 0 1rem !important;
 }
 
-/* 로고와 제목 크기 및 정렬 조절 */
 .md-logo img,
 .md-logo svg {
     height: 1.2rem !important;
 }
 
-.md-header__topic {
-    font-size: 0.85rem !important;
-    font-weight: 600;
-    line-height: var(--md-header-height) !important;
+/* -------------------------------------------
+   2. 상단 메뉴 탭 (Architecture, Devices...)
+------------------------------------------- */
+/* 탭 영역 배경을 투명하게 해서 헤더와 완전히 하나처럼 보이게 만듦 */
+.md-tabs {
+    background-color: transparent !important;
+    border-bottom: none !important;
+    height: 36px;
+    /* 탭 높이 축소 */
 }
 
-/* 검색창 높이 조절 */
-.md-search__input {
-    height: 28px !important;
-    font-size: 0.75rem !important;
+.md-tabs__list {
+    margin: 0;
 }
 
-/* 메인 컨텐츠 영역 시작 지점 조정 (헤더가 좁아진 만큼 위로 올림) */
-.md-main {
-    padding-top: var(--md-header-height) !important;
+/* 탭 메뉴 글씨 및 Hover 효과 (마우스 올렸을 때) */
+.md-tabs__link {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.6) !important;
+    /* 평소엔 살짝 어둡게 */
+    transition: color 0.2s ease;
+    padding: 0 0.5rem;
+    margin-top: 0.2rem;
 }
 
-/* 사이드바 위치 조정 */
+.md-tabs__link:hover {
+    color: #FFFFFF !important;
+    /* 마우스 올리면 완전한 흰색으로 밝아짐 */
+}
+
+.md-tabs__link--active {
+    color: var(--md-accent-fg-color) !important;
+    /* 현재 있는 페이지는 파란색 */
+}
+
+/* -------------------------------------------
+   3. 왼쪽 사이드바 & 검색창 스타일
+------------------------------------------- */
 .md-sidebar {
-    top: var(--md-header-height) !important;
-    height: calc(100% - var(--md-header-height)) !important;
+    background-color: #121212 !important;
 }
 
-/* 다크 모드 배경색을 안드로이드 다크(#121212)보다 더 깊은 블랙으로 조정 */
-[data-md-color-scheme="slate"] {
-    --md-default-bg-color: #0d1117;
-    --md-default-fg-color: #c9d1d9;
+/* 검색창을 안드로이드처럼 각지고 플랫하게 */
+.md-search__input {
+    background-color: rgba(255, 255, 255, 0.08) !important;
+    border-radius: 4px;
+    height: 30px !important;
+    font-size: 0.8rem;
+}
+
+/* 코드 블록 스타일 (둥근 테두리 축소) */
+.md-typeset pre>code {
+    background-color: #1e1e1e;
+    border-radius: 4px;
+    box-shadow: none;
 }
