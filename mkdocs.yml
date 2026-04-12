@@ -1,0 +1,23 @@
+site_name: TinyNPU-RTL 프로젝트 문서
+site_description: Gemma 3N 가속을 위한 NPU 아키텍처 및 RTL 설계 문서
+theme:
+  name: material
+  palette:
+    scheme: slate # dark mode theme
+
+
+
+site_name: uCA documentation
+docs_dir: .       # root folder = document folder
+site_dir: site    # build result for web
+theme:
+  name: material
+  palette:
+    scheme: slate
+
+# left menu bar 
+nav:
+  - HOME: README.md
+  - Architecture: Architecture/Architecture.md 
+  - Devices: Devices/Devices.md
+  - Drivers: Drivers/Drivers.md
