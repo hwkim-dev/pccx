@@ -1,92 +1,106 @@
-/* 안드로이드 개발자 문서 스타일 완벽 구현 (Dark Mode 기본) */
+/* 안드로이드 스타일: 완벽한 1줄 헤더 & 다크모드 최적화 */
 
 :root {
-    /* 상단 헤더+탭 전체가 차지하는 높이를 얇게 압축 */
+    /* 헤더 높이를 48px로 아주 얇게 고정 */
     --md-header-height: 48px;
 }
 
 body {
-    letter-spacing: -0.015em;
     background-color: #121212 !important;
-    /* 페이지 전체 배경색 */
+    letter-spacing: -0.015em;
 }
 
 /* -------------------------------------------
-   1. 헤더 (Header) 및 하얀색 구분선 (Border)
+   1. 헤더 (1줄 고정 및 하얀색 실선)
 ------------------------------------------- */
 .md-header {
     background-color: #121212 !important;
-    /* 헤더 배경을 페이지와 동일하게 */
     box-shadow: none !important;
-    /* 머티리얼 특유의 그림자 완전 제거 */
-    /* 안드로이드 스타일의 얇고 하얀 반투명 실선 (이게 핵심!) */
+    /* 안드로이드 스타일 하얀색 반투명 실선 */
     border-bottom: 1px solid rgba(255, 255, 255, 0.15) !important;
 }
 
-/* 로고 크기 및 헤더 안쪽 여백 최소화 */
 .md-header__inner {
+    height: var(--md-header-height) !important;
     padding: 0 1rem !important;
 }
 
-.md-logo img,
-.md-logo svg {
-    height: 1.2rem !important;
+/* 다크/라이트 모드 전환 아이콘(달/해)이 잘 보이도록 하얀색 강제 적용 */
+.md-header__option {
+    color: #ffffff !important;
 }
 
 /* -------------------------------------------
-   2. 상단 메뉴 탭 (Architecture, Devices...)
+   2. [마법] 상단 메뉴를 헤더 1줄로 끌어올리기
 ------------------------------------------- */
-/* 탭 영역 배경을 투명하게 해서 헤더와 완전히 하나처럼 보이게 만듦 */
-.md-tabs {
-    background-color: transparent !important;
-    border-bottom: none !important;
-    height: 36px;
-    /* 탭 높이 축소 */
-}
+@media screen and (min-width: 76.25em) {
+    .md-tabs {
+        position: absolute;
+        top: 0;
+        /* 로고와 "uCA documentation" 제목 글씨 너비만큼 띄우기 */
+        /* 만약 메뉴가 제목이랑 겹치면 이 숫자를 280px, 300px로 늘려! */
+        left: 260px;
+        height: var(--md-header-height);
+        background: transparent !important;
+        border-bottom: none !important;
+        z-index: 3;
+        /* 헤더 위로 올리기 */
+    }
 
-.md-tabs__list {
-    margin: 0;
-}
+    .md-tabs__list {
+        margin: 0;
+        padding: 0;
+    }
 
-/* 탭 메뉴 글씨 및 Hover 효과 (마우스 올렸을 때) */
-.md-tabs__link {
-    font-size: 0.85rem;
-    font-weight: 500;
-    color: rgba(255, 255, 255, 0.6) !important;
-    /* 평소엔 살짝 어둡게 */
-    transition: color 0.2s ease;
-    padding: 0 0.5rem;
-    margin-top: 0.2rem;
-}
+    .md-tabs__item {
+        height: var(--md-header-height);
+    }
 
-.md-tabs__link:hover {
-    color: #FFFFFF !important;
-    /* 마우스 올리면 완전한 흰색으로 밝아짐 */
-}
+    /* 호버(Hover) 효과 및 글씨 세팅 */
+    .md-tabs__link {
+        height: var(--md-header-height);
+        line-height: var(--md-header-height);
+        padding: 0 1rem;
+        margin: 0;
+        font-size: 0.85rem;
+        font-weight: 500;
+        color: rgba(255, 255, 255, 0.6) !important;
+        /* 평소엔 살짝 어둡게 */
+        transition: color 0.2s;
+    }
 
-.md-tabs__link--active {
-    color: var(--md-accent-fg-color) !important;
-    /* 현재 있는 페이지는 파란색 */
+    .md-tabs__link:hover {
+        color: #ffffff !important;
+        /* 마우스 올리면 완전한 흰색 */
+    }
+
+    .md-tabs__link--active {
+        color: var(--md-accent-fg-color) !important;
+        /* 현재 메뉴는 파란색 */
+    }
+
+    /* 두 줄이던 걸 한 줄로 합쳤으니, 메인 본문이 너무 아래로 안 밀리게 조절 */
+    .md-main {
+        padding-top: var(--md-header-height) !important;
+    }
 }
 
 /* -------------------------------------------
-   3. 왼쪽 사이드바 & 검색창 스타일
+   3. 검색창 & 사이드바
 ------------------------------------------- */
 .md-sidebar {
     background-color: #121212 !important;
 }
 
-/* 검색창을 안드로이드처럼 각지고 플랫하게 */
 .md-search__input {
     background-color: rgba(255, 255, 255, 0.08) !important;
     border-radius: 4px;
-    height: 30px !important;
+    height: 32px !important;
     font-size: 0.8rem;
 }
 
-/* 코드 블록 스타일 (둥근 테두리 축소) */
+/* 코드 블록 스타일 */
 .md-typeset pre>code {
     background-color: #1e1e1e;
     border-radius: 4px;
-    box-shadow: none;
 }
