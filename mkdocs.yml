@@ -33,3 +33,10 @@ nav:
       - KV260: Devices/kv260.md
   - Drivers:
       - API: Drivers/API.md
+  - Archive (Experimental):
+      - v001 Overview: archive/experimental_v001/index.md
+      - v001 Architecture: archive/experimental_v001/Architecture/v001_architecture.md
+      - v001 ISA: archive/experimental_v001/Drivers/ISA.md
+      - v001 ISA Sheet: archive/experimental_v001/Drivers/ISA_Spreadsheet.md
+      - v001 API: archive/experimental_v001/Drivers/v001_API.md
+      - v001 Agents: archive/experimental_v001/agents.md
