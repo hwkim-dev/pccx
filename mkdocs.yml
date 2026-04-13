@@ -5,7 +5,6 @@ theme:
   name: material
   font: false
   features:
-    - navigation.tabs # 메뉴를 상단으로 올림
     - navigation.sections # 하위 메뉴를 묶어줌
     - navigation.top # 위로가기 버튼
   palette:
