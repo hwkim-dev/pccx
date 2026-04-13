@@ -4,10 +4,16 @@ site_dir: site
 theme:
   name: material
   font: false
+  theme:
+  name: material
   features:
-    - navigation.tabs          
-    - navigation.expand        
-    - navigation.top
+    - navigation.tabs # 핵심! 이 줄을 추가해야 메뉴가 위로 올라감
+    - navigation.sections # 탭 아래 하위 메뉴들을 섹션별로 묶어줌
+    - navigation.top # 추가하면 스크롤 내릴 때 위로가기 버튼 생김
+#  features:
+#    - navigation.tabs          
+#    - navigation.expand        
+#    - navigation.top
   palette:
     # 다크 모드
     - scheme: slate
@@ -27,12 +33,12 @@ theme:
 extra_css:
   - stylesheets/custom.css
 
-# [핵심] 사이드바에 뜰 "파일 이름"을 직접 지정해 줌
 nav:
   - HOME: index.md
   - Architecture: 
-      - Architecture: Architecture/Architecture.md
-  - Devices: 
-      - Devices: Devices/Devices.md
-  - Drivers: 
-      - Drivers: Drivers/Drivers.md
+      - Overview: architecture/index.md 
+      - ISA Spec: architecture/isa.md
+  - Devices:
+      - KV260: devices/kv260.md
+  - Drivers:
+      - API: drivers/api.md
