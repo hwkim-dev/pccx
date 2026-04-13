@@ -1,1 +1,0 @@
-# uCA: micro Compute Architecture
