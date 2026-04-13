@@ -1,4 +1,4 @@
-# 📦 Archive: v001 Experimental Architecture
+# Archive: v001 Experimental Architecture
 
 > [!WARNING]
 > 이 아키텍처는 초기(v001) 실험적 디자인입니다. 구조적으로는 우수하나 GEMM(Matrix) 계산 위주로 설계되었기 때문에, GEMV(Vector) 연산이 주를 이루는 로컬 LLM 환경에 최적화하기 위해 현재는 아카이브(Archive) 보관 중입니다. 
@@ -10,7 +10,7 @@
 
 ---
 
-## 🏛️ Project Overview
+## Project Overview
 
 **uXC**는 Xilinx Kria KV260 FPGA(400 MHz, 베어메탈) 위에서 양자화된 **Gemma 3N E4B** 대규모 언어 모델을 가속하기 위해 바닥부터 설계된 커스텀 SystemVerilog 기반 NPU(Neural Processing Unit)입니다. KV260의 1,248 DSP48E2 슬라이스와 144개의 BRAM을 극한으로 활용하도록 설계되었습니다.
 
@@ -19,31 +19,31 @@
 
 ---
 
-## 📚 퀵 메뉴
+## 퀵 메뉴
 
 <div class="grid cards" markdown>
 
--   :material-cpu-64-bit: **[Architecture Overview](Architecture/v001_architecture.md)**
+-   **[Architecture Overview](Architecture/v001_architecture.md)**
     
     ---
     NPU 내부 아키텍처, 3계층 코어 시스템 및 디커플링 모델, 그리고 메모리 전이 레이아웃에 관해 설명합니다.
 
--   :material-memory: **[ISA Specification](Drivers/ISA.md)**
+-   **[ISA Specification](Drivers/ISA.md)**
     
     ---
     64-bit VLIW 코어, Opcode 설계, 레지스터 할당 방법 및 파이프라인 스케줄링.
     
--   :material-microsoft-excel: **[ISA Spreadsheet](Drivers/ISA_Spreadsheet.md)**
+-   **[ISA Spreadsheet](Drivers/ISA_Spreadsheet.md)**
 
     ---
     전체 ISA 명령집합 구조의 시트 뷰 요약본을 제공합니다.
 
--   :material-api: **[C API Detail](Drivers/v001_API.md)**
+-   **[C API Detail](Drivers/v001_API.md)**
     
     ---
     NPU 호스트 제어를 담당하는 `uCA_v1_api.c` 및 `uCA_v1_api.h` 헤더의 주된 인터페이스.
 
--   :material-robot-outline: **[Agents Architecture](agents.md)**
+-   **[Agents Architecture](agents.md)**
     
     ---
     디커플링된 데이터플로우 모델 안에서의 에이전트 마이크로 스케줄링 설계에 대한 컨셉트.
@@ -52,7 +52,7 @@
 
 ---
 
-## ⚙️ Quantization Strategy: W4A16 with BF16 Activations
+## Quantization Strategy: W4A16 with BF16 Activations
 
 핵심 계산 경로는 **W4A16** 정밀도(Precision)로 운용됩니다:
 
@@ -79,7 +79,7 @@ graph TD
 
 ---
 
-## 🚀 Compute Engines
+## Compute Engines
 
 | 엔진 (Engine) | 연산 (Operation) | 가중치(Weights) 공급 | 활성 함수 (Activation) | 누산기 (Accumulator) |
 | ------------- | ------------------| ---------------- | ---------------- | ------------- |

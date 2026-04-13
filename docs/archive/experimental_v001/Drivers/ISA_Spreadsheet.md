@@ -1,4 +1,4 @@
-# 📊 uCA ISA Spreadsheet View
+# uCA ISA Spreadsheet View
 
 이 페이지는 Google Sheets에서 내보낸 NPU ISA 구조 요약 HTML 스프레드시트를 표시합니다. 
 자세한 ISA 명세는 [ISA Specification](./ISA.md) 페이지를 참고하세요.

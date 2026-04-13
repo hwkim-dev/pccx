@@ -21,6 +21,17 @@ theme:
         icon: material/weather-sunny
         name: 다크 모드로 전환
 
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+
 extra_css:
   - stylesheets/custom.css
 
@@ -28,15 +39,20 @@ nav:
   - HOME: index.md
   - Architecture: 
       - Overview: Architecture/index.md 
-      - ISA Spec: Architecture/v001/v001_isa.md
+      - v001:
+          - ISA Spec: Architecture/v001/v001_isa.md
   - Devices:
       - KV260: Devices/kv260.md
   - Drivers:
       - API: Drivers/API.md
-  - Archive (Experimental):
-      - v001 Overview: archive/experimental_v001/index.md
-      - v001 Architecture: archive/experimental_v001/Architecture/v001_architecture.md
-      - v001 ISA: archive/experimental_v001/Drivers/ISA.md
-      - v001 ISA Sheet: archive/experimental_v001/Drivers/ISA_Spreadsheet.md
-      - v001 API: archive/experimental_v001/Drivers/v001_API.md
-      - v001 Agents: archive/experimental_v001/agents.md
+  - Archive:
+      - experimental_v001:
+          - Overview: archive/experimental_v001/index.md
+          - Architecture:
+              - v001_architecture: archive/experimental_v001/Architecture/v001_architecture.md
+          - Drivers:
+              - ISA: archive/experimental_v001/Drivers/ISA.md
+              - ISA_Spreadsheet: archive/experimental_v001/Drivers/ISA_Spreadsheet.md
+              - v001_API: archive/experimental_v001/Drivers/v001_API.md
+          - agents: archive/experimental_v001/agents.md
+  - Agents: agents.md
