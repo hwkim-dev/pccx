@@ -5,21 +5,30 @@ theme:
   name: material
   font: false
   features:
-    - navigation.sections # 하위 메뉴를 묶어줌
-    - navigation.top # 위로가기 버튼
+    - navigation.sections
+    - navigation.top
   palette:
     - scheme: slate
       primary: black
       accent: green            
       toggle:
         icon: material/weather-night
-        name: 라이트 모드로 전환
+        name: Switch to Light Mode
     - scheme: default
       primary: white
       accent: green
       toggle:
         icon: material/weather-sunny
-        name: 다크 모드로 전환
+        name: Switch to Dark Mode
+
+extra:
+  alternate:
+    - name: English
+      link: /
+      lang: en
+    - name: Korean
+      link: /ko/
+      lang: ko
 
 markdown_extensions:
   - pymdownx.highlight:
