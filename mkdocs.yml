@@ -52,22 +52,15 @@ extra_css:
 
 nav:
   - HOME: index.md
-  - Architecture: 
-      - Overview: Architecture/index.md 
-      - v001:
-          - ISA Spec: Architecture/v001/v001_isa.md
-  - Devices:
-      - KV260: Devices/kv260.md
-  - Drivers:
-      - API: Drivers/API.md
+  - v002: v002/
+  - Devices: Devices/
   - Archive:
       - experimental_v001:
           - Overview: archive/experimental_v001/index.md
-          - Architecture:
-              - v001_architecture: archive/experimental_v001/Architecture/v001_architecture.md
+          - Architecture: archive/experimental_v001/Architecture/v001_architecture.md
           - Drivers:
-              - ISA: archive/experimental_v001/Drivers/ISA.md
-              - ISA_Spreadsheet: archive/experimental_v001/Drivers/ISA_Spreadsheet.md
-              - v001_API: archive/experimental_v001/Drivers/v001_API.md
-          - agents: archive/experimental_v001/agents.md
+              - ISA Spec: archive/experimental_v001/Drivers/ISA.md
+              - ISA Spreadsheet: archive/experimental_v001/Drivers/ISA_Spreadsheet.md
+              - API Reference: archive/experimental_v001/Drivers/v001_API.md
+          - Agents: archive/experimental_v001/agents.md
   - Agents: agents.md
