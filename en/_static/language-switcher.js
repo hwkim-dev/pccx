@@ -6,20 +6,22 @@
     ko: { short: 'KO', full: '한국어' }
   };
 
+  // Support both /xpcc/ and /pccx/ repo names
   function getLanguageInfo() {
     var path = window.location.pathname;
-    var enMatch = path.match(/^(.*\/xpcc)\/en(\/.*|$)/);
-    var koMatch = path.match(/^(.*\/xpcc)\/ko(\/.*|$)/);
-    if (enMatch) return { current: 'en', base: enMatch[1], rest: enMatch[2] || '/index.html' };
-    if (koMatch) return { current: 'ko', base: koMatch[1], rest: koMatch[2] || '/index.html' };
-    return null;
+    var m = path.match(/^(.*\/(?:xpcc|pccx))\/(en|ko)(\/.*|$)/);
+    if (!m) return null;
+    return {
+      current: m[2],
+      base: m[1],
+      rest: m[3] || '/index.html'
+    };
   }
 
   function createSwitcher(langInfo) {
     var wrapper = document.createElement('div');
-    wrapper.className = 'lang-switcher';
+    wrapper.className = 'lang-switcher navbar-item';
 
-    // Button: shows short code (EN / KO)
     var btn = document.createElement('button');
     btn.className = 'lang-btn';
     btn.setAttribute('aria-haspopup', 'listbox');
@@ -29,7 +31,6 @@
       '<span class="lang-short">' + LANGS[langInfo.current].short + '</span>' +
       '<span class="lang-arrow" aria-hidden="true">&#9662;</span>';
 
-    // Dropdown: shows full names
     var dropdown = document.createElement('ul');
     dropdown.className = 'lang-dropdown';
     dropdown.setAttribute('role', 'listbox');
@@ -76,19 +77,26 @@
 
     var switcher = createSwitcher(langInfo);
 
-    // Furo: .sidebar-header-items__end holds [theme-toggle] [...] [toc-btn]
-    // Insert BEFORE the last child so order becomes: theme-toggle → lang → toc-btn
-    var headerEnd = document.querySelector('.sidebar-header-items__end');
-    if (headerEnd) {
-      var last = headerEnd.lastElementChild;
-      headerEnd.insertBefore(switcher, last || null);
-      return;
+    // PyData: .navbar-header-items__end — insert before last child (theme-switcher)
+    // Furo:   .sidebar-header-items__end — same approach
+    var targets = [
+      '.navbar-header-items__end',
+      '.sidebar-header-items__end',
+      '.bd-header-items .navbar-nav',
+      'nav.bd-header',
+      'header'
+    ];
+
+    for (var i = 0; i < targets.length; i++) {
+      var el = document.querySelector(targets[i]);
+      if (el) {
+        var last = el.lastElementChild;
+        el.insertBefore(switcher, last || null);
+        return;
+      }
     }
 
-    // Fallback
-    var header = document.querySelector('header');
-    if (header) { header.appendChild(switcher); return; }
-
+    // Absolute fallback
     switcher.style.cssText = 'position:fixed;top:8px;right:12px;z-index:9999';
     document.body.appendChild(switcher);
   }
