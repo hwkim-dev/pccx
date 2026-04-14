@@ -1,81 +1,83 @@
-/* Language switcher – Furo compatible, dark & light mode */
+/* Language switcher – PyData Sphinx Theme compatible */
 
 .lang-switcher {
   position: relative;
   display: inline-flex;
   align-items: center;
+  margin: 0 4px;
 }
 
-/* Button: matches Furo's icon-button size & feel */
+/* Button: blend with PyData navbar buttons */
 .lang-btn {
   display: inline-flex;
   align-items: center;
   gap: 3px;
-  padding: 0 7px;
-  height: 2rem;
-  border: none;
-  border-radius: 0.5rem;
+  padding: 4px 9px;
+  height: 31px;
+  border: 1px solid transparent;
+  border-radius: 4px;
   background: transparent;
-  color: var(--color-foreground-primary);
-  font-size: 0.75rem;
-  font-weight: 700;
+  color: var(--pst-color-text-base, inherit);
+  font-size: 0.8rem;
+  font-weight: 600;
   letter-spacing: 0.04em;
   cursor: pointer;
   white-space: nowrap;
-  transition: background 0.15s;
+  transition: background 0.15s, border-color 0.15s;
+  line-height: 1;
 }
 
 .lang-btn:hover,
 .lang-btn--open {
-  background: var(--color-background-hover, rgba(128,128,128,0.15));
+  background: var(--pst-color-surface, rgba(128,128,128,0.12));
+  border-color: var(--pst-color-border, rgba(128,128,128,0.3));
 }
 
 .lang-btn:focus-visible {
-  outline: 2px solid var(--color-brand-primary, #6b6bb7);
+  outline: 2px solid var(--pst-color-primary, #0072b2);
   outline-offset: 2px;
 }
 
 .lang-short {
-  font-size: 0.78rem;
+  font-size: 0.8rem;
   font-weight: 700;
-  letter-spacing: 0.05em;
 }
 
 .lang-arrow {
   font-size: 0.6rem;
-  opacity: 0.7;
+  opacity: 0.65;
   margin-top: 1px;
 }
 
-/* Dropdown list */
+/* Dropdown */
 .lang-dropdown {
   position: absolute;
   top: calc(100% + 4px);
   right: 0;
-  min-width: 110px;
+  min-width: 120px;
   margin: 0;
   padding: 4px 0;
   list-style: none;
-  border-radius: 0.5rem;
-  border: 1px solid var(--color-foreground-border, rgba(128,128,128,0.25));
-  background: var(--color-background-primary, #fff);
-  box-shadow: 0 4px 16px rgba(0,0,0,0.18);
-  z-index: 1000;
+  border-radius: 6px;
+  border: 1px solid var(--pst-color-border, rgba(128,128,128,0.25));
+  background: var(--pst-color-background, #fff);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.14);
+  z-index: 10000;
 }
 
 .lang-option {
-  padding: 7px 16px;
+  padding: 8px 16px;
   font-size: 0.875rem;
   cursor: pointer;
-  color: var(--color-foreground-primary);
+  color: var(--pst-color-text-base, inherit);
   transition: background 0.1s;
 }
 
 .lang-option:hover {
-  background: var(--color-background-hover, rgba(128,128,128,0.12));
+  background: var(--pst-color-surface, rgba(128,128,128,0.1));
 }
 
 .lang-option--active {
   font-weight: 700;
-  color: var(--color-brand-primary, #6b6bb7);
+  color: var(--pst-color-primary, #0072b2);
 }
