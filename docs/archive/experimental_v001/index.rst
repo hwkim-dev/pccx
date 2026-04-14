@@ -11,6 +11,15 @@ Archive: v001 Experimental Architecture
 |Status Archived| |SystemVerilog RTL| |Target Hardware| |Quantization
 Precision|
 
+.. toctree::
+   :hidden:
+   :maxdepth: 1
+
+   Architecture/v001_architecture
+   Drivers/ISA
+   Drivers/ISA_Spreadsheet
+   Drivers/v001_API
+
 --------------
 
 Project Overview
