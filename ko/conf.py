@@ -1,4 +1,4 @@
-# Configuration file for the Sphinx documentation builder.
+# Configuration file for the Sphinx documentation builder (Korean).
 import os
 import sys
 
@@ -15,19 +15,20 @@ extensions = [
     'myst_parser',
 ]
 
-templates_path = ['_templates']
-exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store', 'node_modules', 'ko']
+templates_path = ['../_templates']
+exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store', 'node_modules']
 
 # -- Options for HTML output -------------------------------------------------
 
 html_theme = 'furo'
-html_title = 'uCA Documentation'
+html_title = 'uCA 문서'
+language = 'ko'
 
 html_theme_options = {
     "sidebar_hide_name": False,
     "navigation_with_keys": True,
 }
 
-html_static_path = ['_static']
+html_static_path = ['../_static']
 html_js_files = ['language-switcher.js']
 html_css_files = ['language-switcher.css']
