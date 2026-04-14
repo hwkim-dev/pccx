@@ -1,10 +1,10 @@
-uCA: micro Compute Architecture
-===============================
+pccx: Parallel Compute Core eXecutor
+=====================================
 
 NPU Architecture Overview
 -------------------------
 
-.. figure:: /docs/assets/images/Architecture/architecture_v001.png
+.. figure:: ../../../assets/images/Architecture/architecture_v001.png
    :alt: NPU Architecture
 
    NPU Architecture

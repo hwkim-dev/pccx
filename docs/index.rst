@@ -1,9 +1,9 @@
-uCA: micro Compute Architecture
-===============================
+pccx: Parallel Compute Core eXecutor
+=====================================
 
 |License| |Architecture| |Target| |Precision|
 
-   **Notice: Active Development in Progress** > uCA is a scalable and
+   **Notice: Active Development in Progress** > pccx is a scalable and
    modular Neural Processing Unit (NPU) architecture designed to
    accelerate Transformer-based Large Language Models (LLMs) on
    resource-constrained edge devices.
@@ -13,7 +13,7 @@ uCA: micro Compute Architecture
 1. Architecture Overview
 ------------------------
 
-uCA is a device-agnostic hardware-software co-design framework. It
+pccx is a device-agnostic hardware-software co-design framework. It
 focuses on breaking the memory bandwidth and compute bottlenecks of edge
 hardware by scaling the core architecture to the specific physical
 resource budget of the target device.
@@ -32,7 +32,7 @@ portability and scalability:
    -  This layer is independent of any specific hardware vendor or
       interface protocol.
 
--  **``/device`` (The Implementation Layer)** \* Mappings of the uCA
+-  **``/device`` (The Implementation Layer)** \* Mappings of the pccx
    architecture onto specific hardware targets.
 
    -  Adjusts the number of compute cores, systolic array dimensions,
@@ -44,7 +44,7 @@ portability and scalability:
    Abstraction Layer (HAL) and high-level API.
 
    -  Manages instruction dispatching and memory mapping, acting as the
-      bridge between high-level AI models and the uCA hardware.
+      bridge between high-level AI models and the pccx hardware.
 
 --------------
 
@@ -87,11 +87,11 @@ stalls and maximize throughput.
 
 | Detailed technical specifications are located in the ``/docs``
   directory:
-| 1. ``uCA_ISA_Spec.md``: Specification of the 64-bit Custom Instruction
+| 1. ``pccx_ISA_Spec.md``: Specification of the 64-bit Custom Instruction
   Set.
 | 2. ``Architecture_Scaling.md``: Guidelines for mapping logic to
   physical resources.
-| 3. ``API_Reference.md``: Documentation for the uCA Driver and SDK.
+| 3. ``API_Reference.md``: Documentation for the pccx Driver and SDK.
 
 --------------
 

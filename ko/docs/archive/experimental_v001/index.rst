@@ -14,7 +14,7 @@
 프로젝트 개요
 -------------
 
-**uXC** 는 베어메탈 Xilinx Kria KV260 FPGA(400 MHz)에서 양자화된
+**pccx** 는 베어메탈 Xilinx Kria KV260 FPGA(400 MHz)에서 양자화된
 **Gemma 3N E4B** 대규모 언어 모델을 가속하기 위해 처음부터 맞춤 설계된
 SystemVerilog 기반 신경망 처리 장치(NPU)입니다. 이 아키텍처는 KV260 플랫폼의
 1,248개 DSP48E2 슬라이스와 144개 BRAM을 기능적 한계까지 활용하도록 세밀하게 설계되었습니다.
