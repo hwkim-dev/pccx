@@ -1,5 +1,5 @@
-pccx v002 Architecture
-======================
+uCA v002 Architecture
+=====================
 
 .. toctree::
    :maxdepth: 2

@@ -8,12 +8,10 @@ detailed specification parameter definition, please navigate to the
 
 .. raw:: html
 
-   <div style="overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: 6px;">
-     <iframe
-       src="../../../../_static/ISA_Instruction_set_architecture.html"
-       width="1100"
-       height="900"
-       style="border: none; display: block; min-width: 900px;"
-       title="pccx ISA Spreadsheet">
-     </iframe>
-   </div>
+   <iframe
+     src="../../../../_static/ISA_Instruction_set_architecture.html"
+     width="100%"
+     height="800px"
+     style="border: none; border-radius: 6px;"
+     title="pccx ISA Spreadsheet">
+   </iframe>
