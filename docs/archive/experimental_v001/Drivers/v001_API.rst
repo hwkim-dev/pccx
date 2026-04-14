@@ -1,5 +1,5 @@
-Developer Reference for uCA v001 Host API
-=========================================
+Developer Reference for pccx v001 Host API
+==========================================
 
    [!NOTE] This document covers the High-Level C API used by the host
    application to control the NPU. It is designed for the v001 NPU
@@ -10,14 +10,14 @@ API Architecture Overview
 
 The current API layer pursues an experience similar to CUDA. Developers
 can utilize the asynchronous hardware accelerator by simply making
-``uca_*`` C function calls without needing to understand the 64-bit VLIW
+``pccx_*`` C function calls without needing to understand the 64-bit VLIW
 instruction assembly.
 
 -  **Non-blocking (Asynchronous)**: All computation functions simply
    queue the instructions into the NPU FIFO via the HAL and return
    immediately.
 -  **Sync Point**: The host execution flow stops and synchronizes with
-   the hardware state only when the ``uca_sync()`` function is
+   the hardware state only when the ``pccx_sync()`` function is
    explicitly called.
 
 --------------
@@ -32,27 +32,27 @@ These fundamental functions initialize the NPU device handles and
 release the resources. They ensure the NPU is responsive before
 proceeding.
 
-=== “Header (uCA_v1_api.h)”
+=== "Header (pccx_v1_api.h)"
 
 ::
 
    ```c
-   int  uca_init(void);
+   int  pccx_init(void);
 
-   void uca_deinit(void);
+   void pccx_deinit(void);
    ```
 
-=== “Implementation (uCA_v1_api.c)”
+=== "Implementation (pccx_v1_api.c)"
 
 ::
 
    ```c
-   int uca_init(void) {
-       return uca_hal_init();
+   int pccx_init(void) {
+       return pccx_hal_init();
    }
 
-   void uca_deinit(void) {
-       uca_hal_deinit();
+   void pccx_deinit(void) {
+       pccx_hal_deinit();
    }
    ```
 
@@ -66,27 +66,27 @@ a 64-bit VLIW format and pushes it to the hardware FIFO.
 **Parameters:** - ``dest_reg`` : Destination register or L2 memory
 address (17-bit). - ``src_addr`` : Starting location of the Source
 Feature Map buffer (17-bit). - ``flags`` : Configuration flags
-(``UCA_FLAG_FINDEMAX``, ``UCA_FLAG_ACCM``, etc). - ``size_ptr`` :
+(``PCCX_FLAG_FINDEMAX``, ``PCCX_FLAG_ACCM``, etc). - ``size_ptr`` :
 Pointer to the size descriptor inside the shape cache (6-bit). -
 ``shape_ptr`` : Pointer to the shape descriptor inside the shape cache
 (6-bit). - ``lanes`` : The number of parallel μV-Core lanes to utilize
 (1 to 4).
 
-=== “Header (uCA_v1_api.h)”
+=== "Header (pccx_v1_api.h)"
 
 ::
 
    ```c
-   void uca_gemv(uint32_t dest_reg,   uint32_t src_addr,
-                 uint8_t  flags,      uint8_t  size_ptr,
-                 uint8_t  shape_ptr,  uint8_t  lanes);
+   void pccx_gemv(uint32_t dest_reg,   uint32_t src_addr,
+                  uint8_t  flags,      uint8_t  size_ptr,
+                  uint8_t  shape_ptr,  uint8_t  lanes);
 
-   void uca_gemm(uint32_t dest_reg,   uint32_t src_addr,
-                 uint8_t  flags,      uint8_t  size_ptr,
-                 uint8_t  shape_ptr,  uint8_t  lanes);
+   void pccx_gemm(uint32_t dest_reg,   uint32_t src_addr,
+                  uint8_t  flags,      uint8_t  size_ptr,
+                  uint8_t  shape_ptr,  uint8_t  lanes);
    ```
 
-=== “Implementation (uCA_v1_api.c)”
+=== "Implementation (pccx_v1_api.c)"
 
 ::
 
@@ -103,9 +103,9 @@ Pointer to the size descriptor inside the shape cache (6-bit). -
        return instr;
    }
 
-   void uca_gemv(...) {
-       uint64_t instr = build_compute_instr(UCA_OP_GEMV, dest_reg, src_addr, flags, size_ptr, shape_ptr, lanes);
-       uca_hal_issue_instr(instr);
+   void pccx_gemv(...) {
+       uint64_t instr = build_compute_instr(PCCX_OP_GEMV, dest_reg, src_addr, flags, size_ptr, shape_ptr, lanes);
+       pccx_hal_issue_instr(instr);
    }
    ```
 
@@ -116,28 +116,28 @@ Controls the non-linear math functions (SFU and CORDIC) utilized for
 attention weight scaling such as Softmax, RMSNorm, GELU, and RoPE.
 
 **Parameters:** - ``cvo_func`` : The function code constant, such as
-``UCA_CVO_EXP``, ``UCA_CVO_SQRT``. - ``src_addr`` : Source cache
+``PCCX_CVO_EXP``, ``PCCX_CVO_SQRT``. - ``src_addr`` : Source cache
 address. - ``dst_addr`` : Destination cache address. - ``length`` : The
 number of vector operations to process sequentially.
 
-=== “Header (uCA_v1_api.h)”
+=== "Header (pccx_v1_api.h)"
 
 ::
 
    ```c
-   void uca_cvo(uint8_t  cvo_func,  uint32_t src_addr,
-                uint32_t dst_addr,  uint16_t length,
-                uint8_t  flags,     uint8_t  async);
+   void pccx_cvo(uint8_t  cvo_func,  uint32_t src_addr,
+                 uint32_t dst_addr,  uint16_t length,
+                 uint8_t  flags,     uint8_t  async);
    ```
 
-=== “Implementation (uCA_v1_api.c)”
+=== "Implementation (pccx_v1_api.c)"
 
 ::
 
    ```c
    static uint64_t build_cvo_instr(...) {
        uint64_t instr = 0;
-       instr |= ((uint64_t)(UCA_OP_CVO & 0xF)   << 60);
+       instr |= ((uint64_t)(PCCX_OP_CVO & 0xF)   << 60);
        instr |= ((uint64_t)(cvo_func  & 0xF)    << 56);
        instr |= ((uint64_t)(src_addr  & 0x1FFFF)<< 39);
        instr |= ((uint64_t)(dst_addr  & 0x1FFFF)<< 22);
@@ -147,9 +147,9 @@ number of vector operations to process sequentially.
        return instr;
    }
 
-   void uca_cvo(...) {
+   void pccx_cvo(...) {
        uint64_t instr = build_cvo_instr(cvo_func, src_addr, dst_addr, length, flags, async);
-       uca_hal_issue_instr(instr);
+       pccx_hal_issue_instr(instr);
    }
    ```
 
@@ -163,34 +163,34 @@ L2 Cache, and L1 engine local caches.
 identifying flow source and destination. - ``dest_addr`` : Transfer
 target local address. - ``src_addr`` : Source buffer address.
 
-=== “Header (uCA_v1_api.h)”
+=== "Header (pccx_v1_api.h)"
 
 ::
 
    ```c
-   void uca_memcpy(uint8_t route, uint32_t dest_addr, uint32_t src_addr, uint8_t shape_ptr, uint8_t async);
+   void pccx_memcpy(uint8_t route, uint32_t dest_addr, uint32_t src_addr, uint8_t shape_ptr, uint8_t async);
 
-   void uca_memset(uint8_t dest_cache, uint8_t dest_addr, uint16_t a, uint16_t b, uint16_t c);
+   void pccx_memset(uint8_t dest_cache, uint8_t dest_addr, uint16_t a, uint16_t b, uint16_t c);
    ```
 
-=== “Implementation (uCA_v1_api.c)”
+=== "Implementation (pccx_v1_api.c)"
 
 ::
 
    ```c
-   void uca_memcpy(...) {
+   void pccx_memcpy(...) {
        uint8_t from_dev = (route >> 4) & 0xF;
        uint8_t to_dev   = (route >> 0) & 0xF;
 
        uint64_t instr = 0;
-       instr |= ((uint64_t)(UCA_OP_MEMCPY & 0xF) << 60);
+       instr |= ((uint64_t)(PCCX_OP_MEMCPY & 0xF) << 60);
        instr |= ((uint64_t)(from_dev  & 0x1)      << 59);
        instr |= ((uint64_t)(to_dev    & 0x1)      << 58);
        instr |= ((uint64_t)(dest_addr & 0x1FFFF)  << 41);
        instr |= ((uint64_t)(src_addr  & 0x1FFFF)  << 24);
        instr |= ((uint64_t)(shape_ptr & 0x3F)     <<  1);
        instr |= ((uint64_t)(async     & 0x1)      <<  0);
-       uca_hal_issue_instr(instr);
+       pccx_hal_issue_instr(instr);
    }
    ```
 
@@ -203,20 +203,20 @@ registered in the FIFO queue have completed their tasks.
 **Parameters:** - ``timeout_us`` : Threshold timeout in microseconds
 before returning an error state.
 
-=== “Header (uCA_v1_api.h)”
+=== "Header (pccx_v1_api.h)"
 
 ::
 
    ```c
-   int uca_sync(uint32_t timeout_us);
+   int pccx_sync(uint32_t timeout_us);
    ```
 
-=== “Implementation (uCA_v1_api.c)”
+=== "Implementation (pccx_v1_api.c)"
 
 ::
 
    ```c
-   int uca_sync(uint32_t timeout_us) {
-       return uca_hal_wait_idle(timeout_us);
+   int pccx_sync(uint32_t timeout_us) {
+       return pccx_hal_wait_idle(timeout_us);
    }
    ```

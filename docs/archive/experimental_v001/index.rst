@@ -25,7 +25,7 @@ Precision|
 Project Overview
 ----------------
 
-**uXC** is a customized SystemVerilog-based Neural Processing Unit (NPU)
+**pccx** (formerly uXC) is a customized SystemVerilog-based Neural Processing Unit (NPU)
 engineered fundamentally from the ground up to accelerate the quantized
 **Gemma 3N E4B** Large Language Model on the bare-metal Xilinx Kria
 KV260 FPGA (400 MHz). The architecture is meticulously designed to push
@@ -71,8 +71,8 @@ Quick Menu
 
       --------------
 
-      Focuses on the primary wrapping interfaces of ``uCA_v1_api.c`` and
-      ``uCA_v1_api.h`` targeting the active NPU host controller.
+      Focuses on the primary wrapping interfaces of ``pccx_v1_api.c`` and
+      ``pccx_v1_api.h`` targeting the active NPU host controller.
 
    -  `Agents Architecture <agents.md>`__
 
@@ -147,7 +147,6 @@ Compute Engines
 +-----------+----------------+--------------+--------------+-----------+
 | Engine    | Operation      | Weights      | Activation   | Ac        |
 |           |                | Input        | Fetch        | cumulator |
-|           |                |              |              | Unit      |
 +===========+================+==============+==============+===========+
 | **Matrix  | GEMM (prefill, | HP0/1 (32    | BF16         | INT48     |
 | Core**    | projections)   | INT4/clk)    | :math:`      | (DSP48E2) |
