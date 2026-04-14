@@ -1,7 +1,7 @@
-uCA ISA Specification
-=====================
+pccx ISA Specification
+======================
 
-**uCA**: micro Compute Architecture — the FPGA NPU instruction set.
+**pccx** (Parallel Compute Core eXecutor) — the FPGA NPU instruction set.
 
 Target: Kria KV260 \| Word width: **64-bit** \| Encoding: **VLIW**
 

@@ -1,2 +1,2 @@
-uCA: micro Compute Architecture
-===============================
+pccx: Parallel Compute Core eXecutor
+=====================================

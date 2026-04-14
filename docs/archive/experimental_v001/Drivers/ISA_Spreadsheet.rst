@@ -1,13 +1,17 @@
-uCA ISA Spreadsheet View
-========================
+pccx ISA Spreadsheet View
+==========================
 
 This page displays the HTML spreadsheet outline of the NPU ISA
 Architecture exported directly from Google Sheets. For a more highly
-detailed specification parameter definition, please navigate to the `ISA
-Specification <./ISA.md>`__ page.
+detailed specification parameter definition, please navigate to the
+`ISA Specification <ISA.html>`__ page.
 
-.. container::
+.. raw:: html
 
-   ::
-
-      <iframe src="../ISA_Instruction_set_architecture.html" width="100%" height="800px" style="border: none;"></iframe>
+   <iframe
+     src="../../../../_static/ISA_Instruction_set_architecture.html"
+     width="100%"
+     height="800px"
+     style="border: none; border-radius: 6px;"
+     title="pccx ISA Spreadsheet">
+   </iframe>

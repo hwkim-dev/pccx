@@ -4,7 +4,7 @@ import sys
 
 # -- Project information -----------------------------------------------------
 
-project = 'uCA'
+project = 'pccx'
 copyright = '2026, hwkim'
 author = 'hwkim'
 release = 'v001'
@@ -21,7 +21,7 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store', 'node_modules']
 # -- Options for HTML output -------------------------------------------------
 
 html_theme = 'furo'
-html_title = 'uCA 문서'
+html_title = 'pccx 문서'
 language = 'ko'
 
 html_theme_options = {

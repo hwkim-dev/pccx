@@ -1,17 +1,17 @@
 (function () {
   'use strict';
 
+  var LANGS = {
+    en: { short: 'EN', full: 'English' },
+    ko: { short: 'KO', full: '한국어' }
+  };
+
   function getLanguageInfo() {
     var path = window.location.pathname;
     var enMatch = path.match(/^(.*\/xpcc)\/en(\/.*|$)/);
     var koMatch = path.match(/^(.*\/xpcc)\/ko(\/.*|$)/);
-
-    if (enMatch) {
-      return { current: 'en', base: enMatch[1], rest: enMatch[2] || '/index.html' };
-    }
-    if (koMatch) {
-      return { current: 'ko', base: koMatch[1], rest: koMatch[2] || '/index.html' };
-    }
+    if (enMatch) return { current: 'en', base: enMatch[1], rest: enMatch[2] || '/index.html' };
+    if (koMatch) return { current: 'ko', base: koMatch[1], rest: koMatch[2] || '/index.html' };
     return null;
   }
 
@@ -19,36 +19,54 @@
     var wrapper = document.createElement('div');
     wrapper.className = 'lang-switcher';
 
-    var globe = document.createElement('span');
-    globe.className = 'lang-globe';
-    globe.textContent = '\uD83C\uDF10';
-    globe.setAttribute('aria-hidden', 'true');
+    // Button: shows short code (EN / KO)
+    var btn = document.createElement('button');
+    btn.className = 'lang-btn';
+    btn.setAttribute('aria-haspopup', 'listbox');
+    btn.setAttribute('aria-expanded', 'false');
+    btn.setAttribute('aria-label', 'Select language');
+    btn.innerHTML =
+      '<span class="lang-short">' + LANGS[langInfo.current].short + '</span>' +
+      '<span class="lang-arrow" aria-hidden="true">&#9662;</span>';
 
-    var select = document.createElement('select');
-    select.className = 'lang-select';
-    select.setAttribute('aria-label', 'Select language / 언어 선택');
+    // Dropdown: shows full names
+    var dropdown = document.createElement('ul');
+    dropdown.className = 'lang-dropdown';
+    dropdown.setAttribute('role', 'listbox');
+    dropdown.hidden = true;
 
-    var langs = [
-      { value: 'en', label: 'English' },
-      { value: 'ko', label: '\ud55c\uad6d\uc5b4' }
-    ];
-
-    langs.forEach(function (l) {
-      var opt = document.createElement('option');
-      opt.value = l.value;
-      opt.textContent = l.label;
-      if (l.value === langInfo.current) opt.selected = true;
-      select.appendChild(opt);
+    Object.keys(LANGS).forEach(function (code) {
+      var li = document.createElement('li');
+      li.className = 'lang-option' + (code === langInfo.current ? ' lang-option--active' : '');
+      li.setAttribute('role', 'option');
+      li.setAttribute('aria-selected', String(code === langInfo.current));
+      li.textContent = LANGS[code].full;
+      li.addEventListener('click', function () {
+        if (code === langInfo.current) { close(); return; }
+        window.location.href = langInfo.base + '/' + code + langInfo.rest;
+      });
+      dropdown.appendChild(li);
     });
 
-    select.addEventListener('change', function () {
-      var newLang = this.value;
-      var newUrl = langInfo.base + '/' + newLang + langInfo.rest;
-      window.location.href = newUrl;
-    });
+    function open() {
+      dropdown.hidden = false;
+      btn.setAttribute('aria-expanded', 'true');
+      btn.classList.add('lang-btn--open');
+    }
+    function close() {
+      dropdown.hidden = true;
+      btn.setAttribute('aria-expanded', 'false');
+      btn.classList.remove('lang-btn--open');
+    }
 
-    wrapper.appendChild(globe);
-    wrapper.appendChild(select);
+    btn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      dropdown.hidden ? open() : close();
+    });
+    document.addEventListener('click', close);
+
+    wrapper.appendChild(btn);
+    wrapper.appendChild(dropdown);
     return wrapper;
   }
 
@@ -58,28 +76,20 @@
 
     var switcher = createSwitcher(langInfo);
 
-    // Furo sidebar header is the ideal location
-    var targets = [
-      '.sidebar-header-items__end',
-      '.sidebar-header-items',
-      '.sidebar-header',
-      '.header-items__end',
-      'header'
-    ];
-
-    for (var i = 0; i < targets.length; i++) {
-      var el = document.querySelector(targets[i]);
-      if (el) {
-        el.appendChild(switcher);
-        return;
-      }
+    // Furo: .sidebar-header-items__end holds [theme-toggle] [...] [toc-btn]
+    // Insert BEFORE the last child so order becomes: theme-toggle → lang → toc-btn
+    var headerEnd = document.querySelector('.sidebar-header-items__end');
+    if (headerEnd) {
+      var last = headerEnd.lastElementChild;
+      headerEnd.insertBefore(switcher, last || null);
+      return;
     }
 
-    // Absolute fallback: fixed top-right corner
-    switcher.style.position = 'fixed';
-    switcher.style.top = '8px';
-    switcher.style.right = '12px';
-    switcher.style.zIndex = '9999';
+    // Fallback
+    var header = document.querySelector('header');
+    if (header) { header.appendChild(switcher); return; }
+
+    switcher.style.cssText = 'position:fixed;top:8px;right:12px;z-index:9999';
     document.body.appendChild(switcher);
   }
 

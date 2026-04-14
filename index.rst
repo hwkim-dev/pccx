@@ -1,8 +1,8 @@
-===============================
-uCA Navigation
-===============================
+================================
+pccx Navigation
+================================
 
-Welcome to the **uCA** Sphinx documentation network!
+Welcome to the **pccx** Sphinx documentation network!
 
 .. toctree::
    :maxdepth: 2
