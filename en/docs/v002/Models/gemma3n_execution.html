@@ -1,0 +1,1295 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Gemma 3N E4B on pccx v002 — Execution and Scheduling &#8212; pccx Documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=7f76b32a3354e82990f2" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=7f76b32a3354e82990f2" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/language-switcher.css?v=5ec28b56" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mermaid-theme.css?v=87bd70f5" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/image-lightbox.css?v=884c9d5a" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../../../_static/scripts/fontawesome.js?digest=7f76b32a3354e82990f2"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=7f76b32a3354e82990f2" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=7f76b32a3354e82990f2" />
+
+    <script src="../../../_static/documentation_options.js?v=dfc80500"></script>
+    <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+    <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10.9.0/dist/mermaid.esm.min.mjs";
+
+
+
+
+
+const initStyles = () => {
+    const defaultStyle = document.createElement('style');
+    defaultStyle.textContent = `pre.mermaid {
+    /* Same as .mermaid-container > pre */
+    display: block;
+    width: 100%;
+}
+
+pre.mermaid > svg {
+    /* Same as .mermaid-container > pre > svg */
+    height: 500px;
+    width: 100%;
+    max-width: 100% !important;
+}`;
+    document.head.appendChild(defaultStyle);
+
+    const fullscreenStyle = document.createElement('style');
+    fullscreenStyle.textContent = `.mermaid-container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.mermaid-container > pre {
+    display: block;
+    width: 100%;
+}
+
+.mermaid-container > pre > svg {
+    height: 500px;
+    width: 100%;
+    max-width: 100% !important;
+}
+
+.mermaid-fullscreen-btn {
+    width: 28px;
+    height: 28px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    font-size: 14px;
+    line-height: 1;
+    padding: 0;
+    color: #333;
+}
+
+.mermaid-fullscreen-btn:hover {
+    opacity: 100% !important;
+    background: rgba(255, 255, 255, 1);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+    transform: scale(1.1);
+}
+
+.mermaid-fullscreen-btn.dark-theme {
+    background: rgba(50, 50, 50, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #e0e0e0;
+}
+
+.mermaid-fullscreen-btn.dark-theme:hover {
+    background: rgba(60, 60, 60, 1);
+    box-shadow: 0 3px 10px rgba(255, 255, 255, 0.2);
+}
+
+.mermaid-fullscreen-modal {
+    display: none;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 95vw;
+    height: 100vh;
+    background: rgba(255, 255, 255, 0.98);
+    z-index: 9999;
+    padding: 20px;
+    overflow: auto;
+}
+
+.mermaid-fullscreen-modal.dark-theme {
+    background: rgba(0, 0, 0, 0.98);
+}
+
+.mermaid-fullscreen-modal.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen {
+    position: relative;
+    width: 95vw;
+    height: 90vh;
+    max-width: 95vw;
+    max-height: 90vh;
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    overflow: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen.dark-theme {
+    background: #1a1a1a;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+}
+
+.mermaid-container-fullscreen pre.mermaid {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen .mermaid svg {
+    height: 100% !important;
+    width: 100% !important;
+    cursor: grab;
+}
+
+.mermaid-fullscreen-close {
+    position: fixed !important;
+    top: 20px !important;
+    right: 20px !important;
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transition: all 0.2s;
+    font-size: 24px;
+    line-height: 1;
+    color: #333;
+}
+
+.mermaid-fullscreen-close:hover {
+    background: white;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+    transform: scale(1.1);
+}
+
+.mermaid-fullscreen-close.dark-theme {
+    background: rgba(50, 50, 50, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #e0e0e0;
+}
+
+.mermaid-fullscreen-close.dark-theme:hover {
+    background: rgba(60, 60, 60, 1);
+    box-shadow: 0 6px 16px rgba(255, 255, 255, 0.2);
+}
+
+.mermaid-fullscreen-modal .mermaid-fullscreen-btn {
+    display: none !important;
+}`;
+    document.head.appendChild(fullscreenStyle);
+}
+
+// Detect if page has dark background
+const isDarkTheme = () => {
+    // We use a set of heuristics:
+    // 1. Check for common dark mode classes or attributes
+    // 2. Check computed background color brightness
+    if (document.documentElement.classList.contains('dark') ||
+        document.documentElement.getAttribute('data-theme') === 'dark' ||
+        document.body.classList.contains('dark') ||
+        document.body.getAttribute('data-theme') === 'dark') {
+        // console.log("Dark theme detected via class/attribute");
+        return true;
+    }
+    if (document.documentElement.classList.contains('light') ||
+        document.documentElement.getAttribute('data-theme') === 'light' ||
+        document.body.classList.contains('light') ||
+        document.body.getAttribute('data-theme') === 'light') {
+        // console.log("Light theme detected via class/attribute");
+        return false;
+    }
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        // console.log("Dark theme detected via prefers-color-scheme");
+        return true;
+    }
+    const bgColor = window.getComputedStyle(document.body).backgroundColor;
+    const match = bgColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)/);
+    if (match) {
+        const r = parseInt(match[1]);
+        const g = parseInt(match[2]);
+        const b = parseInt(match[3]);
+        const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+        // console.log("Background color brightness:", brightness);
+        return brightness < 128;
+    }
+    // console.log("No dark or light theme detected, defaulting to light theme");
+    return false;
+};
+
+let darkTheme = isDarkTheme();
+let modal = null;
+let modalContent = null;
+let previousScrollOffset = [window.scrollX, window.scrollY];
+
+const runMermaid = async (rerun) => {
+    console.log("Running mermaid diagrams, rerun =", rerun);
+    // clear all existing mermaid charts
+    let all_mermaids = document.querySelectorAll(".mermaid");
+
+    if (rerun) {
+        all_mermaids.forEach((el) => {
+            if(!el.hasAttribute("data-original-code")) {
+                // store original code
+                // console.log(`Storing original code for first run: `, el.innerHTML);
+                el.setAttribute('data-original-code', el.innerHTML);
+            }
+            if(el.getAttribute("data-processed") === "true") {
+                // remove and restore original
+                el.removeAttribute("data-processed");
+                // console.log(`Restoring original code for re-run: `, el.getAttribute('data-original-code'));
+                el.innerHTML = el.getAttribute('data-original-code');
+            } else {
+                // store original code
+                // console.log(`Storing original code for re-run: `, el.innerHTML);
+                el.setAttribute('data-original-code', el.innerHTML);
+            }
+        });
+        await mermaid.run();
+    }
+
+    all_mermaids = document.querySelectorAll(".mermaid");
+    const mermaids_processed = document.querySelectorAll(".mermaid[data-processed='true']");
+
+    if ("False" === "True") {
+        const mermaids_to_add_zoom = -1 === -1 ? all_mermaids.length : -1;
+        if(mermaids_to_add_zoom > 0) {
+            var svgs = d3.selectAll("");
+            if(all_mermaids.length !== mermaids_processed.length) {
+                setTimeout(() => runMermaid(false), 200);
+                return;
+            } else if(svgs.size() !== mermaids_to_add_zoom) {
+                setTimeout(() => runMermaid(false), 200);
+                return;
+            } else {
+                svgs.each(function() {
+                    var svg = d3.select(this);
+                    svg.html("<g class='wrapper'>" + svg.html() + "</g>");
+                    var inner = svg.select("g");
+                    var zoom = d3.zoom().on("zoom", function(event) {
+                        inner.attr("transform", event.transform);
+                    });
+                    svg.call(zoom);
+                });
+            }
+        }
+    } else if(all_mermaids.length !== mermaids_processed.length) {
+        // Wait for mermaid to process all diagrams
+        setTimeout(() => runMermaid(false), 200);
+        return;
+    }
+
+    // Stop here if not adding fullscreen capability
+    if ("True" !== "True") return;
+
+    if (modal !== null ) {
+        // Destroy existing modal
+        modal.remove();
+        modal = null;
+        modalContent = null;
+    }
+
+    modal = document.createElement('div');
+    modal.className = 'mermaid-fullscreen-modal' + (darkTheme ? ' dark-theme' : '');
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-label', 'Fullscreen diagram viewer');
+    modal.innerHTML = `
+        <button class="mermaid-fullscreen-close${darkTheme ? ' dark-theme' : ''}" aria-label="Close fullscreen">✕</button>
+        <div class="mermaid-container-fullscreen${darkTheme ? ' dark-theme' : ''}"></div>
+    `;
+    document.body.appendChild(modal);
+
+    modalContent = modal.querySelector('.mermaid-container-fullscreen');
+    const closeBtn = modal.querySelector('.mermaid-fullscreen-close');
+
+    const closeModal = () => {
+        modal.classList.remove('active');
+        modalContent.innerHTML = '';
+        document.body.style.overflow = ''
+        window.scrollTo({left: previousScrollOffset[0], top: previousScrollOffset[1], behavior: 'instant'});
+    };
+
+    closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.classList.contains('active')) {
+            closeModal();
+        }
+    });
+
+    document.querySelectorAll('.mermaid').forEach((mermaidDiv) => {
+        if (mermaidDiv.parentNode.classList.contains('mermaid-container') ||
+            mermaidDiv.closest('.mermaid-fullscreen-modal')) {
+            // Already processed, adjust button class if needed
+            const existingBtn = mermaidDiv.parentNode.querySelector('.mermaid-fullscreen-btn');
+            if (existingBtn) {
+                existingBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+            }
+            return;
+        }
+
+        const container = document.createElement('div');
+        container.className = 'mermaid-container';
+        mermaidDiv.parentNode.insertBefore(container, mermaidDiv);
+        container.appendChild(mermaidDiv);
+
+        const fullscreenBtn = document.createElement('button');
+        fullscreenBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+        fullscreenBtn.setAttribute('aria-label', 'View diagram in fullscreen');
+        fullscreenBtn.textContent = '⛶';
+        fullscreenBtn.style.opacity = '50%';
+
+        // Calculate dynamic position based on diagram's margin and padding
+        const diagramStyle = window.getComputedStyle(mermaidDiv);
+        const marginTop = parseFloat(diagramStyle.marginTop) || 0;
+        const marginRight = parseFloat(diagramStyle.marginRight) || 0;
+        const paddingTop = parseFloat(diagramStyle.paddingTop) || 0;
+        const paddingRight = parseFloat(diagramStyle.paddingRight) || 0;
+        fullscreenBtn.style.top = `${marginTop + paddingTop + 4}px`;
+        fullscreenBtn.style.right = `${marginRight + paddingRight + 4}px`;
+
+        fullscreenBtn.addEventListener('click', () => {
+            previousScrollOffset = [window.scroll, window.scrollY];
+            const clone = mermaidDiv.cloneNode(true);
+            modalContent.innerHTML = '';
+            modalContent.appendChild(clone);
+
+            const svg = clone.querySelector('svg');
+            if (svg) {
+                svg.removeAttribute('width');
+                svg.removeAttribute('height');
+                svg.style.width = '100%';
+                svg.style.height = 'auto';
+                svg.style.maxWidth = '100%';
+                svg.style.sdisplay = 'block';
+
+                if ("False" === "True") {
+                    setTimeout(() => {
+                        const g = svg.querySelector('g');
+                        if (g) {
+                            var svgD3 = d3.select(svg);
+                            svgD3.html("<g class='wrapper'>" + svgD3.html() + "</g>");
+                            var inner = svgD3.select("g");
+                            var zoom = d3.zoom().on("zoom", function(event) {
+                                inner.attr("transform", event.transform);
+                            });
+                            svgD3.call(zoom);
+                        }
+                    }, 100);
+                }
+            }
+
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+        container.appendChild(fullscreenBtn);
+    });
+};
+
+const load = async () => {
+    initStyles();
+
+    await runMermaid(true);
+
+    const reRunIfThemeChanges = async () => {
+        const newDarkTheme = isDarkTheme();
+        if (newDarkTheme !== darkTheme) {
+            darkTheme = newDarkTheme;
+            console.log("Theme change detected, re-running mermaid with", darkTheme ? "dark" : "default", "theme");
+            await mermaid.initialize(
+                {...JSON.parse(
+                    `{"startOnLoad": false, "securityLevel": "loose", "flowchart": {"htmlLabels": true, "curve": "basis", "useMaxWidth": false, "padding": 12}, "sequence": {"useMaxWidth": false, "mirrorActors": false}}`
+                ),
+                ...{ darkMode: darkTheme, theme: darkTheme ? 'dark' : 'default' },
+                }
+            );
+            await runMermaid(true);
+        }
+    };
+
+    // Update theme classes when theme changes
+    const themeObserver = new MutationObserver(reRunIfThemeChanges);
+    themeObserver.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+    themeObserver.observe(document.body, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+};
+
+
+
+
+
+console.log("Initializing mermaid with", darkTheme ? "dark" : "default", "theme");
+mermaid.initialize(
+    {...JSON.parse(
+        `{"startOnLoad": false, "securityLevel": "loose", "flowchart": {"htmlLabels": true, "curve": "basis", "useMaxWidth": false, "padding": 12}, "sequence": {"useMaxWidth": false, "mirrorActors": false}}`
+    ),
+    ...{ darkMode: darkTheme, theme: darkTheme ? 'dark' : 'default' },
+    }
+);
+
+window.addEventListener("load", load);
+window.runMermaid = runMermaid;</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'docs/v002/Models/gemma3n_execution';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <script src="../../../_static/language-switcher.js?v=e91f783c"></script>
+    <script src="../../../_static/image-lightbox.js?v=dec353f8"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="prev" title="Gemma 3N — FFN Gaussian Top-K Sparsity" href="gemma3n_ffn_sparsity.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  
+    
+    <script src="../../../_static/searchtools.js"></script>
+    <script src="../../../_static/language_data.js"></script>
+    <script src="../../../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search pccx docs..."
+         aria-label="Search pccx docs..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">pccx</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../index.html">
+    pccx: Parallel Compute Core eXecutor
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../Devices/index.html">
+    Devices
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../archive/index.html">
+    Archive
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    pccx v002 Architecture
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/hwkim-dev/pccx" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://hwkim-dev.github.io/hwkim-dev/" title="Personal Site" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-user fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Personal Site</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../index.html">
+    pccx: Parallel Compute Core eXecutor
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../Devices/index.html">
+    Devices
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../archive/index.html">
+    Archive
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    pccx v002 Architecture
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/hwkim-dev/pccx" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://hwkim-dev.github.io/hwkim-dev/" title="Personal Site" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-user fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">Personal Site</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item pst-sidebar-collapse"><button id="pst-collapse-sidebar-button" aria-expanded="true" aria-controls="pst-primary-sidebar"><svg class="pst-icon svg-inline--fa" role="img" aria-hidden="true" focusable="false" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+    <path fill="currentColor" d="M3 15.5C2.36232 15.5 1.74874 15.2564 1.28478 14.8189C0.820828 14.3815 0.541576 13.7832 0.504167 13.1467L0.5 13L0.5 3C0.499965 2.36232 0.743605 1.74874 1.18107 1.28478C1.61854 0.820828 2.21676 0.541576 2.85333 0.504167L3 0.5L13 0.5C13.6377 0.499965 14.2513 0.743605 14.7152 1.18107C15.1792 1.61854 15.4584 2.21676 15.4958 2.85333L15.5 3L15.5 13C15.5 13.6377 15.2564 14.2513 14.8189 14.7152C14.3815 15.1792 13.7832 15.4584 13.1467 15.4958L13 15.5L3 15.5ZM3 13.8333L10.5 13.8333L10.5 2.16667L3 2.16667C2.79589 2.16669 2.59889 2.24163 2.44636 2.37726C2.29383 2.5129 2.19638 2.69979 2.1725 2.9025L2.16667 3L2.16667 13C2.16669 13.2041 2.24163 13.4011 2.37726 13.5536C2.5129 13.7062 2.69979 13.8036 2.9025 13.8275L3 13.8333ZM6.65583 10.325L6.5775 10.2558L4.91083 8.58917C4.76735 8.44567 4.68116 8.25476 4.66843 8.05223C4.65569 7.84971 4.71729 7.6495 4.84167 7.48917L4.91083 7.41083L6.5775 5.74417C6.72747 5.59471 6.9287 5.50794 7.14032 5.50148C7.35194 5.49502 7.55809 5.56935 7.7169 5.70937C7.8757 5.8494 7.97525 6.04463 7.99533 6.25539C8.01541 6.46616 7.95451 6.67667 7.825 6.84417L7.75583 6.9225L6.67917 8L7.75583 9.0775C7.89931 9.22099 7.98551 9.41191 7.99824 9.61443C8.01097 9.81695 7.94938 10.0172 7.825 10.1775L7.75583 10.2558C7.61234 10.3993 7.42142 10.4855 7.2189 10.4982C7.01638 10.511 6.81617 10.4494 6.65583 10.325Z"/>
+  </svg>
+  <span class="pst-collapse-sidebar-label">Collapse Sidebar</span>
+  <span class="pst-expand-sidebar-label">Expand Sidebar</span>
+</button></div>
+        <div class="sidebar-primary-item">
+
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><p aria-level="2" class="caption" role="heading"><span class="caption-text">Overview</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../overview.html">Overview</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Hardware Architecture</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../Architecture/index.html">Hardware Architecture</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../Architecture/rationale.html">Design Rationale: v001 → v002</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Architecture/top_level.html">Top-Level Architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Architecture/floorplan.html">Physical Floorplan</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Architecture/memory_hierarchy.html">Memory Hierarchy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Architecture/kv_cache.html">KV Cache Optimization Strategy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Architecture/gemm_core.html">GEMM Core (Systolic Array)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Architecture/gemv_core.html">GEMV Core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Architecture/sfu_core.html">SFU Core (Complex Vector Operations)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Architecture/dsp48e2_w4a8.html">DSP48E2 W4A8 Bit Packing and Sign Recovery</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Instruction Set Architecture (ISA)</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../ISA/index.html">Instruction Set Architecture (ISA)</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../ISA/encoding.html">Instruction Encoding</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ISA/instructions.html">Per-Instruction Encoding</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ISA/dataflow.html">Per-Instruction Dataflow</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Software Stack</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../Drivers/index.html">Software Stack</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../Drivers/api.html">C API Overview</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Target Models</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html">Target Models</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="gemma3n_overview.html">Gemma 3N E4B — Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gemma3n_pipeline.html">Gemma 3N E4B — Operator-Level Pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gemma3n_attention_rope.html">Gemma 3N — Attention and RoPE Constraints</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gemma3n_ple_laurel.html">Gemma 3N — LAuReL and PLE Calibration Modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gemma3n_ffn_sparsity.html">Gemma 3N — FFN Gaussian Top-K Sparsity</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Gemma 3N E4B on pccx v002 — Execution and Scheduling</a></li>
+</ul>
+</details></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">pccx v002 Architecture</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">Target Models</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Gemma 3N E4B on pccx v002 — Execution and Scheduling</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="gemma-3n-e4b-on-pccx-v002-execution-and-scheduling">
+<h1>Gemma 3N E4B on pccx v002 — Execution and Scheduling<a class="headerlink" href="#gemma-3n-e4b-on-pccx-v002-execution-and-scheduling" title="Link to this heading">#</a></h1>
+<p>This page explains <em>how</em> a single decode token of Gemma 3N E4B runs
+end-to-end on pccx v002 — which tensor lives where, which instruction
+fires which core, and how the scheduler keeps all three compute engines
+busy.</p>
+<p>For the math, see <a class="reference internal" href="gemma3n_pipeline.html"><span class="doc">Gemma 3N E4B — Operator-Level Pipeline</span></a>. For the instruction encodings
+themselves, see <a class="reference internal" href="../ISA/instructions.html"><span class="doc">Per-Instruction Encoding</span></a>.</p>
+<section id="memory-layout-at-steady-state">
+<h2>1. Memory Layout at Steady State<a class="headerlink" href="#memory-layout-at-steady-state" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<colgroup>
+<col style="width: 20.0%" />
+<col style="width: 20.0%" />
+<col style="width: 20.0%" />
+<col style="width: 40.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Region</p></th>
+<th class="head"><p>Backing store</p></th>
+<th class="head"><p>Unit</p></th>
+<th class="head"><p>Contents</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>Host DDR4</strong></p></td>
+<td><p>4 GB shared with PS</p></td>
+<td><p>byte</p></td>
+<td><p>All weights (INT4 + per-channel scales), KV cache ring buffer,
+embedding / LM head tables.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>L2 cache</strong> (URAM)</p></td>
+<td><p>1.75 MB, 128-bit words</p></td>
+<td><p>128-bit word</p></td>
+<td><p>Current <code class="docutils literal notranslate"><span class="pre">xs[0..3]</span></code>, <code class="docutils literal notranslate"><span class="pre">x_norm</span></code>, <code class="docutils literal notranslate"><span class="pre">Q/K/V</span></code>, <code class="docutils literal notranslate"><span class="pre">attn_output</span></code>,
+<code class="docutils literal notranslate"><span class="pre">gate_raw</span></code>, <code class="docutils literal notranslate"><span class="pre">up_out</span></code>, <code class="docutils literal notranslate"><span class="pre">hidden</span></code>, <code class="docutils literal notranslate"><span class="pre">mlp_out</span></code>, <code class="docutils literal notranslate"><span class="pre">pli_all</span></code>,
+e_max, reduction accumulators.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Weight Buffer</strong> (BRAM/URAM FIFO)</p></td>
+<td><p>~512 KB</p></td>
+<td><p>128-bit word</p></td>
+<td><p>Burst buffer between HP2/HP3 (250 MHz) and the 400 MHz compute
+cores. Holds at most one GEMV/GEMM’s worth of weights.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Constant Cache</strong> (BRAM)</p></td>
+<td><p>64 entries × 48-bit</p></td>
+<td><p>shape / scale tuple</p></td>
+<td><p>RMSNorm scales, attention shapes, RoPE θ, sparsity cutoff <code class="docutils literal notranslate"><span class="pre">μ</span> <span class="pre">+</span>
+<span class="pre">1.645·σ</span></code>, the <span class="math notranslate nohighlight">\(1/\sqrt{2}\)</span> LAuReL scalar.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="host-setup-once-at-model-load">
+<h2>2. Host Setup (Once, at Model Load)<a class="headerlink" href="#host-setup-once-at-model-load" title="Link to this heading">#</a></h2>
+<p>The driver performs these steps before any token is generated:</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">pccx_open(&amp;handle)</span></code> — maps the AXI-Lite control window and opens
+the HP/ACP DMA channels.</p></li>
+<li><p><strong>Load immutable weights</strong> (host DDR → L2 is too small; weights stay
+on DDR and stream on demand via HP ports).</p>
+<ul class="simple">
+<li><p>Embedding table (<code class="docutils literal notranslate"><span class="pre">W_embed</span></code>), PLE tables, AltUp projections,
+LM head — these do land on L2 for the first and last layer
+respectively, via <code class="docutils literal notranslate"><span class="pre">MEMCPY</span> <span class="pre">from_device=1</span> <span class="pre">to_device=0</span> <span class="pre">async=1</span></code>.</p></li>
+</ul>
+</li>
+<li><p><strong>Preload constants</strong> via a sequence of <code class="docutils literal notranslate"><span class="pre">MEMSET</span></code> instructions:</p>
+<ul class="simple">
+<li><p>Attention / FFN shape tuples.</p></li>
+<li><p>Per-layer RoPE <code class="docutils literal notranslate"><span class="pre">theta_base</span></code> (10 000 or 1 000 000 depending on
+the 5-layer cycle).</p></li>
+<li><p>FFN sparsity z-score <code class="docutils literal notranslate"><span class="pre">1.6448536</span></code>.</p></li>
+<li><p>LAuReL <span class="math notranslate nohighlight">\(1/\sqrt{2}\)</span> scalar, attention+LAuReL merged scale.</p></li>
+</ul>
+</li>
+<li><p><strong>Initialize the KV ring buffer</strong>:
+<code class="docutils literal notranslate"><span class="pre">pccx_kv_init(handle,</span> <span class="pre">max_tokens=8192)</span></code>. The hardware treats KV
+cache as a ring with an explicit hard cap — see
+<a class="reference internal" href="../Architecture/kv_cache.html"><span class="doc">KV Cache Optimization Strategy</span></a>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pccx_start(handle)</span></code> — raises <code class="docutils literal notranslate"><span class="pre">core_enable</span></code> and unblocks the
+dispatcher FIFO.</p></li>
+</ol>
+</section>
+<section id="per-token-decode-flow">
+<h2>3. Per-Token Decode Flow<a class="headerlink" href="#per-token-decode-flow" title="Link to this heading">#</a></h2>
+<p>One decode token executes Sections 1 → 6 of <a class="reference internal" href="gemma3n_pipeline.html"><span class="doc">Gemma 3N E4B — Operator-Level Pipeline</span></a>. The
+high-level dataflow, annotated with instructions:</p>
+<pre  class="mermaid">
+        flowchart TB
+    A[&quot;Host: read token id&quot;] --&gt; B[&quot;MEMCPY host → L2&lt;br/&gt;W_embed row + pli_all&quot;]
+    B --&gt; C[&quot;GEMV: xs[k+1] = x0 · altup_projs[k]&quot;]
+    C --&gt; L[&quot;Layer loop (i = 0 ... 34)&quot;]
+    L --&gt; L1[&quot;GEMV/CVO: AltUp router + pred&quot;]
+    L1 --&gt; L2[&quot;GEMV: Q/K/V projection&quot;]
+    L2 --&gt; L3[&quot;CVO: QK-Norm + RoPE&quot;]
+    L3 --&gt; L4[&quot;GEMV: Q · Kᵀ&lt;br/&gt;flags.findemax = 1&quot;]
+    L4 --&gt; L5[&quot;CVO: softmax sequence&quot;]
+    L5 --&gt; L6[&quot;GEMV: scores · V&quot;]
+    L6 --&gt; L7[&quot;GEMV: W_o projection&lt;br/&gt;(+ LAuReL GEMVs in parallel)&quot;]
+    L7 --&gt; L8[&quot;GEMV: FFN gate + up&quot;]
+    L8 --&gt; L9[&quot;CVO: sparsity / GELU / merge&quot;]
+    L9 --&gt; L10[&quot;GEMV: W_down + residual add&quot;]
+    L10 --&gt; L11[&quot;GEMV/CVO: AltUp correction + PLE shadow inject&quot;]
+    L11 --&gt; L
+    L --&gt; D[&quot;GEMV: Mean magnitude + unprojections&quot;]
+    D --&gt; E[&quot;GEMV: LM head projection&quot;]
+    E --&gt; F[&quot;CVO: softcap tanh&quot;]
+    F --&gt; G[&quot;MEMCPY L2 → host: logits&quot;]
+    G --&gt; H[&quot;Host: sampling&quot;]
+    </pre><section id="who-does-what">
+<h3>3.1 Who Does What<a class="headerlink" href="#who-does-what" title="Link to this heading">#</a></h3>
+<div class="pst-scrollable-table-container"><table class="table">
+<colgroup>
+<col style="width: 30.0%" />
+<col style="width: 20.0%" />
+<col style="width: 20.0%" />
+<col style="width: 30.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Pipeline stage</p></th>
+<th class="head"><p>Systolic Array</p></th>
+<th class="head"><p>GEMV ×4</p></th>
+<th class="head"><p>SFU ×4</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Embedding row fetch + AltUp init (×4)</p></td>
+<td><p>—</p></td>
+<td><p>4 GEMV (one per <code class="docutils literal notranslate"><span class="pre">altup_projs[k]</span></code>)</p></td>
+<td><p>—</p></td>
+</tr>
+<tr class="row-odd"><td><p>PLE pre-compute</p></td>
+<td><p>—</p></td>
+<td><p>1 GEMV</p></td>
+<td><p>2 (RMSNorm + scale)</p></td>
+</tr>
+<tr class="row-even"><td><p>Attention Q/K/V</p></td>
+<td><p>—</p></td>
+<td><p>3 GEMV</p></td>
+<td><p>2 (Q-norm, K-norm per head)</p></td>
+</tr>
+<tr class="row-odd"><td><p>RoPE</p></td>
+<td><p>—</p></td>
+<td><p>—</p></td>
+<td><p>2 (sin, cos) per Q, K</p></td>
+</tr>
+<tr class="row-even"><td><p>Attention score + softmax + context</p></td>
+<td><p>—</p></td>
+<td><p>2 GEMV</p></td>
+<td><p>3 (exp, reduce_sum, scale)</p></td>
+</tr>
+<tr class="row-odd"><td><p>Output + LAuReL merge</p></td>
+<td><p>—</p></td>
+<td><p>3 GEMV (W_o + 2 LAuReL)</p></td>
+<td><p>1 (× 1/sqrt 2)</p></td>
+</tr>
+<tr class="row-even"><td><p>FFN gate + up</p></td>
+<td><p>—</p></td>
+<td><p>2 GEMV (16384 × 2048 each)</p></td>
+<td><p>—</p></td>
+</tr>
+<tr class="row-odd"><td><p>FFN sparsity (layers 0–9) or GELU only</p></td>
+<td><p>—</p></td>
+<td><p>—</p></td>
+<td><p>4 (reduce × 2, gate compute, GELU)</p></td>
+</tr>
+<tr class="row-even"><td><p>FFN down + residual</p></td>
+<td><p>—</p></td>
+<td><p>1 GEMV (2048 × 16384)</p></td>
+<td><p>1 (RMSNorm)</p></td>
+</tr>
+<tr class="row-odd"><td><p>AltUp correction + PLE inject</p></td>
+<td><p>—</p></td>
+<td><p>3 GEMV (ple_gate, ple_proj, shadow-only add)</p></td>
+<td><p>2 (tanh, RMSNorm)</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The Systolic Array is <strong>idle</strong> during decode. It wakes up only for the
+prefill stage, where <code class="docutils literal notranslate"><span class="pre">Q</span> <span class="pre">·</span> <span class="pre">Kᵀ</span></code> across the full context is a real GEMM.</p>
+</section>
+<section id="overlap-strategy">
+<h3>3.2 Overlap Strategy<a class="headerlink" href="#overlap-strategy" title="Link to this heading">#</a></h3>
+<p>Three rules keep the cores busy:</p>
+<ol class="arabic simple">
+<li><p><strong>Weight prefetch from HP2/HP3 starts the moment the previous GEMV
+launches.</strong> The Weight Buffer is deep enough to hold one full GEMV
+worth of weights, so weight DMA and compute always overlap.</p></li>
+<li><p><strong>SFU runs ahead of its consumer.</strong> Once a GEMV finishes, its result
+is written to L2 and immediately picked up by the SFU through a
+direct-connect FIFO. The SFU result goes back to L2 in parallel with
+the next GEMV starting.</p></li>
+<li><p><strong>PLE pre-compute lives off the critical path.</strong> <code class="docutils literal notranslate"><span class="pre">pli_all</span></code> is
+computed on token entry, not per-layer. Per-layer PLE injection is
+also kept off the main stream (see
+<a class="reference internal" href="gemma3n_ple_laurel.html"><span class="doc">Gemma 3N — LAuReL and PLE Calibration Modules</span></a>), so it overlaps with the next layer’s
+AltUp router on the main stream lane.</p></li>
+</ol>
+</section>
+</section>
+<section id="kv-cache-management">
+<h2>4. KV Cache Management<a class="headerlink" href="#kv-cache-management" title="Link to this heading">#</a></h2>
+<p>KV cache is the single biggest bandwidth consumer. Two driver-level
+behaviors apply:</p>
+<ol class="arabic simple">
+<li><p><strong>Cross-layer sharing.</strong> Only layers 0–19 write their own KV entries.
+Layers 20–34 reuse the cache from layer 18 (local θ) or layer 19
+(global θ). The scheduler therefore issues the GEMV that produces
+<code class="docutils literal notranslate"><span class="pre">K</span></code> / <code class="docutils literal notranslate"><span class="pre">V</span></code> only for <code class="docutils literal notranslate"><span class="pre">i</span> <span class="pre">&lt;</span> <span class="pre">20</span></code> and re-reads <code class="docutils literal notranslate"><span class="pre">target_K</span></code> /
+<code class="docutils literal notranslate"><span class="pre">target_V</span></code> from the cache for <code class="docutils literal notranslate"><span class="pre">i</span> <span class="pre">&gt;=</span> <span class="pre">20</span></code>.</p></li>
+<li><p><strong>Hard-cap ring buffer.</strong> <code class="docutils literal notranslate"><span class="pre">max_tokens</span></code> is set at init time and
+cannot grow. When the ring wraps, the <strong>oldest</strong> entries are
+overwritten according to the attention-sink + local-window policy.</p></li>
+<li><p><strong>Optional INT4 / INT8 quantization</strong> on the KV write path (see
+<a class="reference internal" href="../Architecture/kv_cache.html"><span class="doc">KV Cache Optimization Strategy</span></a> §2.1). Recommended default for
+context length &gt; 4 K.</p></li>
+</ol>
+</section>
+<section id="error-and-completion-handling">
+<h2>5. Error and Completion Handling<a class="headerlink" href="#error-and-completion-handling" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Every instruction carries a 1-bit <code class="docutils literal notranslate"><span class="pre">async</span></code> field. The driver treats
+all intra-layer instructions as async and only waits (via the
+<code class="docutils literal notranslate"><span class="pre">done</span></code> status register) once per layer, at the AltUp correction
+step where the previous layer’s results must be visible.</p></li>
+<li><p>A <code class="docutils literal notranslate"><span class="pre">CVO_SCALE</span></code> with <code class="docutils literal notranslate"><span class="pre">flags.recip_scale=1</span></code> returns <code class="docutils literal notranslate"><span class="pre">0</span></code> when the
+scalar is <code class="docutils literal notranslate"><span class="pre">0</span></code>; the driver is responsible for not issuing such an
+instruction (it is a programmer error, not a hardware fault).</p></li>
+<li><p>The Global Scheduler exposes an <strong>error interrupt</strong> on the AXI-Lite
+control bank when an instruction fails decode (reserved bits
+nonzero, unknown opcode, out-of-range addresses). The driver logs
+the instruction and halts.</p></li>
+</ul>
+</section>
+<section id="performance-budget-target">
+<h2>6. Performance Budget (Target)<a class="headerlink" href="#performance-budget-target" title="Link to this heading">#</a></h2>
+<p>Under the baseline configuration (W4A8 compute path, INT4 KV cache,
+<code class="docutils literal notranslate"><span class="pre">L</span> <span class="pre">=</span> <span class="pre">8192</span></code> hard cap), the end-to-end decode target is:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<colgroup>
+<col style="width: 30.0%" />
+<col style="width: 20.0%" />
+<col style="width: 50.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Metric</p></th>
+<th class="head"><p>Target</p></th>
+<th class="head"><p>Source of bottleneck</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Decode throughput</p></td>
+<td><p><strong>20 tok/s</strong></p></td>
+<td><p>GEMV bandwidth at 400 MHz × 4 lanes × 1024 MAC/clk.</p></td>
+</tr>
+<tr class="row-odd"><td><p>L2 activation bandwidth</p></td>
+<td><p><strong>~1.6 GB/s</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">xs[0..3]</span></code>, <code class="docutils literal notranslate"><span class="pre">gate_raw</span></code>, <code class="docutils literal notranslate"><span class="pre">up_out</span></code>, <code class="docutils literal notranslate"><span class="pre">hidden</span></code> round-trips.</p></td>
+</tr>
+<tr class="row-even"><td><p>KV cache read bandwidth &#64; 8 K</p></td>
+<td><p><strong>~6 GB/s</strong></p></td>
+<td><p>20 layers × 512 × INT4 × 2 (K, V) × 8 K / 50 ms.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Weight stream bandwidth</p></td>
+<td><p><strong>~3 GB/s</strong></p></td>
+<td><p>Two HP ports at 128-bit × 250 MHz, amortized.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>When context length exceeds 4 K, KV bandwidth becomes the limiter — see
+the mitigations in <a class="reference internal" href="../Architecture/kv_cache.html"><span class="doc">KV Cache Optimization Strategy</span></a>.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p>Operator spec: <a class="reference internal" href="gemma3n_pipeline.html"><span class="doc">Gemma 3N E4B — Operator-Level Pipeline</span></a></p></li>
+<li><p>Pccx v002 ISA: <a class="reference internal" href="../ISA/index.html"><span class="doc">Instruction Set Architecture (ISA)</span></a></p></li>
+<li><p>Driver API: <a class="reference internal" href="../Drivers/api.html"><span class="doc">C API Overview</span></a></p></li>
+</ul>
+</div>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="gemma3n_ffn_sparsity.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Gemma 3N — FFN Gaussian Top-K Sparsity</p>
+      </div>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#memory-layout-at-steady-state">1. Memory Layout at Steady State</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#host-setup-once-at-model-load">2. Host Setup (Once, at Model Load)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#per-token-decode-flow">3. Per-Token Decode Flow</a><ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#who-does-what">3.1 Who Does What</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#overlap-strategy">3.2 Overlap Strategy</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kv-cache-management">4. KV Cache Management</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#error-and-completion-handling">5. Error and Completion Handling</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#performance-budget-target">6. Performance Budget (Target)</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../../_static/scripts/bootstrap.js?digest=7f76b32a3354e82990f2"></script>
+<script defer src="../../../_static/scripts/pydata-sphinx-theme.js?digest=7f76b32a3354e82990f2"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2026, hwkim.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item"><p class="personal-link">
+  <a href="https://hwkim-dev.github.io/hwkim-dev/" target="_blank" rel="noopener">
+    hwkim-dev.github.io
+  </a>
+</p></div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

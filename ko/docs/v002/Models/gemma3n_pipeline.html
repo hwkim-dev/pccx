@@ -1,0 +1,982 @@
+
+<!DOCTYPE html>
+
+
+<html lang="ko" data-content_root="../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Gemma 3N E4B — 연산자 수준 파이프라인 &#8212; pccx 문서</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=7f76b32a3354e82990f2" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=7f76b32a3354e82990f2" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/language-switcher.css?v=5ec28b56" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mermaid-theme.css?v=87bd70f5" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/image-lightbox.css?v=884c9d5a" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../../../_static/scripts/fontawesome.js?digest=7f76b32a3354e82990f2"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=7f76b32a3354e82990f2" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=7f76b32a3354e82990f2" />
+
+    <script src="../../../_static/documentation_options.js?v=0893e0c8"></script>
+    <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../../_static/translations.js?v=afa94a99"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'docs/v002/Models/gemma3n_pipeline';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <script src="../../../_static/language-switcher.js?v=e91f783c"></script>
+    <script src="../../../_static/image-lightbox.js?v=dec353f8"></script>
+    <link rel="index" title="색인" href="../../../genindex.html" />
+    <link rel="search" title="검색" href="../../../search.html" />
+    <link rel="next" title="Gemma 3N — Attention 및 RoPE 제약" href="gemma3n_attention_rope.html" />
+    <link rel="prev" title="Gemma 3N E4B — 개요" href="gemma3n_overview.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="ko"/>
+  <meta name="docsearch:version" content="" />
+  
+    
+    <script src="../../../_static/searchtools.js"></script>
+    <script src="../../../_static/language_data.js"></script>
+    <script src="../../../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="pccx 문서 검색..."
+         aria-label="pccx 문서 검색..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">pccx</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../index.html">
+    pccx: 병렬 컴퓨트 코어 익스큐터
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../Devices/index.html">
+    지원 디바이스
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../archive/index.html">
+    아카이브
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    pccx v002 아키텍처
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="검색" aria-label="검색" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">검색</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/hwkim-dev/pccx" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://hwkim-dev.github.io/hwkim-dev/" title="개인 사이트" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-user fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">개인 사이트</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="검색" aria-label="검색" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">검색</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../index.html">
+    pccx: 병렬 컴퓨트 코어 익스큐터
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../Devices/index.html">
+    지원 디바이스
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../archive/index.html">
+    아카이브
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    pccx v002 아키텍처
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/hwkim-dev/pccx" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://hwkim-dev.github.io/hwkim-dev/" title="개인 사이트" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-solid fa-user fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">개인 사이트</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item pst-sidebar-collapse"><button id="pst-collapse-sidebar-button" aria-expanded="true" aria-controls="pst-primary-sidebar"><svg class="pst-icon svg-inline--fa" role="img" aria-hidden="true" focusable="false" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+    <path fill="currentColor" d="M3 15.5C2.36232 15.5 1.74874 15.2564 1.28478 14.8189C0.820828 14.3815 0.541576 13.7832 0.504167 13.1467L0.5 13L0.5 3C0.499965 2.36232 0.743605 1.74874 1.18107 1.28478C1.61854 0.820828 2.21676 0.541576 2.85333 0.504167L3 0.5L13 0.5C13.6377 0.499965 14.2513 0.743605 14.7152 1.18107C15.1792 1.61854 15.4584 2.21676 15.4958 2.85333L15.5 3L15.5 13C15.5 13.6377 15.2564 14.2513 14.8189 14.7152C14.3815 15.1792 13.7832 15.4584 13.1467 15.4958L13 15.5L3 15.5ZM3 13.8333L10.5 13.8333L10.5 2.16667L3 2.16667C2.79589 2.16669 2.59889 2.24163 2.44636 2.37726C2.29383 2.5129 2.19638 2.69979 2.1725 2.9025L2.16667 3L2.16667 13C2.16669 13.2041 2.24163 13.4011 2.37726 13.5536C2.5129 13.7062 2.69979 13.8036 2.9025 13.8275L3 13.8333ZM6.65583 10.325L6.5775 10.2558L4.91083 8.58917C4.76735 8.44567 4.68116 8.25476 4.66843 8.05223C4.65569 7.84971 4.71729 7.6495 4.84167 7.48917L4.91083 7.41083L6.5775 5.74417C6.72747 5.59471 6.9287 5.50794 7.14032 5.50148C7.35194 5.49502 7.55809 5.56935 7.7169 5.70937C7.8757 5.8494 7.97525 6.04463 7.99533 6.25539C8.01541 6.46616 7.95451 6.67667 7.825 6.84417L7.75583 6.9225L6.67917 8L7.75583 9.0775C7.89931 9.22099 7.98551 9.41191 7.99824 9.61443C8.01097 9.81695 7.94938 10.0172 7.825 10.1775L7.75583 10.2558C7.61234 10.3993 7.42142 10.4855 7.2189 10.4982C7.01638 10.511 6.81617 10.4494 6.65583 10.325Z"/>
+  </svg>
+  <span class="pst-collapse-sidebar-label">Collapse Sidebar</span>
+  <span class="pst-expand-sidebar-label">Expand Sidebar</span>
+</button></div>
+        <div class="sidebar-primary-item">
+
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><p aria-level="2" class="caption" role="heading"><span class="caption-text">개요</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../overview.html">개요</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">하드웨어 아키텍처</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../Architecture/index.html">하드웨어 아키텍처</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../Architecture/rationale.html">v001 → v002 설계 근거</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Architecture/top_level.html">탑레벨 아키텍처</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Architecture/floorplan.html">물리 플로어플랜</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Architecture/memory_hierarchy.html">메모리 계층</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Architecture/kv_cache.html">KV 캐시 최적화 전략</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Architecture/gemm_core.html">GEMM 코어 (시스톨릭 어레이)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Architecture/gemv_core.html">GEMV 코어</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Architecture/sfu_core.html">SFU 코어 (Complex Vector Operations)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Architecture/dsp48e2_w4a8.html">DSP48E2 W4A8 비트 패킹과 부호 복원</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">명령어 세트 아키텍처 (ISA)</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../ISA/index.html">명령어 세트 아키텍처 (ISA)</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../ISA/encoding.html">명령어 인코딩</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ISA/instructions.html">명령어 상세 인코딩</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ISA/dataflow.html">명령어별 데이터플로우</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">소프트웨어 스택</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../Drivers/index.html">소프트웨어 스택</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../Drivers/api.html">C API 개요</a></li>
+</ul>
+</details></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">타깃 모델</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html">타깃 모델</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="gemma3n_overview.html">Gemma 3N E4B — 개요</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Gemma 3N E4B — 연산자 수준 파이프라인</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gemma3n_attention_rope.html">Gemma 3N — Attention 및 RoPE 제약</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gemma3n_ple_laurel.html">Gemma 3N — LAuReL 과 PLE Calibration 모듈</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gemma3n_ffn_sparsity.html">Gemma 3N — FFN Gaussian Top-K Sparsity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gemma3n_execution.html">Gemma 3N E4B 를 pccx v002 에서 실행 — Execution / Scheduling</a></li>
+</ul>
+</details></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">pccx v002 아키텍처</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">타깃 모델</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Gemma 3N E4B — 연산자 수준 파이프라인</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="gemma-3n-e4b">
+<h1>Gemma 3N E4B — 연산자 수준 파이프라인<a class="headerlink" href="#gemma-3n-e4b" title="Link to this heading">#</a></h1>
+<p>Gemma 3N E4B 의 전체 연산 사양. 각 텐서에 shape / dtype 을 표기하여,
+각 단계가 pccx v002 의 명령어와 1:1 로 매핑되도록 했습니다
+(<a class="reference internal" href="gemma3n_execution.html"><span class="doc">Gemma 3N E4B 를 pccx v002 에서 실행 — Execution / Scheduling</span></a> 참고).</p>
+<dl class="simple">
+<dt><strong>기본 차원</strong></dt><dd><p><span class="math notranslate nohighlight">\(D=2048\)</span>, <span class="math notranslate nohighlight">\(D_{ffn}=16384\)</span>, <span class="math notranslate nohighlight">\(D_{patch}=256\)</span>,
+<span class="math notranslate nohighlight">\(D_{router}=4\)</span>, <span class="math notranslate nohighlight">\(Vocab=262400\)</span>.</p>
+</dd>
+<dt><strong>어텐션</strong></dt><dd><p>Q 8 / KV 2, <span class="math notranslate nohighlight">\(d_{head}=256\)</span>, <span class="math notranslate nohighlight">\(N_{layers}=35\)</span>.</p>
+</dd>
+</dl>
+<hr class="docutils" />
+<section id="id1">
+<h2>0. 핵심 함수 정의<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
+<p><strong>Embedding</strong> — 정수 id 로 행 조회.</p>
+<div class="math notranslate nohighlight">
+\[Output = W_{embed}[token\_id,\ :]\]</div>
+<p><strong>RMSNorm</strong></p>
+<div class="math notranslate nohighlight">
+\[RMS = \sqrt{\frac{1}{N}\sum_{i=1}^{N}x_i^2 + 10^{-6}},
+\qquad Output = \frac{x}{RMS} \times \gamma\]</div>
+<p><strong>GELU</strong></p>
+<div class="math notranslate nohighlight">
+\[Output = 0.5\,x\,\bigl(1 + \tanh(\sqrt{2/\pi}\,(x + 0.044715\,x^3))\bigr)\]</div>
+<p><strong>RoPE (Rotary Position Embedding)</strong></p>
+<div class="math notranslate nohighlight">
+\[\begin{split}Output_{2i}   &amp;= x_{2i}\cos\theta - x_{2i+1}\sin\theta \\
+Output_{2i+1} &amp;= x_{2i}\sin\theta + x_{2i+1}\cos\theta\end{split}\]</div>
+<p><strong>INT4 역양자화</strong> — 한 바이트에서 W4 두 개 풀어내기:</p>
+<div class="math notranslate nohighlight">
+\[w_0 = W_{packed} \land \mathtt{0x0F},
+\quad w_0 \mathrel{-}= 16 \text{ if } w_0 &gt; 7\]</div>
+<div class="math notranslate nohighlight">
+\[w_1 = W_{packed} \gg 4,
+\quad w_1 \mathrel{-}= 16 \text{ if } w_1 &gt; 7\]</div>
+<div class="math notranslate nohighlight">
+\[Output = [w_0,\ w_1] \times Scale\]</div>
+<p><strong>GQA (Grouped-Query Attention)</strong> — Q 8 헤드와 KV 2 헤드를 4:1 로 묶음.
+<span class="math notranslate nohighlight">\(g \in \{0, 1\}\)</span> 에 대해:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}Q_g &amp;= Q[4g:4g+4,\ :] \in \mathbb{R}^{4 \times d_{head}} \\
+\mathrm{scores}_g &amp;= \frac{Q_g \cdot K_g^{T}}{\sqrt{d_{head}}}
+                     \in \mathbb{R}^{4 \times L} \\
+\mathrm{out}_g &amp;= \mathrm{softmax}(\mathrm{scores}_g) \cdot V_g
+                  \in \mathbb{R}^{4 \times d_{head}}\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[GQA_{out} = \mathrm{concat}(\mathrm{out}_0, \mathrm{out}_1)
+           \in \mathbb{R}^{8 \times d_{head}}
+           \xrightarrow{\text{flatten}} \mathbb{R}^{1 \times D}\]</div>
+<p><span class="math notranslate nohighlight">\(L\)</span> 은 현재 시퀀스 길이, <span class="math notranslate nohighlight">\(K_g\)</span>, <span class="math notranslate nohighlight">\(V_g\)</span> 는 KV 캐시에서
+가져옵니다.</p>
+</section>
+<hr class="docutils" />
+<section id="id2">
+<h2>1. 토큰 임베딩<a class="headerlink" href="#id2" title="Link to this heading">#</a></h2>
+<div class="math notranslate nohighlight">
+\[x_0 = Embedding(token\_id, W_{embed}) \times \sqrt{2048}\]</div>
+<div class="admonition note">
+<p class="admonition-title">참고</p>
+<p><code class="docutils literal notranslate"><span class="pre">token_id</span></code> 는 PLE vocab 범위를 초과하지 않도록
+<code class="docutils literal notranslate"><span class="pre">min(token_id,</span> <span class="pre">262143)</span></code> 로 clip 합니다.</p>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>W_embed  [262400 × 2048]  INT4
+─────────────────────────────────
+x₀       [1 × 2048]       float32
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="altup-projection">
+<h2>2. AltUp 초기 Projection<a class="headerlink" href="#altup-projection" title="Link to this heading">#</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">xs</span></code> 의 0 번 행에 <span class="math notranslate nohighlight">\(x_0\)</span> 를 넣고, 1~3 행은 <span class="math notranslate nohighlight">\(x_0\)</span> 와
+AltUp projection 행렬의 내적으로 채웁니다.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}xs[0] &amp;= x_0 \\
+xs[k+1] &amp;= x_0 \cdot altup\_projs[k], \quad k = 0, 1, 2\end{split}\]</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>altup_projs[k]  [2048 × 2048]  float32  (k = 0, 1, 2)
+─────────────────────────────────────────────────────
+xs              [4 × 2048]     float32
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="ple">
+<h2>3. PLE 사전 계산<a class="headerlink" href="#ple" title="Link to this heading">#</a></h2>
+<p>보조 벡터 <code class="docutils literal notranslate"><span class="pre">pli_all</span></code> 을 토큰 진입 시 1 회만 계산해 35 레이어가 공유합니다.</p>
+<p><strong>Step 1 — Linear projection &amp; normalization.</strong></p>
+<div class="math notranslate nohighlight">
+\[x_{proj} = \frac{x_0 \cdot W_{ple\_proj}^{T}}{\sqrt{2048}}
+           \xrightarrow{\text{reshape}} [35 \times 256]\]</div>
+<div class="math notranslate nohighlight">
+\[x_{proj\_normed} = \frac{x_{proj}}{RMS(x_{proj})} \times norm_{ple}\]</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>W_ple_proj  [8960 × 2048]  INT4    →  x_proj         [35 × 256]  float32
+norm_ple    [256]          float32 →  x_proj_normed  [35 × 256]  float32
+</pre></div>
+</div>
+<p><strong>Step 2 — Patch 임베딩 추출.</strong></p>
+<div class="math notranslate nohighlight">
+\[y = Embedding(token\_id, W_{ple})
+    \xrightarrow{\text{reshape}} [35 \times 256]
+    \times \sqrt{256}\]</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>W_ple  [262144 × 8960]  INT4   →  y  [35 × 256]  float32
+</pre></div>
+</div>
+<p><strong>Step 3 — 합성.</strong></p>
+<div class="math notranslate nohighlight">
+\[pli\_all = (x_{proj\_normed} + y) \times \frac{1}{\sqrt{2}}\]</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>pli_all  [35 × 256]  float32
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="transformer-35">
+<h2>4. Transformer 레이어 (×35)<a class="headerlink" href="#transformer-35" title="Link to this heading">#</a></h2>
+<p>루프 인덱스 <span class="math notranslate nohighlight">\(i = 0, 1, \ldots, 34\)</span>.</p>
+<section id="a-altup-router-prediction">
+<h3>4.A AltUp Router &amp; Prediction<a class="headerlink" href="#a-altup-router-prediction" title="Link to this heading">#</a></h3>
+<p>4 개의 modality 벡터를 혼합해 <span class="math notranslate nohighlight">\(xs_{pred}\)</span> 를 만듭니다.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}x_n &amp;= \frac{RMSNorm(xs[0], W_{altup\_rn})}{2048} \\
+modalities &amp;= \tanh(x_n \cdot W_{altup\_router}) \\
+coef\_mat &amp;= (W_{altup\_pred} \cdot modalities)
+            \xrightarrow{\text{reshape}} [4 \times 4] \\
+xs_{pred} &amp;= xs + coef\_mat \cdot xs\end{split}\]</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>altup_rn     [2048]      float32  →  x_n         [1 × 2048]  float32
+altup_router [2048 × 4]  float32  →  modalities  [4]         float32
+altup_pred   [16 × 4]    float32  →  coef_mat    [4 × 4]     float32
+──────────────────────────────────────────────────────────────────────
+xs_pred      [4 × 2048]  float32
+</pre></div>
+</div>
+</section>
+<section id="b-attention-q-k-v-projection">
+<h3>4.B Attention — Q / K / V Projection<a class="headerlink" href="#b-attention-q-k-v-projection" title="Link to this heading">#</a></h3>
+<div class="math notranslate nohighlight">
+\[\begin{split}x_{input} &amp;= xs_{pred}[0],
+\quad x_{norm} = RMSNorm(x_{input}, W_{input\_ln}) \\
+Q &amp;= x_{norm} \cdot W_q^{T},
+\quad K = x_{norm} \cdot W_k^{T},
+\quad V = x_{norm} \cdot W_v^{T}\end{split}\]</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>input_ln  [2048]           float32
+W_q       [2048 × 2048]    INT4    →  Q  [1 × 2048]  →  [8 × 256]  float32
+W_k       [512  × 2048]    INT4    →  K  [1 × 512]   →  [2 × 256]  float32
+W_v       [512  × 2048]    INT4    →  V  [1 × 512]   →  [2 × 256]  float32
+</pre></div>
+</div>
+<section id="b-2-head-wise-qk-norm">
+<h4>4.B-2 Head-wise QK-Norm<a class="headerlink" href="#b-2-head-wise-qk-norm" title="Link to this heading">#</a></h4>
+<p>헤드 단위 RMSNorm (256 차원).</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}Q^{head}_i &amp;= \frac{Q^{head}_i}{RMS(Q^{head}_i)} \times \gamma_q,
+\quad i = 0, \ldots, 7 \\
+K^{head}_j &amp;= \frac{K^{head}_j}{RMS(K^{head}_j)} \times \gamma_k,
+\quad j = 0, 1\end{split}\]</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>gamma_q  [256]  float32  (Q 8 헤드에 공유)
+gamma_k  [256]  float32  (K 2 헤드에 공유)
+──────────────────────────────────────────
+Q_norm   [8 × 256]  float32
+K_norm   [2 × 256]  float32
+</pre></div>
+</div>
+</section>
+<section id="b-3-rope">
+<h4>4.B-3 동적 θ RoPE<a class="headerlink" href="#b-3-rope" title="Link to this heading">#</a></h4>
+<div class="math notranslate nohighlight">
+\[\begin{split}\theta = \begin{cases}
+  1{,}000{,}000 &amp; i \bmod 5 = 4 \\
+  10{,}000     &amp; \text{otherwise}
+\end{cases}\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[Q_{rope} = RoPE(Q_{norm}, pos, \theta),
+\quad K_{rope} = RoPE(K_{norm}, pos, \theta)\]</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Q_rope  [8 × 256]  float32
+K_rope  [2 × 256]  float32
+</pre></div>
+</div>
+<p>자세한 θ 주기 시각화 및 scaling / softcap 제거 근거는
+<a class="reference internal" href="gemma3n_attention_rope.html"><span class="doc">Gemma 3N — Attention 및 RoPE 제약</span></a> 참고.</p>
+</section>
+<section id="b-4-kv">
+<h4>4.B-4 KV 캐시 저장과 레이어 간 공유<a class="headerlink" href="#b-4-kv" title="Link to this heading">#</a></h4>
+<p>KV 캐시는 float32 를 <strong>float16</strong> 으로 downcast 해서 저장합니다.</p>
+<p>Shape: <code class="docutils literal notranslate"><span class="pre">K_cache[20,</span> <span class="pre">max_seq,</span> <span class="pre">512]</span></code>, <code class="docutils literal notranslate"><span class="pre">V_cache[20,</span> <span class="pre">max_seq,</span> <span class="pre">512]</span></code>.</p>
+<p>고유 엔트리를 가지는 레이어:</p>
+<div class="math notranslate nohighlight">
+\[i &lt; 20:\quad K\_cache[i, pos, :] = K_{rope},
+\quad V\_cache[i, pos, :] = V\]</div>
+<p>상위 캐시를 재사용하는 레이어:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}i \ge 20:\quad
+\begin{cases}
+  target\_K = K\_cache[19, :pos+1, :] &amp; i \bmod 5 = 4 \\
+  target\_K = K\_cache[18, :pos+1, :] &amp; \text{otherwise}
+\end{cases}\end{split}\]</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>K_cache   [20 × max_seq × 512]  float16
+V_cache   [20 × max_seq × 512]  float16
+target_K  [L × 512]  →  [L × 2 × 256]  float16   (L = pos + 1)
+target_V  [L × 512]  →  [L × 2 × 256]  float16
+</pre></div>
+</div>
+</section>
+<section id="b-5-gqa-output-projection">
+<h4>4.B-5 GQA &amp; Output Projection<a class="headerlink" href="#b-5-gqa-output-projection" title="Link to this heading">#</a></h4>
+<div class="math notranslate nohighlight">
+\[\begin{split}attn\_raw &amp;= GQA(Q_{rope}, target\_K, target\_V) \\
+attn\_output &amp;= attn\_raw \cdot W_o^{T}\end{split}\]</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>scores_g     [4 × L]      float32   (g = 0, 1)
+out_g        [4 × 256]    float32
+attn_raw     [1 × 2048]   float32
+W_o          [2048 × 2048]  INT4
+──────────────────────────────────
+attn_output  [1 × 2048]   float32
+</pre></div>
+</div>
+</section>
+</section>
+<section id="c-laurel-attention-residual">
+<h3>4.C LAuReL + Attention Residual 합성<a class="headerlink" href="#c-laurel-attention-residual" title="Link to this heading">#</a></h3>
+<p>LAuReL 의 residual 에는 원본이 아니라 <strong>정규화된 입력</strong>
+(<span class="math notranslate nohighlight">\(x_{norm}\)</span>) 이 더해집니다:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}laurel\_x &amp;= (x_{norm} \cdot W_{laurel\_left}^{T})
+             \cdot W_{laurel\_right}^{T} \\
+laurel\_out &amp;= x_{norm} + RMSNorm(laurel\_x, W_{laurel\_norm})\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[attn\_output &amp;= RMSNorm(attn\_output, W_{post\_attn\_ln}) + x_{input}\]</div>
+<div class="math notranslate nohighlight">
+\[x_{attn} = (attn\_output + laurel\_out) \times \frac{1}{\sqrt{2}}\]</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>laurel_left   [64   × 2048]  INT4    →  laurel_x (중간) [1 × 64]    float32
+laurel_right  [2048 × 64  ]  INT4    →  laurel_x        [1 × 2048]  float32
+laurel_norm   [2048]         float32
+post_attn_ln  [2048]         float32
+──────────────────────────────────────────────────────────────────
+x_attn        [1 × 2048]     float32
+</pre></div>
+</div>
+<p><span class="math notranslate nohighlight">\(1/\sqrt{2}\)</span> 스케일의 근거는 <a class="reference internal" href="gemma3n_ple_laurel.html"><span class="doc">Gemma 3N — LAuReL 과 PLE Calibration 모듈</span></a> 참고.</p>
+</section>
+<section id="d-ffn-gate-up-down">
+<h3>4.D FFN (Gate-Up-Down)<a class="headerlink" href="#d-ffn-gate-up-down" title="Link to this heading">#</a></h3>
+<div class="math notranslate nohighlight">
+\[\begin{split}x_{n2} &amp;= RMSNorm(x_{attn}, W_{pre\_ffn\_ln}) \\
+gate\_raw &amp;= x_{n2} \cdot W_{gate}^{T},
+\quad up\_out = x_{n2} \cdot W_{up}^{T}\end{split}\]</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>pre_ffn_ln  [2048]           float32
+W_gate      [16384 × 2048]   INT4    →  gate_raw  [1 × 16384]  float32
+W_up        [16384 × 2048]   INT4    →  up_out    [1 × 16384]  float32
+</pre></div>
+</div>
+<p><strong>:math:`i ge 10` — 표준 GELU 게이트.</strong></p>
+<div class="math notranslate nohighlight">
+\[gate\_out = GELU(gate\_raw),
+\quad hidden = gate\_out \times up\_out\]</div>
+<p><strong>:math:`i &lt; 10` — 희소 게이트 (Gaussian Top-K,
+:doc:`gemma3n_ffn_sparsity` 참고).</strong></p>
+<div class="math notranslate nohighlight">
+\[cutoff = Mean(gate\_raw) + Std(gate\_raw) \times 1.6448536\]</div>
+<div class="math notranslate nohighlight">
+\[sparse\_gate = \max(gate\_raw - cutoff, 0),
+\quad hidden = GELU(sparse\_gate) \times up\_out\]</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>hidden  [1 × 16384]  float32
+</pre></div>
+</div>
+<p><strong>FFN 출력.</strong></p>
+<div class="math notranslate nohighlight">
+\[mlp\_out = hidden \cdot W_{down}^{T}\]</div>
+<div class="math notranslate nohighlight">
+\[outputs = RMSNorm(mlp\_out, W_{post\_ffn\_ln}) + x_{attn}\]</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>W_down       [2048 × 16384]  INT4    →  mlp_out  [1 × 2048]  float32
+post_ffn_ln  [2048]          float32
+───────────────────────────────────────────────────────────────────
+outputs      [1 × 2048]      float32
+</pre></div>
+</div>
+</section>
+<section id="e-altup-correction-ple-mixing">
+<h3>4.E AltUp Correction + PLE Mixing<a class="headerlink" href="#e-altup-correction-ple-mixing" title="Link to this heading">#</a></h3>
+<p><strong>Step 1 — Scale 과 innovation.</strong></p>
+<div class="math notranslate nohighlight">
+\[\begin{split}activated &amp;= outputs \times W_{altup\_scale} \\
+innovation &amp;= activated - xs_{pred}[0]\end{split}\]</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>altup_scale  [2048]       float32
+activated    [1 × 2048]   float32
+innovation   [1 × 2048]   float32
+</pre></div>
+</div>
+<p><strong>Step 2 — 보정 계수.</strong></p>
+<div class="math notranslate nohighlight">
+\[\begin{split}x_{n3} &amp;= \frac{RMSNorm(activated, W_{altup\_rn})}{2048} \\
+mod\_corr &amp;= \tanh(x_{n3} \cdot W_{altup\_router}) \\
+corr\_coefs &amp;= W_{altup\_corr} \cdot mod\_corr + 1.0\end{split}\]</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>altup_rn      [2048]      float32  →  x_n3        [1 × 2048]  float32
+altup_router  [2048 × 4]  float32  →  mod_corr    [4]         float32
+altup_corr    [4 × 4]     float32  →  corr_coefs  [4]         float32
+</pre></div>
+</div>
+<p><strong>Step 3 — Modality 업데이트 (broadcasting).</strong></p>
+<div class="math notranslate nohighlight">
+\[xs_{new} = xs_{pred} + corr\_coefs_{[:,1]} \times innovation_{[1,:]}\]</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>corr_coefs[:, np.newaxis]  [4 × 1]    × innovation  [1 × 2048]  →  [4 × 2048]
+xs_new                     [4 × 2048]  float32
+</pre></div>
+</div>
+<p><strong>Step 4 — PLE mixing (shadow stream 전용).</strong></p>
+<div class="math notranslate nohighlight">
+\[\begin{split}gate\_ple &amp;= GELU(activated \cdot W_{ple\_gate}^{T}) \times pli \\
+mapped    &amp;= RMSNorm(gate\_ple \cdot W_{ple\_proj}, W_{ple\_post\_ln}) \\
+xs_{new}[1:] &amp;\mathrel{+}= mapped\end{split}\]</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>W_ple_gate   [256  × 2048]  INT4    →  gate_ple (INT4 matmul)  [1 × 256]   float32
+pli          [256]          float32 →  gate_ple (× pli)        [1 × 256]   float32
+W_ple_proj   [256  × 2048]  float32 →  gate_ple · W_ple_proj   [1 × 2048]  float32
+ple_post_ln  [2048]         float32 →  mapped                  [1 × 2048]  float32
+</pre></div>
+</div>
+<div class="math notranslate nohighlight">
+\[xs \leftarrow xs_{new} \quad [4 \times 2048]\]</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="decode-logits">
+<h2>5. Decode Logits<a class="headerlink" href="#decode-logits" title="Link to this heading">#</a></h2>
+<p><strong>Step 1 — Magnitude 매칭과 unprojection.</strong></p>
+<div class="math notranslate nohighlight">
+\[target\_mag = \sqrt{Mean(xs[0]^2)}\]</div>
+<div class="math notranslate nohighlight">
+\[proj\_x_k = xs[k+1] \cdot altup\_unprojs[k], \quad k = 0, 1, 2\]</div>
+<div class="math notranslate nohighlight">
+\[new\_mag_k = \sqrt{Mean(proj\_x_k^2)},
+\quad proj\_x_k \mathrel{\ast}= \frac{target\_mag}{\max(new\_mag_k,\ 10^{-12})}\]</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>altup_unprojs[k]  [2048 × 2048]  float32  (k = 0, 1, 2)
+proj_x_k          [1 × 2048]     float32
+</pre></div>
+</div>
+<p><strong>Step 2 — 평균과 최종 projection.</strong></p>
+<div class="math notranslate nohighlight">
+\[x_{final} = Mean([xs[0], proj\_x_0, proj\_x_1, proj\_x_2])\]</div>
+<div class="math notranslate nohighlight">
+\[x_{final\_norm} = RMSNorm(x_{final}, W_{final\_norm})\]</div>
+<div class="math notranslate nohighlight">
+\[logits = x_{final\_norm} \cdot W_{lm\_head}^{T}\]</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>W_final_norm  [2048]           float32
+W_lm_head     [262400 × 2048]  INT4
+─────────────────────────────────────
+x_final_norm  [1 × 2048]       float32
+logits        [1 × 262400]     float32
+</pre></div>
+</div>
+<p><strong>Step 3 — Logit soft-capping.</strong></p>
+<div class="math notranslate nohighlight">
+\[Logits = 30.0 \times \tanh(logits / 30.0)\]</div>
+</section>
+<hr class="docutils" />
+<section id="id3">
+<h2>6. 생성 및 샘플링<a class="headerlink" href="#id3" title="Link to this heading">#</a></h2>
+<p><strong>반복 페널티</strong> (<span class="math notranslate nohighlight">\(\rho = 1.15\)</span>):</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}Logits_t = \begin{cases}
+  Logits_t \times \rho &amp; Logits_t &lt; 0 \\
+  Logits_t / \rho      &amp; Logits_t \ge 0
+\end{cases}\end{split}\]</div>
+<p><strong>Temperature softmax.</strong> <span class="math notranslate nohighlight">\(T = 0\)</span> 이면
+<span class="math notranslate nohighlight">\(next\_token = \arg\max(Logits)\)</span>. <span class="math notranslate nohighlight">\(T &gt; 0\)</span> 이면:</p>
+<div class="math notranslate nohighlight">
+\[Logits_{safe} = \frac{Logits}{T} - \max\!\left(\frac{Logits}{T}\right)\]</div>
+<div class="math notranslate nohighlight">
+\[probs_i = \frac{\exp(Logits_{safe, i})}{\sum_j \exp(Logits_{safe, j})}\]</div>
+<p><strong>Top-P 샘플링</strong> (<span class="math notranslate nohighlight">\(p = 0.9\)</span>):</p>
+<div class="math notranslate nohighlight">
+\[sorted\_idx = \mathrm{argsort}(probs)[::-1]\]</div>
+<div class="math notranslate nohighlight">
+\[\mathrm{keep} = \{i : \mathrm{cumsum}(probs[sorted\_idx])_i
+                    - probs[sorted\_idx_i] &lt; p\}\]</div>
+<div class="math notranslate nohighlight">
+\[probs = \frac{probs_{filtered}}{\sum probs_{filtered}},
+\qquad next\_token \sim \mathrm{Categorical}(probs)\]</div>
+<p>샘플링 (§5 Step 3 이후) 은 pccx 레퍼런스 드라이버에서 호스트 CPU 가
+처리합니다. NPU 는 soft-cap 후 logits 를 반환합니다.</p>
+<div class="admonition seealso">
+<p class="admonition-title">더 보기</p>
+<ul class="simple">
+<li><p>명령어 수준 매핑: <a class="reference internal" href="gemma3n_execution.html"><span class="doc">Gemma 3N E4B 를 pccx v002 에서 실행 — Execution / Scheduling</span></a>.</p></li>
+<li><p>KV 캐시 전략: <a class="reference internal" href="../Architecture/kv_cache.html"><span class="doc">KV 캐시 최적화 전략</span></a>.</p></li>
+</ul>
+</div>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="gemma3n_overview.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">이전</p>
+        <p class="prev-next-title">Gemma 3N E4B — 개요</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="gemma3n_attention_rope.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">다음</p>
+        <p class="prev-next-title">Gemma 3N — Attention 및 RoPE 제약</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">0. 핵심 함수 정의</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">1. 토큰 임베딩</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#altup-projection">2. AltUp 초기 Projection</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ple">3. PLE 사전 계산</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#transformer-35">4. Transformer 레이어 (×35)</a><ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a-altup-router-prediction">4.A AltUp Router &amp; Prediction</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#b-attention-q-k-v-projection">4.B Attention — Q / K / V Projection</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#b-2-head-wise-qk-norm">4.B-2 Head-wise QK-Norm</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#b-3-rope">4.B-3 동적 θ RoPE</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#b-4-kv">4.B-4 KV 캐시 저장과 레이어 간 공유</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#b-5-gqa-output-projection">4.B-5 GQA &amp; Output Projection</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#c-laurel-attention-residual">4.C LAuReL + Attention Residual 합성</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#d-ffn-gate-up-down">4.D FFN (Gate-Up-Down)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#e-altup-correction-ple-mixing">4.E AltUp Correction + PLE Mixing</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#decode-logits">5. Decode Logits</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">6. 생성 및 샘플링</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../../_static/scripts/bootstrap.js?digest=7f76b32a3354e82990f2"></script>
+<script defer src="../../../_static/scripts/pydata-sphinx-theme.js?digest=7f76b32a3354e82990f2"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2026, hwkim.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item"><p class="personal-link">
+  <a href="https://hwkim-dev.github.io/hwkim-dev/" target="_blank" rel="noopener">
+    hwkim-dev.github.io
+  </a>
+</p></div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0 버전으로 생성되었습니다.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>
