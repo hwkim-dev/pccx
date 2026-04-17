@@ -1,0 +1,67 @@
+/**
+ * Icon links in the navbar
+ */
+
+.pst-navbar-icon {
+  // Extra specificity needed for overrides
+  html & {
+    @include min-hit-area;
+    @include link-style-block;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    // Bootstrap overrides
+    border-radius: 0;
+    border: none;
+    font-size: 1rem;
+    line-height: $line-height-body; // Override Boostrap, which defines a separate line-height for buttons
+    padding: $navbar-link-padding-y 0; // Horizontal white space in nav bar between items is controlled via column gap rule on the container.
+
+    // Make the navbar icon links have the same size as the navbar text links
+    height: calc(2 * $navbar-link-padding-y + $line-height-body * 1rem);
+  }
+}
+
+ul.navbar-icon-links {
+  display: flex;
+  flex-flow: row wrap;
+  column-gap: $nav-icon-column-gap;
+  justify-content: space-evenly;
+  align-items: center;
+  padding-left: 0;
+  margin-bottom: 0;
+  list-style: none;
+
+  // Icons styling
+  svg {
+    &.fa-brands,
+    &.fa-regular,
+    &.fa-solid {
+      vertical-align: middle;
+      font-style: normal;
+      font-size: var(--pst-font-size-icon);
+    }
+
+    /* We no longer color the social media icons in their brand colors (makes a11y harder)
+       but this one is left in as an example in case we decide to go back to it someday:
+
+    &.fa-square-twitter {
+      color: #55acee;
+    }
+    */
+  }
+
+  // Force images to be icon-sized
+  img.icon-link-image {
+    height: 1.5em;
+    border-radius: 0.2rem;
+  }
+
+  .fa-pydata {
+    stroke: var(--pst-color-background);
+    stroke-linejoin: round;
+    stroke-width: 0.35;
+  }
+}

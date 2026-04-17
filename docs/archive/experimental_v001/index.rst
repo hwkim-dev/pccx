@@ -48,35 +48,25 @@ Quick Menu
 
    -  `Architecture Overview <Architecture/v001_architecture.md>`__
 
-      --------------
-
       Illustrates the internal NPU architecture, the 3-tier core system
       decoupled model, and the memory transition layer layout.
 
    -  `ISA Specification <Drivers/ISA.md>`__
-
-      --------------
 
       Explains the 64-bit VLIW core, Opcode routing design, register
       mappings, and pipeline scheduling methodologies.
 
    -  `ISA Spreadsheet <Drivers/ISA_Spreadsheet.md>`__
 
-      --------------
-
       Provides an internal spreadsheet-view breakdown of the overall
       modular ISA structure.
 
    -  `C API Detail <Drivers/v001_API.md>`__
 
-      --------------
-
       Focuses on the primary wrapping interfaces of ``pccx_v1_api.c`` and
       ``pccx_v1_api.h`` targeting the active NPU host controller.
 
    -  `Agents Architecture <agents.md>`__
-
-      --------------
 
       Concept logic on the autonomous agent micro-scheduling model
       operating inside the decoupled dataflow pipeline.
@@ -126,7 +116,7 @@ precision**:
 Precision Promotion Flow
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. code:: mermaid
+.. mermaid::
 
    graph TD
        A[Weight: INT4] --> MAC[DSP48E2 MAC]

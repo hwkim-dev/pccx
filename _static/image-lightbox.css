@@ -1,0 +1,73 @@
+/* Lightweight image lightbox */
+
+.pccx-zoomable {
+  transition: filter 0.15s ease;
+}
+.pccx-zoomable:hover {
+  filter: brightness(1.05);
+}
+
+.pccx-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(10, 12, 16, 0.88);
+  opacity: 0;
+  transition: opacity 0.18s ease;
+  cursor: zoom-out;
+}
+
+.pccx-lightbox--open {
+  opacity: 1;
+}
+
+.pccx-lightbox[hidden] {
+  display: none !important;
+}
+
+body.pccx-lightbox--active {
+  overflow: hidden;
+}
+
+.pccx-lightbox__img {
+  max-width: 94vw;
+  max-height: 92vh;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.55);
+  border-radius: 4px;
+  background: #fff;
+  cursor: default;
+}
+
+html[data-theme="dark"] .pccx-lightbox__img {
+  /* transparent PNGs look correct on dark backdrop */
+  background: transparent;
+}
+
+.pccx-lightbox__close {
+  position: fixed;
+  top: 14px;
+  right: 18px;
+  width: 44px;
+  height: 44px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  font-size: 28px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s, transform 0.15s;
+}
+
+.pccx-lightbox__close:hover,
+.pccx-lightbox__close:focus-visible {
+  background: rgba(255, 255, 255, 0.25);
+  transform: scale(1.08);
+  outline: none;
+}

@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(sphinx-build -b html -q . _build/html/en)",
+      "Bash(sphinx-build -b html -q ko _build/html/ko)",
+      "Bash(echo \"EXIT: $?\")"
+    ]
+  }
+}

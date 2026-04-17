@@ -72,11 +72,13 @@ pccx는 디바이스에 독립적인 하드웨어-소프트웨어 공동 설계 
 3. 문서
 -------
 
-자세한 기술 사양은 ``/docs`` 디렉토리에 있습니다:
+자세한 기술 사양은 :doc:`v002/index` 의 다음 섹션에서 확인할 수 있습니다:
 
-1. ``pccx_ISA_Spec.md`` — 64비트 커스텀 명령어 세트 사양.
-2. ``Architecture_Scaling.md`` — 물리적 리소스에 로직을 매핑하는 가이드라인.
-3. ``API_Reference.md`` — pccx 드라이버 및 SDK 문서.
+1. :doc:`v002/ISA/index` — 64비트 커스텀 명령어 세트 사양.
+2. :doc:`v002/Architecture/index` — 하드웨어 아키텍처 및 플로어플랜.
+3. :doc:`v002/Drivers/index` — pccx 드라이버 및 SDK 문서.
+
+v001 아키텍처는 :doc:`archive/experimental_v001/index` 에 아카이브되어 있습니다.
 
 --------------
 
@@ -86,6 +88,14 @@ pccx는 디바이스에 독립적인 하드웨어-소프트웨어 공동 설계 
 이 프로젝트는 **Apache License 2.0** 하에 라이선스가 부여됩니다.
 오픈소스 하드웨어 개발을 위한 안전한 생태계를 보장하면서
 아키텍처를 특허 관련 위험으로부터 보호하며 자유로운 사용과 수정을 제공합니다.
+
+--------------
+
+5. 관련 링크
+------------
+
+-  소스 코드 · 이슈: `github.com/hwkim-dev/pccx <https://github.com/hwkim-dev/pccx>`_
+-  저자 사이트: `hwkim-dev.github.io/hwkim-dev <https://hwkim-dev.github.io/hwkim-dev/>`_
 
 .. |License| image:: https://img.shields.io/badge/License-Apache_2.0-blue.svg
 .. |Architecture| image:: https://img.shields.io/badge/Architecture-Scalable_NPU-purple
