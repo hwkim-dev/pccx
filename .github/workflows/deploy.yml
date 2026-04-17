@@ -17,7 +17,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install sphinx pydata-sphinx-theme myst-parser
+          pip install sphinx pydata-sphinx-theme myst-parser sphinxcontrib-mermaid
 
       - name: Build English Sphinx HTML
         run: |
@@ -33,30 +33,22 @@ jobs:
           touch _build/html/.nojekyll
           cat > _build/html/index.html << 'EOF'
           <!DOCTYPE html>
-          <html lang="en">
+          <html>
           <head>
             <meta charset="utf-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1">
-            <meta http-equiv="refresh" content="0; url=en/index.html">
-            <link rel="canonical" href="en/index.html">
             <title>pccx Documentation</title>
-            <style>
-              body { font-family: sans-serif; display: flex; justify-content: center;
-                     align-items: center; min-height: 100vh; margin: 0;
-                     background: #1a1a1a; color: #eee; }
-              .box { text-align: center; }
-              a { color: #a78bfa; margin: 0 12px; font-size: 1.1em; }
-            </style>
+            <link rel="canonical" href="en/index.html">
+            <script>
+              (function () {
+                var lang = (navigator.language || 'en').toLowerCase();
+                var target = lang.indexOf('ko') === 0 ? 'ko/index.html' : 'en/index.html';
+                location.replace(target);
+              })();
+            </script>
+            <meta http-equiv="refresh" content="0; url=en/index.html">
+            <style>html,body{margin:0;padding:0;background:#1a1a1a;}</style>
           </head>
-          <body>
-            <div class="box">
-              <h1>pccx Documentation</h1>
-              <p>
-                <a href="en/index.html">English</a> |
-                <a href="ko/index.html">한국어</a>
-              </p>
-            </div>
-          </body>
+          <body></body>
           </html>
           EOF
 

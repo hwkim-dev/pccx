@@ -1,0 +1,50 @@
+/* Mermaid container polish — coexists with sphinxcontrib-mermaid's own styles.
+ * sphinxcontrib-mermaid wraps diagrams in .mermaid-container and injects a
+ * fullscreen button; we tune spacing and dark-mode surface. */
+
+.mermaid-container {
+  margin: 1.25rem 0;
+  padding: 0.5rem 0;
+  background: transparent;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.mermaid-container > pre.mermaid {
+  background: transparent !important;
+  text-align: center;
+  margin: 0;
+  padding: 0;
+  /* Override sphinxcontrib-mermaid's forced 100% so wide flowcharts keep
+   * their natural width and the container scrolls horizontally. */
+  width: auto !important;
+  min-width: 320px;
+  height: auto !important;
+}
+
+.mermaid-container > pre.mermaid > svg {
+  /* Remove the forced height:500px from sphinxcontrib-mermaid so small
+   * diagrams shrink to fit their content instead of ballooning. */
+  height: auto !important;
+  max-width: none !important;
+  width: auto !important;
+  display: inline-block;
+}
+
+/* Scrollbar styling */
+.mermaid-container::-webkit-scrollbar {
+  height: 8px;
+}
+.mermaid-container::-webkit-scrollbar-thumb {
+  background: var(--pst-color-border, rgba(128, 128, 128, 0.4));
+  border-radius: 4px;
+}
+
+/* Dark mode: overrule any baked-in white backgrounds on raw <pre>/svg. */
+html[data-theme="dark"] pre.mermaid,
+html[data-theme="dark"] .mermaid-container {
+  background: transparent !important;
+}
+html[data-theme="dark"] .mermaid svg {
+  background: transparent !important;
+}

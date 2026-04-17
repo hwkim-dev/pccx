@@ -4,3 +4,5 @@ docs/agents.ko.rst
 docs/archive/experimental_v001/agents.ko.rst
 venv/
 _build/
+.claudesignore
+CLAUDE.md

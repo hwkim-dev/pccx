@@ -4,7 +4,7 @@ pccx: Parallel Compute Core eXecutor
 NPU Architecture Overview
 -------------------------
 
-.. figure:: ../../../assets/images/Architecture/architecture_v001.png
+.. figure:: ../../../../assets/images/Architecture/v001/architecture_v001.png
    :alt: NPU Architecture
 
    NPU Architecture

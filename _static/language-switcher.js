@@ -6,10 +6,11 @@
     ko: { short: 'KO', full: '한국어' }
   };
 
-  // Support both /xpcc/ and /pccx/ repo names
+  // Match /<base>/<en|ko>/<rest> at any depth.
+  // Works for both production (/pccx/en/...) and local dev (/en/...).
   function getLanguageInfo() {
     var path = window.location.pathname;
-    var m = path.match(/^(.*\/(?:xpcc|pccx))\/(en|ko)(\/.*|$)/);
+    var m = path.match(/^(.*)\/(en|ko)(\/.*|$)/);
     if (!m) return null;
     return {
       current: m[2],
@@ -72,17 +73,20 @@
   }
 
   function injectSwitcher() {
+    if (document.querySelector('.lang-switcher')) return;
+
     var langInfo = getLanguageInfo();
     if (!langInfo) return;
 
     var switcher = createSwitcher(langInfo);
 
-    // PyData: .navbar-header-items__end — insert before last child (theme-switcher)
-    // Furo:   .sidebar-header-items__end — same approach
+    // PyData Sphinx Theme: navbar icon list lives in .navbar-icon-links
+    // The .bd-navbar-elements .navbar-persistent--container is another option.
     var targets = [
+      '.navbar-icon-links',
       '.navbar-header-items__end',
-      '.sidebar-header-items__end',
       '.bd-header-items .navbar-nav',
+      '.bd-header .navbar-nav',
       'nav.bd-header',
       'header'
     ];
@@ -90,13 +94,18 @@
     for (var i = 0; i < targets.length; i++) {
       var el = document.querySelector(targets[i]);
       if (el) {
-        var last = el.lastElementChild;
-        el.insertBefore(switcher, last || null);
+        // For icon-links list, prepend so it sits left of the icons.
+        if (el.classList.contains('navbar-icon-links')) {
+          el.parentNode.insertBefore(switcher, el);
+        } else {
+          var last = el.lastElementChild;
+          el.insertBefore(switcher, last || null);
+        }
         return;
       }
     }
 
-    // Absolute fallback
+    // Absolute fallback — pinned to top-right so it is never hidden.
     switcher.style.cssText = 'position:fixed;top:8px;right:12px;z-index:9999';
     document.body.appendChild(switcher);
   }
