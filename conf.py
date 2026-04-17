@@ -8,6 +8,7 @@ project = 'pccx'
 copyright = '2026, hwkim'
 author = 'hwkim'
 release = 'v001'
+language = 'en'
 
 # -- General configuration ---------------------------------------------------
 
@@ -22,9 +23,6 @@ myst_enable_extensions = ["dollarmath", "amsmath", "colon_fence"]
 graphviz_output_format = 'svg'
 mermaid_output_format = 'raw'
 mermaid_version = '10.9.0'
-# sphinxcontrib-mermaid already observes <html data-theme> and re-renders
-# on toggle; we only customize layout so wide flowcharts scroll instead of
-# shrinking text below legibility.
 mermaid_init_config = {
     "startOnLoad": False,
     "securityLevel": "loose",
@@ -62,6 +60,7 @@ html_theme_options = {
     "secondary_sidebar_items": ["page-toc"],
     "show_prev_next": True,
     "navigation_depth": 4,
+    "show_toc_level": 2,
     "search_bar_text": "Search pccx docs...",
     "icon_links": [
         {
