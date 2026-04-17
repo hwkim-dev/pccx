@@ -38,3 +38,9 @@ path.
    :caption: Software Stack
 
    Drivers/index
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Target Models
+
+   Models/index
