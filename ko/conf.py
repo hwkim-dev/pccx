@@ -61,6 +61,7 @@ html_theme_options = {
     "secondary_sidebar_items": ["page-toc"],
     "show_prev_next": True,
     "navigation_depth": 4,
+    "show_toc_level": 2,
     "search_bar_text": "pccx 문서 검색...",
     "icon_links": [
         {
