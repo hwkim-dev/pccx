@@ -1,0 +1,123 @@
+/* =============================================================================
+ * pccx — Furo theme overrides
+ *
+ * Design tenets:
+ *   1. SVG diagrams rely on currentColor + CSS variables. Never hardcode
+ *      colors here — use ``var(--color-...)`` tokens so dark/light just work.
+ *   2. Keep typography tight and print-like; this is a reference manual.
+ *   3. Custom tokens are prefixed ``--pccx-`` and are declared in conf_common.
+ * ============================================================================= */
+
+/* -- SVG: theme-aware text + lines ----------------------------------------- */
+article svg {
+  color: var(--color-foreground-primary);
+}
+article svg text,
+article svg tspan {
+  fill: currentColor;
+}
+
+/* -- Figures: subtler captions ---------------------------------------------- */
+article figure figcaption,
+article .plot-figcaption,
+article .figure .caption {
+  font-size: 0.9em;
+  color: var(--color-foreground-secondary);
+  line-height: 1.45;
+  margin-top: 0.4em;
+}
+
+/* -- Admonitions used throughout (sphinx-design + built-in) ---------------- */
+article .admonition.last-verified,
+article .admonition.note {
+  border-inline-start-width: 3px;
+}
+
+/* "Last verified against" marker block */
+article .admonition.last-verified {
+  border-color: var(--pccx-accent, #ff7a00);
+  background: var(--color-background-secondary);
+}
+
+/* -- Code blocks: copy-button sizing + mono baseline ----------------------- */
+article pre {
+  font-feature-settings: "calt" 0;          /* stop "==" ligatures in diffs */
+  line-height: 1.45;
+}
+article .copybtn {
+  opacity: 0.5;
+  transition: opacity 120ms ease-in-out;
+}
+article pre:hover .copybtn {
+  opacity: 1;
+}
+
+/* -- Tables: pccx-style dense reference tables ----------------------------- */
+article table.docutils {
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+article table.docutils th,
+article table.docutils td {
+  border-color: var(--pccx-muted-border, var(--color-foreground-border));
+}
+article table.docutils thead th {
+  background: var(--color-background-secondary);
+  font-weight: 600;
+}
+
+/* -- WaveDrom: tidy up the auto-generated SVG ------------------------------ */
+article .wavedrom,
+article svg.wavedrom-svg {
+  max-width: 100%;
+  height: auto;
+}
+
+/* -- Mermaid: match Furo's content width ----------------------------------- */
+article div.mermaid {
+  text-align: center;
+  overflow-x: auto;
+}
+article div.mermaid svg {
+  max-width: 100%;
+  height: auto !important;
+}
+
+/* -- Sphinx-gallery thumbnails: tighten grid ------------------------------- */
+article div.sphx-glr-thumbnails .sphx-glr-thumbcontainer {
+  border: 1px solid var(--pccx-muted-border, var(--color-foreground-border));
+  background: var(--color-background-primary);
+  border-radius: 6px;
+}
+article div.sphx-glr-thumbnails .sphx-glr-thumbcontainer:hover {
+  border-color: var(--color-brand-primary);
+}
+
+/* -- Announcement bar: single-line, cleaner padding ------------------------ */
+.announcement {
+  font-size: 0.85em;
+  padding-block: 0.45em;
+}
+.announcement a {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* -- Footer icons ---------------------------------------------------------- */
+.footer-icons a:hover svg {
+  fill: var(--color-brand-primary);
+}
+
+/* -- Print ----------------------------------------------------------------- */
+@media print {
+  .sidebar-drawer,
+  .toc-drawer,
+  .mobile-header,
+  .edit-this-page,
+  .announcement {
+    display: none !important;
+  }
+  article {
+    max-width: 100%;
+  }
+}

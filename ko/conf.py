@@ -1,99 +1,106 @@
-# Configuration file for the Sphinx documentation builder (Korean).
-import os
+"""
+pccx — Korean Sphinx configuration.
+
+Thin wrapper: pulls every shared knob from the repo-root :mod:`conf_common`
+and only overrides language-specific values. See ``CLAUDE.md`` §2.
+"""
+
+from __future__ import annotations
+
 import sys
+from pathlib import Path
 
-# -- Project information -----------------------------------------------------
+# conf_common.py lives at the repo root; ``ko/conf.py`` is one level down.
+_HERE = Path(__file__).resolve().parent
+_REPO_ROOT = _HERE.parent
+sys.path.insert(0, str(_REPO_ROOT))
 
-project = 'pccx'
-copyright = '2026, hwkim'
-author = 'hwkim'
-release = 'v001'
+from conf_common import *                          # noqa: F401,F403
+from conf_common import (                          # noqa: F401
+    exclude_patterns,
+    html_theme_options,
+    sphinx_gallery_conf,
+)
 
-# -- General configuration ---------------------------------------------------
 
-extensions = [
-    'myst_parser',
-    'sphinx.ext.graphviz',
-    'sphinxcontrib.mermaid',
-]
+# -- Language ----------------------------------------------------------------
 
-myst_enable_extensions = ["dollarmath", "amsmath", "colon_fence"]
+language = "ko"
 
-graphviz_output_format = 'svg'
-mermaid_output_format = 'raw'
-mermaid_version = '10.9.0'
-mermaid_init_config = {
-    "startOnLoad": False,
-    "securityLevel": "loose",
-    "theme": "default",
-    "flowchart": {
-        "htmlLabels": True,
-        "curve": "basis",
-        "useMaxWidth": False,
-        "padding": 12,
-    },
-    "sequence": {
-        "useMaxWidth": False,
-        "mirrorActors": False,
-    },
-}
 
-templates_path = ['../_templates']
+# -- Static & templates ------------------------------------------------------
+
+# ``_static`` and ``_templates`` live at the repo root so both languages share
+# them (single source of truth for CSS/JS/slot overrides).
+html_static_path = ["../_static"]
+templates_path = ["../_templates"]
+
+
+# -- Exclusions --------------------------------------------------------------
+
+# The Korean build's srcdir is ``ko/``. Exclude the English-specific roots that
+# the shared ``exclude_patterns`` references (they'd resolve under ``ko/``
+# otherwise and Sphinx would warn).
 exclude_patterns = [
-    '_build', 'Thumbs.db', '.DS_Store', 'node_modules',
-    '.venv', '.git', 'CLAUDE.md', 'README.md',
-    'docs/archive/experimental_v001/v001_architecture.md',
-    '../codes/v002/README.md',
-    '../codes/v002/docs/**',
+    *exclude_patterns,
+    # The English tree sits outside srcdir; no exclusion needed for `docs/`.
+    # But the codes/ exclusions from conf_common are relative to *this* srcdir,
+    # so rewrite them with the correct depth.
+    "../codes/v002/README.md",
+    "../codes/v002/docs/**",
+    # v001 architecture MD is an orphaned archive page that references a
+    # deleted image and starts at H2. Excluded until we either restore the
+    # asset or fold the content into a proper v001 archive index.
+    "docs/archive/experimental_v001/v001_architecture.md",
 ]
 
-# -- Options for HTML output -------------------------------------------------
 
-html_theme = 'pydata_sphinx_theme'
-html_title = 'pccx 문서'
-language = 'ko'
+# -- Theme options -----------------------------------------------------------
 
 html_theme_options = {
-    "logo": {
-        "text": "pccx",
-        "alt_text": "pccx - Parallel Compute Core eXecutor",
-    },
-    "navbar_start": ["navbar-logo"],
-    "navbar_center": ["navbar-nav"],
-    "navbar_end": ["theme-switcher", "navbar-icon-links"],
-    "secondary_sidebar_items": ["page-toc"],
-    "show_prev_next": True,
-    "navigation_depth": 2,
-    "show_toc_level": 2,
-    "search_bar_text": "pccx 문서 검색...",
-    "icon_links": [
-        {
-            "name": "GitHub",
-            "url": "https://github.com/hwkim-dev/pccx",
-            "icon": "fa-brands fa-github",
-            "type": "fontawesome",
-        },
-        {
-            "name": "개인 사이트",
-            "url": "https://hwkim-dev.github.io/hwkim-dev/",
-            "icon": "fa-solid fa-user",
-            "type": "fontawesome",
-        },
-    ],
-    "pygments_light_style": "friendly",
-    "pygments_dark_style": "monokai",
-    "footer_start": ["copyright", "personal-link"],
-    "footer_end": ["sphinx-version"],
+    **html_theme_options,
+    "source_directory": "ko/docs/",
+    "announcement": (
+        '한국어 버전 · '
+        '<a href="/pccx-FPGA-NPU-LLM-kv260/en/">View in English →</a>'
+    ),
 }
 
-html_static_path = ['../_static']
-html_js_files = [
-    'language-switcher.js',
-    'image-lightbox.js',
-    'mermaid-theme.js',
-]
-html_css_files = [
-    'language-switcher.css',
-    'mermaid-theme.css',
-    'image-lightbox.css',
-]
+
+# -- sphinx-gallery ---------------------------------------------------------
+
+# Share the single plots/ directory at the repo root so plot scripts don't
+# need to be duplicated per language. Outputs land under ko/auto_plots/.
+sphinx_gallery_conf = {
+    **sphinx_gallery_conf,
+    "examples_dirs": "../plots",       # <repo>/plots
+    "gallery_dirs":  "auto_plots",     # <repo>/ko/auto_plots
+}
+
+
+# -- Referencing & SEO ------------------------------------------------------
+
+bibtex_bibfiles = ["../refs.bib"]
+sitemap_filename = "sitemap-ko.xml"
+
+
+# -- Localized strings ------------------------------------------------------
+
+html_title = "pccx 문서"
+html_short_title = "pccx 문서"
+
+numfig_format = {
+    "figure":     "그림 %s",
+    "table":      "표 %s",
+    "code-block": "리스팅 %s",
+    "section":    "섹션 %s",
+}
+
+notfound_context = {
+    "title": "페이지를 찾을 수 없습니다",
+    "body": (
+        "<h1>404 — 페이지 없음</h1>"
+        "<p>요청하신 페이지는 이 버전의 pccx 에 존재하지 않습니다.</p>"
+        '<p><a href="/pccx-FPGA-NPU-LLM-kv260/ko/">문서 루트로 돌아가기</a></p>'
+    ),
+}

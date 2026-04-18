@@ -1,114 +1,67 @@
-/* Language switcher – PyData Sphinx Theme compatible */
+/* =============================================================================
+ * pccx — language switcher (Furo-aware).
+ *
+ * Rendered inside Furo's sidebar, immediately below `.sidebar-brand`, by
+ * `_templates/sidebar/brand.html`. Style matches Furo's own sidebar typography
+ * and is theme-aware via Furo CSS variables — no hardcoded colors.
+ * ============================================================================= */
 
-.lang-switcher {
-  position: relative;
-  display: inline-flex;
+.pccx-langswitch {
+  display: flex;
   align-items: center;
-  margin: 0 4px;
+  justify-content: center;
+  gap: 0.4em;
+  margin: 0.25rem 0 0.75rem;
+  padding: 0.1rem 0.25rem;
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--color-foreground-muted);
+  text-align: center;
 }
 
-/* Button: blend with PyData navbar buttons */
-.lang-btn {
+.pccx-langswitch__btn {
   display: inline-flex;
   align-items: center;
-  gap: 3px;
-  padding: 4px 9px;
-  height: 31px;
-  border: 1px solid transparent;
+  justify-content: center;
+  min-width: 1.9em;
+  padding: 0.15em 0.5em;
   border-radius: 4px;
-  background: transparent;
-  color: var(--pst-color-text-base, inherit);
-  font-size: 0.8rem;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: background 0.15s, border-color 0.15s;
-  line-height: 1;
+  color: var(--color-foreground-secondary);
+  text-decoration: none !important;
+  transition:
+    background-color 120ms ease-in-out,
+    color            120ms ease-in-out;
 }
 
-.lang-btn:hover,
-.lang-btn--open {
-  background: var(--pst-color-surface, rgba(128,128,128,0.12));
-  border-color: var(--pst-color-border, rgba(128,128,128,0.3));
+.pccx-langswitch__btn:hover {
+  background-color: var(--color-background-hover);
+  color: var(--color-brand-primary);
 }
 
-.lang-btn:focus-visible {
-  outline: 2px solid var(--pst-color-primary, #0072b2);
+.pccx-langswitch__btn:focus-visible {
+  outline: 2px solid var(--color-brand-primary);
   outline-offset: 2px;
 }
 
-.lang-short {
-  font-size: 0.8rem;
+.pccx-langswitch__btn.is-active {
+  color: var(--color-brand-primary);
   font-weight: 700;
+  cursor: default;
 }
 
-.lang-arrow {
-  font-size: 0.6rem;
-  opacity: 0.65;
-  margin-top: 1px;
+.pccx-langswitch__btn.is-active:hover {
+  background-color: transparent;
 }
 
-/* Dropdown */
-.lang-dropdown {
-  position: absolute;
-  top: calc(100% + 4px);
-  right: 0;
-  min-width: 120px;
-  margin: 0;
-  padding: 4px 0;
-  list-style: none;
-  border-radius: 6px;
-  border: 1px solid var(--pst-color-border, rgba(128,128,128,0.25));
-  background: var(--pst-color-background, #fff);
-  box-shadow: 0 6px 20px rgba(0,0,0,0.14);
-  z-index: 10000;
+.pccx-langswitch__sep {
+  user-select: none;
+  color: var(--color-foreground-border);
 }
 
-.lang-option {
-  padding: 8px 16px;
-  font-size: 0.875rem;
-  cursor: pointer;
-  color: var(--pst-color-text-base, inherit);
-  transition: background 0.1s;
-}
-
-.lang-option:hover {
-  background: var(--pst-color-surface, rgba(128,128,128,0.1));
-}
-
-.lang-option--active {
-  font-weight: 700;
-  color: var(--pst-color-primary, #0072b2);
-}
-
-/* ── Desktop: hide the fixed mobile version ── */
-@media (min-width: 992px) {
-  .lang-switcher--mobile {
-    display: none !important;
-  }
-}
-
-/* ── Mobile: fixed top-right, desktop injected version hidden ── */
-@media (max-width: 991.98px) {
-  /* Hide the one injected into the (potentially collapsed) navbar */
-  .lang-switcher--desktop {
-    display: none !important;
-  }
-
-  /* Show the fixed version, clearing the hamburger button */
-  .lang-switcher--mobile {
-    display: inline-flex !important;
-    position: fixed;
-    top: 0.45rem;
-    right: 3.4rem;       /* leaves room for the hamburger (~2.75rem wide) */
-    z-index: 10002;
-    margin: 0;
-  }
-
-  /* On very small screens keep the dropdown from going off-screen */
-  .lang-switcher--mobile .lang-dropdown {
-    right: 0;
-    left: auto;
+/* -- Mobile (Furo's mobile header shows the sidebar via the drawer) -------- */
+@media (max-width: 67em) {
+  .pccx-langswitch {
+    margin-block: 0.5rem 0.75rem;
+    font-size: 0.88rem;
   }
 }
