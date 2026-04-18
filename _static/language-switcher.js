@@ -6,8 +6,6 @@
     ko: { short: 'KO', full: '한국어' }
   };
 
-  // Match /<base>/<en|ko>/<rest> at any depth.
-  // Works for both production (/pccx/en/...) and local dev (/en/...).
   function getLanguageInfo() {
     var path = window.location.pathname;
     var m = path.match(/^(.*)\/(en|ko)(\/.*|$)/);
@@ -72,16 +70,12 @@
     return wrapper;
   }
 
-  function injectSwitcher() {
-    if (document.querySelector('.lang-switcher')) return;
-
-    var langInfo = getLanguageInfo();
-    if (!langInfo) return;
+  function injectDesktopSwitcher(langInfo) {
+    if (document.querySelector('.lang-switcher--desktop')) return;
 
     var switcher = createSwitcher(langInfo);
+    switcher.classList.add('lang-switcher--desktop');
 
-    // PyData Sphinx Theme: navbar icon list lives in .navbar-icon-links
-    // The .bd-navbar-elements .navbar-persistent--container is another option.
     var targets = [
       '.navbar-icon-links',
       '.navbar-header-items__end',
@@ -94,20 +88,34 @@
     for (var i = 0; i < targets.length; i++) {
       var el = document.querySelector(targets[i]);
       if (el) {
-        // For icon-links list, prepend so it sits left of the icons.
         if (el.classList.contains('navbar-icon-links')) {
           el.parentNode.insertBefore(switcher, el);
         } else {
-          var last = el.lastElementChild;
-          el.insertBefore(switcher, last || null);
+          el.insertBefore(switcher, el.lastElementChild || null);
         }
         return;
       }
     }
 
-    // Absolute fallback — pinned to top-right so it is never hidden.
+    // Desktop fallback
     switcher.style.cssText = 'position:fixed;top:8px;right:12px;z-index:9999';
     document.body.appendChild(switcher);
+  }
+
+  function injectMobileSwitcher(langInfo) {
+    if (document.getElementById('lang-switcher-mobile')) return;
+
+    var switcher = createSwitcher(langInfo);
+    switcher.classList.add('lang-switcher--mobile');
+    switcher.id = 'lang-switcher-mobile';
+    document.body.appendChild(switcher);
+  }
+
+  function injectSwitcher() {
+    var langInfo = getLanguageInfo();
+    if (!langInfo) return;
+    injectDesktopSwitcher(langInfo);
+    injectMobileSwitcher(langInfo);
   }
 
   if (document.readyState === 'loading') {

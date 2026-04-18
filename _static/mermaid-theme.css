@@ -56,3 +56,33 @@ html[data-theme="dark"] .bd-content img,
 html[data-theme="dark"] figure img {
   background: transparent;
 }
+
+/* ── Header height ──────────────────────────────────────────────────────────
+ * PyData default is ~4rem; we trim vertical padding to get a tighter bar
+ * similar to Android Developers / Unreal Engine style docs. */
+.bd-header {
+  padding-top: 0.2rem !important;
+  padding-bottom: 0.2rem !important;
+}
+
+/* Tighten the inner navbar content so the brand/links don't re-inflate it */
+.bd-header .navbar-brand,
+.bd-header .nav-link {
+  padding-top: 0.3rem !important;
+  padding-bottom: 0.3rem !important;
+}
+
+/* ── Mobile sidebar spacing ─────────────────────────────────────────────────
+ * When the offcanvas sidebar opens on small screens, the first nav item
+ * sits flush against the top. Add breathing room so the close button and
+ * the nav text don't collide. */
+@media (max-width: 991.98px) {
+  .bd-sidebar-primary .sidebar-primary-items__start {
+    padding-top: 0.75rem;
+  }
+
+  /* Extra top margin on the sidebar scroll container itself */
+  .bd-sidebar-primary {
+    padding-top: 0.5rem;
+  }
+}
