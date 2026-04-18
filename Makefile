@@ -59,7 +59,7 @@ check-codes:
 	    echo "\033[33m[pccx] codes/v002 is missing.\033[0m"; \
 	    echo "    Clone it with:"; \
 	    echo "        git clone --depth 1 \\"; \
-	    echo "            https://github.com/hwkim-dev/NPU-FPGA-Transformer-Accelerator-KV260 \\"; \
+	    echo "            https://github.com/hwkim-dev/pccx-FPGA-NPU-LLM-kv260 \\"; \
 	    echo "            codes/v002"; \
 	    exit 1; \
 	fi

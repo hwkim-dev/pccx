@@ -189,7 +189,7 @@ html_theme_options = {
     "sidebar_hide_name": False,
     "navigation_with_keys": True,
     "top_of_page_buttons": ["view", "edit"],
-    "source_repository": "https://github.com/hwkim-dev/pccx-FPGA-NPU-LLM-kv260/",
+    "source_repository": "https://github.com/hwkim-dev/pccx/",
     "source_branch": "main",
     # source_directory is set per-language in the concrete conf.py.
     "light_css_variables": {
@@ -212,7 +212,7 @@ html_theme_options = {
     "footer_icons": [
         {
             "name": "GitHub",
-            "url":  "https://github.com/hwkim-dev/pccx-FPGA-NPU-LLM-kv260",
+            "url":  "https://github.com/hwkim-dev/pccx",
             "html": (
                 '<svg stroke="currentColor" fill="currentColor" stroke-width="0" '
                 'viewBox="0 0 16 16" width="1em" height="1em">'
@@ -318,11 +318,11 @@ intersphinx_timeout = 10
 # SEO / social
 # =============================================================================
 
-html_baseurl = "https://hwkim-dev.github.io/pccx-FPGA-NPU-LLM-kv260/"
+html_baseurl = "https://hwkim-dev.github.io/pccx/"
 sitemap_url_scheme = "{link}"
 # sitemap_filename is overridden per-language in concrete conf.py.
 
-ogp_site_url = "https://hwkim-dev.github.io/pccx-FPGA-NPU-LLM-kv260/"
+ogp_site_url = "https://hwkim-dev.github.io/pccx/"
 ogp_site_name = "pccx — Parallel Compute Core eXecutor"
 ogp_image = None                         # add once a social card exists
 ogp_type = "website"
@@ -338,10 +338,10 @@ notfound_context = {
     "body": (
         "<h1>404 — Not Found</h1>"
         "<p>The page you were looking for does not exist in this version of pccx.</p>"
-        '<p><a href="/pccx-FPGA-NPU-LLM-kv260/">Back to the project root</a></p>'
+        '<p><a href="/pccx/">Back to the project root</a></p>'
     ),
 }
-notfound_urls_prefix = "/pccx-FPGA-NPU-LLM-kv260/"
+notfound_urls_prefix = "/pccx/"
 
 
 # =============================================================================

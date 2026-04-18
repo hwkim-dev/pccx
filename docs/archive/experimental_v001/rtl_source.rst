@@ -9,8 +9,8 @@ v001 is no longer under active development.
 .. note::
 
    The v002 RTL lives in a separate repository:
-   `hwkim-dev/NPU-FPGA-Transformer-Accelerator-KV260
-   <https://github.com/hwkim-dev/NPU-FPGA-Transformer-Accelerator-KV260>`_.
+   `hwkim-dev/pccx-FPGA-NPU-LLM-kv260
+   <https://github.com/hwkim-dev/pccx-FPGA-NPU-LLM-kv260>`_.
    For v002 source, see :doc:`/docs/v002/RTL/index`.
 
 1. ISA Type Package

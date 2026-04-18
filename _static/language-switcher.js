@@ -6,7 +6,7 @@
  * sibling-language equivalent of the current page and marks the active one.
  *
  * Path model:
- *   /pccx-FPGA-NPU-LLM-kv260/en/<rest>   ↔   /pccx-FPGA-NPU-LLM-kv260/ko/<rest>
+ *   /pccx/en/<rest>   ↔   /pccx/ko/<rest>
  *
  * The regex below captures the base path dynamically, so this works at any
  * deployment prefix (including the `/<lang>/...` layout a local dev server
@@ -20,8 +20,8 @@
 
   /**
    * Parse the current path into {base, current, rest}.
-   *   /pccx-FPGA-NPU-LLM-kv260/en/docs/foo.html
-   *       -> { base: '/pccx-FPGA-NPU-LLM-kv260', current: 'en', rest: '/docs/foo.html' }
+   *   /pccx/en/docs/foo.html
+   *       -> { base: '/pccx', current: 'en', rest: '/docs/foo.html' }
    *   /en/                   -> { base: '',      current: 'en', rest: '/'               }
    */
   function parsePath() {

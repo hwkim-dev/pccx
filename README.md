@@ -8,9 +8,9 @@
 [![Target](https://img.shields.io/badge/Target-Xilinx_Kria_KV260-red)](https://www.xilinx.com/products/som/kria/kv260-vision-starter-kit.html)
 [![Architecture](https://img.shields.io/badge/Architecture-v002_Active-purple)](#architecture)
 [![Precision](https://img.shields.io/badge/Precision-W4A8_→_BF16%2FFP32-green)](#precision)
-[![Docs](https://img.shields.io/badge/Docs-Online-brightgreen)](https://hwkim-dev.github.io/pccx-FPGA-NPU-LLM-kv260/)
+[![Docs](https://img.shields.io/badge/Docs-Online-brightgreen)](https://hwkim-dev.github.io/pccx/)
 
-**[📖 Full Documentation →](https://hwkim-dev.github.io/pccx-FPGA-NPU-LLM-kv260/)**
+**[📖 Full Documentation →](https://hwkim-dev.github.io/pccx/)**
 
 </div>
 
@@ -109,11 +109,11 @@ pccx/
 ├── _static/                     # JS/CSS (language switcher, Mermaid theme)
 └── codes/
     ├── v001/hw/rtl/             # v001 RTL (archived, reference only)
-    └── v002/                    # v002 RTL (CI-cloned from NPU-FPGA-Transformer-Accelerator-KV260)
+    └── v002/                    # v002 RTL (CI-cloned from pccx-FPGA-NPU-LLM-kv260)
 ```
 
 The v002 RTL source lives in a separate repository:
-**[hwkim-dev/NPU-FPGA-Transformer-Accelerator-KV260](https://github.com/hwkim-dev/NPU-FPGA-Transformer-Accelerator-KV260)**
+**[hwkim-dev/pccx-FPGA-NPU-LLM-kv260](https://github.com/hwkim-dev/pccx-FPGA-NPU-LLM-kv260)**
 
 ---
 
@@ -121,15 +121,15 @@ The v002 RTL source lives in a separate repository:
 
 The full technical documentation — architecture deep-dives, ISA encoding tables, DSP48E2 bit-packing derivation, driver API, and embedded RTL source — is published at:
 
-### **[hwkim-dev.github.io/pccx-FPGA-NPU-LLM-kv260/](https://hwkim-dev.github.io/pccx-FPGA-NPU-LLM-kv260/)**
+### **[hwkim-dev.github.io/pccx/](https://hwkim-dev.github.io/pccx/)**
 
 Available in **English** and **한국어 (Korean)**.
 
 Highlights:
-- [Architecture Overview](https://hwkim-dev.github.io/pccx-FPGA-NPU-LLM-kv260/en/docs/v002/Architecture/top_level.html) — block diagram, design rationale, 3.125× gain breakdown
-- [DSP48E2 W4A8 Derivation](https://hwkim-dev.github.io/pccx-FPGA-NPU-LLM-kv260/en/docs/v002/Architecture/dsp48e2_w4a8.html) — dual-channel bit packing math
-- [Custom ISA Reference](https://hwkim-dev.github.io/pccx-FPGA-NPU-LLM-kv260/en/docs/v002/ISA/index.html) — 64-bit VLIW encoding, opcode table, dataflow
-- [RTL Source Reference](https://hwkim-dev.github.io/pccx-FPGA-NPU-LLM-kv260/en/docs/v002/RTL/index.html) — embedded SystemVerilog with live syntax highlighting
+- [Architecture Overview](https://hwkim-dev.github.io/pccx/en/docs/v002/Architecture/top_level.html) — block diagram, design rationale, 3.125× gain breakdown
+- [DSP48E2 W4A8 Derivation](https://hwkim-dev.github.io/pccx/en/docs/v002/Architecture/dsp48e2_w4a8.html) — dual-channel bit packing math
+- [Custom ISA Reference](https://hwkim-dev.github.io/pccx/en/docs/v002/ISA/index.html) — 64-bit VLIW encoding, opcode table, dataflow
+- [RTL Source Reference](https://hwkim-dev.github.io/pccx/en/docs/v002/RTL/index.html) — embedded SystemVerilog with live syntax highlighting
 
 ---
 
@@ -141,7 +141,7 @@ sudo apt-get install graphviz   # for Graphviz diagrams
 
 # Clone v002 RTL (required for literalinclude directives)
 git clone --depth 1 \
-  https://github.com/hwkim-dev/NPU-FPGA-Transformer-Accelerator-KV260 \
+  https://github.com/hwkim-dev/pccx-FPGA-NPU-LLM-kv260 \
   codes/v002
 
 # Build English site
@@ -182,6 +182,6 @@ See [`CLAUDE.md`](CLAUDE.md) for the full build & contribution guide.
 
 <div align="center">
 
-Built by [@hwkim-dev](https://hwkim-dev.github.io/hwkim-dev/) · [Documentation](https://hwkim-dev.github.io/pccx-FPGA-NPU-LLM-kv260/) · [Issues](https://github.com/hwkim-dev/pccx-FPGA-NPU-LLM-kv260/issues)
+Built by [@hwkim-dev](https://hwkim-dev.github.io/hwkim-dev/) · [Documentation](https://hwkim-dev.github.io/pccx/) · [Issues](https://github.com/hwkim-dev/pccx/issues)
 
 </div>

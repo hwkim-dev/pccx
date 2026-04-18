@@ -62,7 +62,7 @@ html_theme_options = {
     "source_directory": "ko/docs/",
     "announcement": (
         '한국어 버전 · '
-        '<a href="/pccx-FPGA-NPU-LLM-kv260/en/">View in English →</a>'
+        '<a href="/pccx/en/">View in English →</a>'
     ),
 }
 
@@ -101,6 +101,6 @@ notfound_context = {
     "body": (
         "<h1>404 — 페이지 없음</h1>"
         "<p>요청하신 페이지는 이 버전의 pccx 에 존재하지 않습니다.</p>"
-        '<p><a href="/pccx-FPGA-NPU-LLM-kv260/ko/">문서 루트로 돌아가기</a></p>'
+        '<p><a href="/pccx/ko/">문서 루트로 돌아가기</a></p>'
     ),
 }

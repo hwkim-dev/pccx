@@ -46,7 +46,7 @@ html_theme_options = {
     "source_directory": "docs/",
     "announcement": (
         'English version · '
-        '<a href="/pccx-FPGA-NPU-LLM-kv260/ko/">한국어로 보기 →</a>'
+        '<a href="/pccx/ko/">한국어로 보기 →</a>'
     ),
 }
 

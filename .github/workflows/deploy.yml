@@ -22,7 +22,7 @@ jobs:
       - name: Clone v002 RTL repository
         run: |
           git clone --depth 1 \
-            https://github.com/hwkim-dev/NPU-FPGA-Transformer-Accelerator-KV260 \
+            https://github.com/hwkim-dev/pccx-FPGA-NPU-LLM-kv260 \
             codes/v002
 
       - name: Build English Sphinx HTML
