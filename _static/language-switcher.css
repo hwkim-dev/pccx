@@ -81,3 +81,34 @@
   font-weight: 700;
   color: var(--pst-color-primary, #0072b2);
 }
+
+/* ── Desktop: hide the fixed mobile version ── */
+@media (min-width: 992px) {
+  .lang-switcher--mobile {
+    display: none !important;
+  }
+}
+
+/* ── Mobile: fixed top-right, desktop injected version hidden ── */
+@media (max-width: 991.98px) {
+  /* Hide the one injected into the (potentially collapsed) navbar */
+  .lang-switcher--desktop {
+    display: none !important;
+  }
+
+  /* Show the fixed version, clearing the hamburger button */
+  .lang-switcher--mobile {
+    display: inline-flex !important;
+    position: fixed;
+    top: 0.45rem;
+    right: 3.4rem;       /* leaves room for the hamburger (~2.75rem wide) */
+    z-index: 10002;
+    margin: 0;
+  }
+
+  /* On very small screens keep the dropdown from going off-screen */
+  .lang-switcher--mobile .lang-dropdown {
+    right: 0;
+    left: auto;
+  }
+}
