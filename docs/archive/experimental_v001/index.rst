@@ -20,7 +20,7 @@ Archive: v001 Experimental Architecture
    Drivers/ISA
    Drivers/ISA_Spreadsheet
    Drivers/v001_API
-   rtl_source
+   RTL/index
 
 --------------
 
@@ -67,6 +67,11 @@ Quick Menu
 
       Focuses on the primary wrapping interfaces of ``pccx_v1_api.c`` and
       ``pccx_v1_api.h`` targeting the active NPU host controller.
+
+   -  :doc:`RTL Source Reference <RTL/index>`
+
+      Per-core SystemVerilog deep-dive: every module under ``codes/v001/``
+      rendered inline with syntax highlighting and collapsible dropdowns.
 
 --------------
 

@@ -18,7 +18,7 @@
    Drivers/ISA
    Drivers/ISA_Spreadsheet
    Drivers/v001_API
-   rtl_source
+   RTL/index
 
 --------------
 
@@ -61,6 +61,11 @@ KV260 플랫폼의 1,248 개 DSP48E2 슬라이스와 144 개 BRAM 을 기능적 
 
       활성 NPU 호스트 컨트롤러를 타게팅하는 ``pccx_v1_api.c`` /
       ``pccx_v1_api.h`` 의 주요 래핑 인터페이스를 다룹니다.
+
+   -  :doc:`RTL 소스 레퍼런스 <RTL/index>`
+
+      코어별 SystemVerilog 심층 해부. ``codes/v001/`` 의 모든 모듈을
+      syntax highlighting 과 접을 수 있는 dropdown 으로 인라인 표시.
 
 --------------
 
