@@ -105,7 +105,7 @@ risks, keeping the ecosystem safe for open-source hardware development.
 5. Links
 --------
 
--  Source · Issues: `github.com/hwkim-dev/pccx <https://github.com/hwkim-dev/pccx>`_
+-  Source · Issues: `github.com/hwkim-dev/pccx-FPGA-NPU-LLM-kv260 <https://github.com/hwkim-dev/pccx-FPGA-NPU-LLM-kv260>`_
 -  Author site: `hwkim-dev.github.io/hwkim-dev <https://hwkim-dev.github.io/hwkim-dev/>`_
 
 .. |License| image:: https://img.shields.io/badge/License-Apache_2.0-blue.svg

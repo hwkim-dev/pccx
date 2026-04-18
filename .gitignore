@@ -1,9 +1,32 @@
+# Legacy agents files (prior tooling iteration)
 docs/agents.rst
 docs/archive/experimental_v001/agents.rst
 docs/agents.ko.rst
 docs/archive/experimental_v001/agents.ko.rst
+
+# Python virtualenv (legacy ``venv`` layout)
 venv/
+
+# Sphinx build outputs
 _build/
-.claudesignore
-CLAUDE.md
+auto_plots/
+ko/auto_plots/
+
+# myst-nb notebook execution cache
+jupyter_execute/
+**/jupyter_execute/
+
+# sphinx-gallery generated at the srcdir root
+sg_execution_times.rst
+**/sg_execution_times.rst
+
+# Python bytecode (conf_common.py lives at repo root)
+__pycache__/
+**/__pycache__/
+*.pyc
+
+# External v002 RTL repo (cloned by CI at build time)
 codes/v002/
+
+# Local tooling scratch (not committed)
+.claudesignore
