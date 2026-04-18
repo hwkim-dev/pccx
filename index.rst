@@ -29,3 +29,9 @@ on edge devices. Select a section from the sidebar to begin.
    :caption: Archive
 
    docs/archive/index
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Toolchain Demos
+
+   docs/samples/index
