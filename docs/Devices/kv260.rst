@@ -1,8 +1,43 @@
 Target Hardware: Xilinx Kria KV260
-==================================
+===================================
+
+KV260 is the primary target hardware platform for pccx.
+
+Key specifications
+------------------
+
+-  **FPGA fabric:** Zynq UltraScale+ MPSoC
+-  **DSP slices:** 1,248 DSP48E2 slices
+-  **BRAM:** 144 block RAMs
+-  **Operating frequency:** 400 MHz (target)
+-  **AXI interfaces:** AXI-Lite (HPM), AXI HP ports 0–3, AXI ACP
+
+Memory architecture
+-------------------
+
+On KV260, pccx leverages the following memory hierarchy:
+
+-  **L2 URAM cache:** 114,688 × 128-bit (feature map and intermediate result storage)
+-  **HP ports 0/1:** Matrix core weight streaming (128-bit/clk)
+-  **HP ports 2/3:** Vector core weight streaming (32 INT4/clk per port)
+-  **ACP port:** Host DDR4 ↔ L2 cache DMA transfers
+
+Resource utilization
+--------------------
+
++------------------+----------+----------+
+| Resource         | Used     | Budget   |
++==================+==========+==========+
+| DSP48E2          | ~1,248   | 1,248    |
++------------------+----------+----------+
+| BRAM (36K)       | ~140     | 144      |
++------------------+----------+----------+
+| URAM             | ~96      | 96       |
++------------------+----------+----------+
+| LUT              | ~200K    | 234K     |
++------------------+----------+----------+
 
 .. note::
 
-   The KV260 device overview page is under construction. For hardware
-   constraints and resource budgets that shaped the v002 architecture,
-   see :doc:`/docs/v002/Architecture/rationale`.
+   Actual resource usage varies with configuration parameters (systolic
+   array dimensions, number of cores, etc.).
