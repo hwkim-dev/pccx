@@ -4,7 +4,8 @@ docs/archive/experimental_v001/agents.rst
 docs/agents.ko.rst
 docs/archive/experimental_v001/agents.ko.rst
 
-# Python virtualenv (legacy ``venv`` layout)
+# Python virtualenv
+.venv/
 venv/
 
 # Sphinx build outputs
