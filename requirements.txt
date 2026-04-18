@@ -1,2 +1,50 @@
-mkdocs-material
-mkdocs-static-i18n
+# =============================================================================
+# pccx — runtime & build dependencies
+#
+# Single-source managed. See CLAUDE.md §3 (Toolchain) for rationale on every
+# entry. Pin upper bounds loosely (major version) to catch breaking upstream
+# changes without blocking minor/patch updates.
+# =============================================================================
+
+# -- Core ---------------------------------------------------------------------
+# Version pin rationale:
+#   * sphinx<8    — myst-parser 5's hard coupling to a transform pulled from
+#                   Sphinx core in 8.0 still blows up during setup, even
+#                   though pip installs it cleanly. Revisit when myst-parser 6
+#                   (Sphinx-8/9-ready) ships.
+#   * myst-parser<5 — 5.0 calls `registry.transforms.remove()` unconditionally
+#                   and cannot coexist with myst-nb 1.4 (which invokes the
+#                   same setup path). 4.0.1 is the last working pairing.
+#   * myst-nb<2   — keeps us on the 1.x API surface myst-parser 4 expects.
+sphinx>=7.4,<8
+furo>=2024.8
+myst-parser>=4.0,<5
+myst-nb>=1.4,<2
+linkify-it-py>=2.0            # required by the myst linkify extension
+
+# -- UI / UX ------------------------------------------------------------------
+sphinx-design>=0.6
+sphinx-copybutton>=0.5
+sphinx-togglebutton>=0.3
+sphinx-notfound-page>=1.0
+sphinxext-opengraph>=0.9
+sphinx-sitemap>=2.6
+sphinx-reredirects>=0.1
+
+# -- Diagrams -----------------------------------------------------------------
+sphinxcontrib-mermaid>=1.0
+sphinxcontrib-wavedrom>=3.0
+# graphviz: sphinx.ext.graphviz is built-in; `dot` (graphviz OS package) is
+# required separately (see README / CLAUDE.md §7).
+
+# -- Math / Plotting ----------------------------------------------------------
+matplotlib>=3.9
+scienceplots>=2.1
+sphinx-gallery>=0.17
+
+# -- Referencing --------------------------------------------------------------
+sphinxcontrib-bibtex>=2.6
+sphinx-external-toc>=1.0   # installed but intentionally not activated (§3.5)
+
+# -- Versioning ---------------------------------------------------------------
+sphinx-multiversion>=0.2
