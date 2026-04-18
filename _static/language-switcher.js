@@ -1,126 +1,69 @@
+/*
+ * pccx — language switcher (Furo-aware).
+ *
+ * The static template `_templates/sidebar/brand.html` renders two anchors
+ * tagged `data-pccx-lang`. This script rewrites their `href` to point at the
+ * sibling-language equivalent of the current page and marks the active one.
+ *
+ * Path model:
+ *   /pccx-FPGA-NPU-LLM-kv260/en/<rest>   ↔   /pccx-FPGA-NPU-LLM-kv260/ko/<rest>
+ *
+ * The regex below captures the base path dynamically, so this works at any
+ * deployment prefix (including the `/<lang>/...` layout a local dev server
+ * produces when serving the build output directly).
+ */
+
 (function () {
   'use strict';
 
-  var LANGS = {
-    en: { short: 'EN', full: 'English' },
-    ko: { short: 'KO', full: '한국어' }
-  };
+  var LANG_CODES = ['en', 'ko'];
 
-  function getLanguageInfo() {
+  /**
+   * Parse the current path into {base, current, rest}.
+   *   /pccx-FPGA-NPU-LLM-kv260/en/docs/foo.html
+   *       -> { base: '/pccx-FPGA-NPU-LLM-kv260', current: 'en', rest: '/docs/foo.html' }
+   *   /en/                   -> { base: '',      current: 'en', rest: '/'               }
+   */
+  function parsePath() {
     var path = window.location.pathname;
     var m = path.match(/^(.*)\/(en|ko)(\/.*|$)/);
     if (!m) return null;
     return {
+      base:    m[1],
       current: m[2],
-      base: m[1],
-      rest: m[3] || '/index.html'
+      rest:    m[3] || '/',
     };
   }
 
-  function createSwitcher(langInfo) {
-    var wrapper = document.createElement('div');
-    wrapper.className = 'lang-switcher navbar-item';
+  function rewriteAnchors(info) {
+    var anchors = document.querySelectorAll('.pccx-langswitch__btn[data-pccx-lang]');
+    if (!anchors.length) return;
 
-    var btn = document.createElement('button');
-    btn.className = 'lang-btn';
-    btn.setAttribute('aria-haspopup', 'listbox');
-    btn.setAttribute('aria-expanded', 'false');
-    btn.setAttribute('aria-label', 'Select language');
-    btn.innerHTML =
-      '<span class="lang-short">' + LANGS[langInfo.current].short + '</span>' +
-      '<span class="lang-arrow" aria-hidden="true">&#9662;</span>';
+    anchors.forEach(function (a) {
+      var code = a.getAttribute('data-pccx-lang');
+      if (LANG_CODES.indexOf(code) === -1) return;
 
-    var dropdown = document.createElement('ul');
-    dropdown.className = 'lang-dropdown';
-    dropdown.setAttribute('role', 'listbox');
-    dropdown.hidden = true;
+      a.href = info.base + '/' + code + info.rest;
 
-    Object.keys(LANGS).forEach(function (code) {
-      var li = document.createElement('li');
-      li.className = 'lang-option' + (code === langInfo.current ? ' lang-option--active' : '');
-      li.setAttribute('role', 'option');
-      li.setAttribute('aria-selected', String(code === langInfo.current));
-      li.textContent = LANGS[code].full;
-      li.addEventListener('click', function () {
-        if (code === langInfo.current) { close(); return; }
-        window.location.href = langInfo.base + '/' + code + langInfo.rest;
-      });
-      dropdown.appendChild(li);
-    });
-
-    function open() {
-      dropdown.hidden = false;
-      btn.setAttribute('aria-expanded', 'true');
-      btn.classList.add('lang-btn--open');
-    }
-    function close() {
-      dropdown.hidden = true;
-      btn.setAttribute('aria-expanded', 'false');
-      btn.classList.remove('lang-btn--open');
-    }
-
-    btn.addEventListener('click', function (e) {
-      e.stopPropagation();
-      dropdown.hidden ? open() : close();
-    });
-    document.addEventListener('click', close);
-
-    wrapper.appendChild(btn);
-    wrapper.appendChild(dropdown);
-    return wrapper;
-  }
-
-  function injectDesktopSwitcher(langInfo) {
-    if (document.querySelector('.lang-switcher--desktop')) return;
-
-    var switcher = createSwitcher(langInfo);
-    switcher.classList.add('lang-switcher--desktop');
-
-    var targets = [
-      '.navbar-icon-links',
-      '.navbar-header-items__end',
-      '.bd-header-items .navbar-nav',
-      '.bd-header .navbar-nav',
-      'nav.bd-header',
-      'header'
-    ];
-
-    for (var i = 0; i < targets.length; i++) {
-      var el = document.querySelector(targets[i]);
-      if (el) {
-        if (el.classList.contains('navbar-icon-links')) {
-          el.parentNode.insertBefore(switcher, el);
-        } else {
-          el.insertBefore(switcher, el.lastElementChild || null);
-        }
-        return;
+      if (code === info.current) {
+        a.classList.add('is-active');
+        a.setAttribute('aria-current', 'true');
+      } else {
+        a.classList.remove('is-active');
+        a.removeAttribute('aria-current');
       }
-    }
-
-    // Desktop fallback
-    switcher.style.cssText = 'position:fixed;top:8px;right:12px;z-index:9999';
-    document.body.appendChild(switcher);
+    });
   }
 
-  function injectMobileSwitcher(langInfo) {
-    if (document.getElementById('lang-switcher-mobile')) return;
-
-    var switcher = createSwitcher(langInfo);
-    switcher.classList.add('lang-switcher--mobile');
-    switcher.id = 'lang-switcher-mobile';
-    document.body.appendChild(switcher);
-  }
-
-  function injectSwitcher() {
-    var langInfo = getLanguageInfo();
-    if (!langInfo) return;
-    injectDesktopSwitcher(langInfo);
-    injectMobileSwitcher(langInfo);
+  function run() {
+    var info = parsePath();
+    if (!info) return;   // unknown layout (e.g. root redirect page) — leave anchors
+    rewriteAnchors(info);
   }
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', injectSwitcher);
+    document.addEventListener('DOMContentLoaded', run);
   } else {
-    injectSwitcher();
+    run();
   }
 })();

@@ -1,0 +1,33 @@
+{#
+ # pccx — Furo sidebar brand slot override.
+ #
+ # Replaces the default brand block to (a) keep Furo's logo + title rendering
+ # exactly as upstream, and (b) insert a language switcher pinned immediately
+ # below the brand. The two anchors are enhanced at runtime by
+ # ``_static/language-switcher.js`` to point at the sibling-language page.
+ #}
+
+<a class="sidebar-brand{% if theme_sidebar_hide_name %} centered{% endif %}" href="{{ pathto(master_doc) }}">
+  {%- block brand_content %}
+    {%- if theme_light_logo and theme_dark_logo %}
+      <img class="sidebar-logo only-light"
+           src="{{ pathto('_static/' ~ theme_light_logo, 1) }}" alt="Light Logo"/>
+      <img class="sidebar-logo only-dark"
+           src="{{ pathto('_static/' ~ theme_dark_logo, 1) }}"  alt="Dark Logo"/>
+    {%- elif logo_url %}
+      <img class="sidebar-logo" src="{{ logo_url }}" alt="Logo"/>
+    {%- endif %}
+    {%- if not theme_sidebar_hide_name %}
+      <span class="sidebar-brand-text">{{ docstitle if docstitle else project }}</span>
+    {%- endif %}
+  {%- endblock brand_content %}
+</a>
+
+{# pccx: inline language switcher. Anchors are rewritten by JS; the fallback
+ # hrefs still point at the site root of each language so the UI degrades
+ # gracefully without JS. #}
+<div class="pccx-langswitch" role="group" aria-label="Language">
+  <a class="pccx-langswitch__btn" href="/pccx-FPGA-NPU-LLM-kv260/en/"  data-pccx-lang="en">EN</a>
+  <span class="pccx-langswitch__sep" aria-hidden="true">·</span>
+  <a class="pccx-langswitch__btn" href="/pccx-FPGA-NPU-LLM-kv260/ko/"  data-pccx-lang="ko">한국어</a>
+</div>
