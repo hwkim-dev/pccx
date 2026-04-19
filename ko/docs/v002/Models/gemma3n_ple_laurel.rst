@@ -38,9 +38,6 @@ RMSNorm 된 :math:`x_{norm}`. post-attention RMSNorm 및 residual add
        LAuReL --> AddOp
        AddOp --> ScaleOp["× 1/sqrt(2)"]
        ScaleOp --> FinalOut["Attention + LAuReL 출력"]
-       style Attn fill:#c8e6c9,stroke:#388e3c
-       style LAuReL fill:#ffccbc,stroke:#d84315
-       style ScaleOp fill:#bbdefb,stroke:#1976d2
 
 1.3 pccx v002 매핑
 -------------------
@@ -123,11 +120,6 @@ PLE 는 레이어 깊이 기반 위치 정보를 주입하되, **오직 shadow s
        AddPLE --> X1_Out["업데이트된 shadow stream xs[1..3]"]
        X0_Out --> NextLayer["다음 레이어"]
        X1_Out --> NextLayer
-       style X0 fill:#a5d6a7,stroke:#2e7d32
-       style MainComputation fill:#a5d6a7,stroke:#2e7d32
-       style X1 fill:#ce93d8,stroke:#6a1b9a
-       style AddPLE fill:#ce93d8,stroke:#6a1b9a
-       style PLE fill:#ffe082,stroke:#ff8f00
 
 2.3 하드웨어 매핑
 ------------------
