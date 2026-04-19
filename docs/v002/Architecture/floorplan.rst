@@ -98,9 +98,9 @@ the Implementation section once post-synthesis results are available.
 4.3 BRAM / URAM Allocation
 ---------------------------
 
-- **L2 Cache**: URAM-based (~96 blocks).
-- **L1 / Constant Cache**: BRAM-based (~140 blocks).
-- **Weight Buffer**: BRAMs in FIFO mode.
+- **L2 Cache**: URAM-based (~50 of 64 blocks; 1.75 MB total).
+- **L1 / Constant Cache**: BRAM-based (~140 of 144 blocks).
+- **Weight Buffer**: URAM-based FIFO (4 × 4096-deep; one per HP port).
 
 .. note::
 

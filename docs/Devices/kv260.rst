@@ -6,9 +6,10 @@ KV260 is the primary target hardware platform for pccx.
 Key specifications
 ------------------
 
--  **FPGA fabric:** Zynq UltraScale+ MPSoC
--  **DSP slices:** 1,248 DSP48E2 slices
--  **BRAM:** 144 block RAMs
+-  **FPGA fabric:** Zynq UltraScale+ MPSoC (ZU5EV)
+-  **DSP slices:** 1,248 DSP48E2
+-  **BRAM:** 144 block RAMs (36 Kb each)
+-  **URAM:** 64 UltraRAM blocks (288 Kb each)
 -  **Operating frequency:** 400 MHz (target)
 -  **AXI interfaces:** AXI-Lite (HPM), AXI HP ports 0–3, AXI ACP
 
@@ -28,16 +29,22 @@ Resource utilization
 +------------------+----------+----------+
 | Resource         | Used     | Budget   |
 +==================+==========+==========+
-| DSP48E2          | ~1,248   | 1,248    |
+| DSP48E2          | ~1,088   | 1,248    |
 +------------------+----------+----------+
-| BRAM (36K)       | ~140     | 144      |
+| BRAM (36 Kb)     | ~140     | 144      |
 +------------------+----------+----------+
-| URAM             | ~96      | 96       |
+| URAM (288 Kb)    | ~50      | 64       |
 +------------------+----------+----------+
 | LUT              | ~200K    | 234K     |
 +------------------+----------+----------+
 
 .. note::
 
-   Actual resource usage varies with configuration parameters (systolic
-   array dimensions, number of cores, etc.).
+   The DSP48E2 estimate sums the 1,024-slice GEMM systolic array with the
+   GEMV reduction stage-1 allocation (16 DSPs × 4 cores = 64). Including
+   the SFU / CVO BF16 multipliers, post-synthesis utilisation is expected
+   to land in the ~1,150–1,200 range and will be revised once the
+   implementation flow completes.
+
+   All numbers above scale with configuration parameters (systolic array
+   dimensions, number of GEMV / SFU cores, and so on).

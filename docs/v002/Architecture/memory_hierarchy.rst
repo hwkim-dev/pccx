@@ -16,7 +16,7 @@ to **prevent data starvation** in the compute cores.
      end
      subgraph core["Internal 400 MHz"]
        WB["Weight Buffer<br/>BRAM FIFO"]
-       L2[("L2 Cache<br/>URAM ~1.5 MB")]
+       L2[("L2 Cache<br/>URAM ~1.75 MB")]
        L1["L1 Cache<br/>per-core BRAM"]
        CC["Constant Cache<br/>BRAM"]
        L0["L0 Accumulator<br/>DSP48E2 P-reg"]
@@ -58,7 +58,7 @@ to **prevent data starvation** in the compute cores.
      - ISA shape/size pointers, scale factors
    * - **L2 Cache**
      - URAM
-     - ~1.5 MB (96 URAM)
+     - **1.75 MB** (114,688 × 128-bit; ~50 of 64 URAM)
      - 256 bit × 2 / clk (both slices)
      - Activations, KV cache, intermediate results
    * - **Weight Buffer**

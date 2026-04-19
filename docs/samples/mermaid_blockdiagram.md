@@ -7,15 +7,15 @@ in `conf_common.py`.
 ```{mermaid}
 flowchart LR
     HOST[Host CPU] -- AXI-Lite --> CTRL[NPU Controller]
-    CTRL --> GEMM[GEMM Core<br/>32×16×2]
-    CTRL --> GEMV[GEMV Core<br/>4 lanes × 8 MAC]
+    CTRL --> GEMM[GEMM Core<br/>32×16×2 · 2-MAC DSP]
+    CTRL --> GEMV[GEMV Core<br/>4 × 32-MAC]
     CTRL --> SFU[SFU / CVO]
     CTRL --> DMA[DMA]
     GEMM <-- HP0/HP1 --> DDR[(DDR4)]
     GEMV <-- HP2/HP3 --> DDR
     DMA  <-- ACP    --> DDR
     GEMV -. direct FIFO .-> SFU
-    GEMM --> L2[(Shared L2<br/>URAM ~1.5 MB)]
+    GEMM --> L2[(Shared L2<br/>URAM 1.75 MB)]
     GEMV --> L2
     SFU  --> L2
 ```
