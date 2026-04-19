@@ -3,7 +3,7 @@ pccx ISA 스프레드시트 뷰
 
 이 페이지는 Google Sheets 에서 직접 내보낸 NPU ISA 아키텍처의 HTML
 스프레드시트 개요를 표시합니다. 더 상세한 사양 파라미터 정의는
-`ISA 사양 <ISA.html>`__ 페이지를 참고하세요.
+:doc:`ISA` 페이지를 참고하세요.
 
 .. raw:: html
 
