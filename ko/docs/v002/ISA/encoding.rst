@@ -101,7 +101,7 @@ pccx v002 의 모든 명령어는 **64 bit 고정 길이** 이며, 다음과 같
 5. 메모리 라우팅 인코딩
 ========================
 
-MEMCPY 의 `from_device` + `to_device` 조합은 Control Unit 내부에서 8-bit
+MEMCPY 의 ``from_device`` + ``to_device`` 조합은 Control Unit 내부에서 8-bit
 route enum (``data_route_e``) 으로 확장됩니다.
 
 .. list-table::

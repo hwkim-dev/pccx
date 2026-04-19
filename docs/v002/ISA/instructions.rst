@@ -206,19 +206,19 @@ Complex Vector Operation — the instruction sent to the SFU.
      - Description
    * - ``CVO_EXP``
      - ``4'h0``
-     - `exp(x)` — softmax.
+     - ``exp(x)`` — softmax.
    * - ``CVO_SQRT``
      - ``4'h1``
-     - `sqrt(x)` — RMSNorm.
+     - ``sqrt(x)`` — RMSNorm.
    * - ``CVO_GELU``
      - ``4'h2``
-     - `gelu(x)` — FFN non-linearity.
+     - ``gelu(x)`` — FFN non-linearity.
    * - ``CVO_SIN``
      - ``4'h3``
-     - `sin(x)` — RoPE.
+     - ``sin(x)`` — RoPE.
    * - ``CVO_COS``
      - ``4'h4``
-     - `cos(x)` — RoPE.
+     - ``cos(x)`` — RoPE.
    * - ``CVO_REDUCE_SUM``
      - ``4'h5``
      - Sum of vector elements.
@@ -227,7 +227,7 @@ Complex Vector Operation — the instruction sent to the SFU.
      - Scalar × vector.
    * - ``CVO_RECIP``
      - ``4'h7``
-     - `1/x`.
+     - ``1/x``.
    * - ``4'h8`` – ``4'hF``
      - —
      - Reserved for future extensions.

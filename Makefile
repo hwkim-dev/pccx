@@ -98,8 +98,8 @@ lint:
 	@command -v sphinx-lint >/dev/null || (echo "sphinx-lint missing; pip install -r requirements-dev.txt"; exit 1)
 	sphinx-lint --enable all --disable line-too-long docs ko/docs
 	@command -v codespell >/dev/null || (echo "codespell missing"; exit 1)
-	codespell --skip="*.svg,*.png,*.jpg,*.jpeg,*.js,*.css,_build,auto_plots,.venv,codes,.git" \
-	          --ignore-words-list="nd,ot,te,ans,hist,ue"
+	codespell --skip="*.svg,*.png,*.jpg,*.jpeg,*.js,*.css,*.html,_build,auto_plots,.venv,codes,.git" \
+	          --ignore-words-list="nd,ot,te,ans,hist,ue,som,sow,lod"
 
 
 # -- Housekeeping -----------------------------------------------------------
