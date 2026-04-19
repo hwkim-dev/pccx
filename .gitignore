@@ -30,5 +30,6 @@ __pycache__/
 codes/v002/
 
 # Local tooling scratch (not committed)
+.claude/
 .claudesignore
 pccx-agent-integration-task.md
