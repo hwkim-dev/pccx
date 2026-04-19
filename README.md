@@ -112,8 +112,22 @@ pccx/
     └── v002/                    # v002 RTL (CI-cloned from pccx-FPGA-NPU-LLM-kv260)
 ```
 
-The v002 RTL source lives in a separate repository:
-**[hwkim-dev/pccx-FPGA-NPU-LLM-kv260](https://github.com/hwkim-dev/pccx-FPGA-NPU-LLM-kv260)**
+Two sibling repositories round out the pccx project:
+
+- **[hwkim-dev/pccx-FPGA-NPU-LLM-kv260](https://github.com/hwkim-dev/pccx-FPGA-NPU-LLM-kv260)** — active v002 SystemVerilog sources (CI-cloned into `codes/v002/`).
+- **[hwkim-dev/pccx-lab](https://github.com/hwkim-dev/pccx-lab)** — performance simulator and AI-integrated profiler (mounted under `/en/lab/` and `/ko/lab/` on the docs site).
+
+---
+
+## Ecosystem
+
+### pccx-lab — Simulator & AI Profiler
+
+Performance simulator and AI-integrated profiler, purpose-built for the pccx NPU. Pre-RTL bottleneck detection, UVM co-simulation, and LLM-driven testbench generation in one workflow.
+
+- Repository: https://github.com/hwkim-dev/pccx-lab
+- Documentation: https://hwkim-dev.github.io/pccx/en/lab/ (Korean: https://hwkim-dev.github.io/pccx/ko/lab/)
+- Status: Work in Progress
 
 ---
 
