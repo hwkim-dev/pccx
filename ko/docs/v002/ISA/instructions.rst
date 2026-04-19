@@ -205,19 +205,19 @@ Complex Vector Operation — SFU 에 전달되는 명령어입니다.
      - 설명
    * - ``CVO_EXP``
      - ``4'h0``
-     - `exp(x)` — softmax 에서 사용.
+     - ``exp(x)`` — softmax 에서 사용.
    * - ``CVO_SQRT``
      - ``4'h1``
-     - `sqrt(x)` — RMSNorm.
+     - ``sqrt(x)`` — RMSNorm.
    * - ``CVO_GELU``
      - ``4'h2``
-     - `gelu(x)` — FFN 비선형.
+     - ``gelu(x)`` — FFN 비선형.
    * - ``CVO_SIN``
      - ``4'h3``
-     - `sin(x)` — RoPE.
+     - ``sin(x)`` — RoPE.
    * - ``CVO_COS``
      - ``4'h4``
-     - `cos(x)` — RoPE.
+     - ``cos(x)`` — RoPE.
    * - ``CVO_REDUCE_SUM``
      - ``4'h5``
      - 벡터 원소의 합.
@@ -226,7 +226,7 @@ Complex Vector Operation — SFU 에 전달되는 명령어입니다.
      - 스칼라 × 벡터.
    * - ``CVO_RECIP``
      - ``4'h7``
-     - `1/x`.
+     - ``1/x``.
    * - ``4'h8`` – ``4'hF``
      - —
      - reserved (향후 확장).

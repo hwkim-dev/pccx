@@ -124,7 +124,7 @@ CVO 는 별도 데이터플로우 다이어그램이 없으나, 아래 경로를
                           └─► L2 Cache ``dst_addr`` / GEMV 직결 FIFO
 
 **Fast Path**: 직전 GEMV 결과를 SFU 가 즉시 소비하는 경우,
-`src_addr` 를 **special tag** 로 지정하여 L2 왕복을 생략합니다.
+``src_addr`` 를 **special tag** 로 지정하여 L2 왕복을 생략합니다.
 이 최적화는 Dispatcher 의 의존성 추적 로직이 자동 판단합니다.
 
 6. 의존성과 완료 통지

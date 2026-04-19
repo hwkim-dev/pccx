@@ -194,10 +194,22 @@ article div.sphx-glr-thumbnails .sphx-glr-thumbcontainer:hover {
   }
 }
 
-/* -- Landing ecosystem grid — asymmetric Implementation hero --------------- */
-article .pccx-ecosystem-grid {
-  margin-top: 1.25rem;
+/* -- Landing CTA grids — unified rhythm for Ecosystem + Tooling sections --- */
+/* Both landing grids live under their own H2 sections, so no extra top
+ * margin is needed — let Furo's section spacing handle the vertical rhythm.
+ * The two grids share identical card dimensions and typography so the page
+ * reads as two parallel blocks rather than two different widgets. */
+article .pccx-ecosystem-grid,
+article .pccx-toolchain-grid {
+  margin-top: 0.5rem;
 }
+article .pccx-ecosystem-grid .sd-card-title,
+article .pccx-toolchain-grid .sd-card-title {
+  font-size: 1.05em;
+  font-weight: 700;
+  line-height: 1.3;
+}
+/* Hero card: Implementation RTL — primary accent (brand blue). */
 article .pccx-hero-card {
   border-left: 3px solid var(--color-brand-primary);
   background: linear-gradient(
@@ -207,18 +219,13 @@ article .pccx-hero-card {
   );
 }
 article .pccx-hero-card .sd-card-title {
-  font-size: 1.2em;
-  font-weight: 700;
+  font-size: 1.15em;    /* slightly larger than peers to signal primary CTA */
 }
 article .pccx-hero-card .sd-card-title svg {
   color: var(--color-brand-primary);
   vertical-align: -0.15em;
 }
-
-/* -- Tooling & Lab grid — symmetric 2-card row with accent border ---------- */
-article .pccx-toolchain-grid {
-  margin-top: 1.5rem;
-}
+/* Lab card: pccx-lab — secondary accent (brand orange). */
 article .pccx-lab-card {
   border-left: 3px solid var(--pccx-accent, #ff7a00);
 }

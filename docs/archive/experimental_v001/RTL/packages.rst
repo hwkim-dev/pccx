@@ -63,7 +63,7 @@ Tier B — Device package
 ------------------------
 
 * ``device_pkg.sv`` — typed views of the Tier A defines suitable for
-  `import device_pkg::*;`.
+  ``import device_pkg::*;``.
 
 .. dropdown:: ``device_pkg.sv``
    :icon: code

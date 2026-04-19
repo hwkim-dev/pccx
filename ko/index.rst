@@ -6,6 +6,9 @@ pccx 문서
 pccx는 엣지 디바이스에서 Transformer 기반 LLM을 가속하기 위한
 확장 가능한 NPU 아키텍처입니다. 사이드바에서 섹션을 선택하세요.
 
+에코시스템
+----------
+
 .. grid:: 1 1 2 2
    :gutter: 3 4 4 4
    :class-container: pccx-ecosystem-grid
@@ -50,8 +53,7 @@ pccx는 엣지 디바이스에서 Transformer 기반 LLM을 가속하기 위한
 ---------
 
 .. grid:: 1 1 2 2
-   :margin: 2
-   :gutter: 3
+   :gutter: 3 4 4 4
    :class-container: pccx-toolchain-grid
 
    .. grid-item-card:: :octicon:`beaker;1.2em;sd-mr-1` pccx-lab

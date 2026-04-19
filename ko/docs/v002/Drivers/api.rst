@@ -116,7 +116,7 @@ ISA 의 각 오피코드에 대응하는 인코더 헬퍼가 제공됩니다.
 5. 예제: Transformer FFN 블록
 ==============================
 
-FFN 블록 (`y = W_down · GELU(W_up · x)`) 의 간단한 실행 예시:
+FFN 블록 (``y = W_down · GELU(W_up · x)``) 의 간단한 실행 예시:
 
 .. code-block:: c
 
