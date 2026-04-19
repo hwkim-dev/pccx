@@ -83,9 +83,10 @@ L1 / Constant Cache → PE 레지스터** 의 4 단 계층으로 구성됩니다
 
 - Systolic Array: **32 × 32 = 1,024 DSP** @ 400 MHz (단일 격자, cascade
   가 16 행에서 끊겨 32 × 16 서브체인 2 개로 나뉨).
-- W4A8 듀얼 채널 패킹으로 **1 DSP = 2 MAC**, 따라서 2048 MAC/clk.
-- 가중치 요구량: 2048 × 4 bit = **8,192 bit/clk @ 400 MHz**.
-- 공급량: HP0/1 각각 256 bit/clk @ 250 MHz = 총 **128 bit/clk @ 400 MHz** 상당.
+- W4A8 듀얼 채널 패킹으로 **1 DSP = 2 MAC**, 따라서 2,048 MAC/clk.
+- 가중치 요구량: 2,048 × 4 bit = **8,192 bit/clk @ 400 MHz**.
+- 공급량: HP0 + HP1 이 **2 × 128 bit/clk @ 250 MHz** (= raw 64 Gbit/s)
+  를 전달, CDC FIFO 를 거쳐 400 MHz 도메인 기준 **~160 bit/clk** 상당.
 
 위 차이는 **Weight 재사용(Weight Stationary)** 전략으로 해소됩니다.
 GEMM 시스톨릭 어레이는 가중치를 프리로드 후 수백~수천 사이클 동안 재사용하며,
@@ -98,10 +99,12 @@ Weight Buffer 는 프리페치만 수행합니다. 자세한 재사용 패턴은
 **목표**: L2 Cache 가 GEMM·GEMV·SFU 의 동시 액티베이션 접근 요구를 충족해야
 합니다.
 
-- L2 Cache 포트: 양측 슬라이스가 각각 독립 read/write 포트 보유 (**듀얼 포트
-  URAM**).
-- 한 슬라이스의 최대 소비량: GEMV 32×1 × 4 코어 = 128 INT8 element/clk.
-  256 bit/clk 포트에서 충분히 공급 가능.
+- L2 Cache 포트: **듀얼 포트 URAM** — Port A 는 ACP DMA, Port B 는
+  NPU 컴퓨트 전용. 두 포트 모두 매 클럭 128-bit 폭.
+- 최대 소비량: 4 개 GEMV 코어 × 32 INT8 원소 / clk = 총 128 INT8
+  원소 / clk. 한 번의 128-bit URAM 읽기로 16 INT8 원소를 공급하지만,
+  GEMV 는 동일 액티베이션을 4 개 코어로 브로드캐스트하므로 단일
+  포트로 충분.
 
 2.3 Host ↔ Device 경로
 ----------------------
