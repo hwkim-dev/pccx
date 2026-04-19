@@ -4,7 +4,8 @@ Plot gallery
 ============
 
 Automatically generated pages for every ``plots/plot_*.py`` script. Each
-script produces an IEEE-style figure via :mod:`scienceplots`, and is
+script produces an IEEE-style figure via the ``scienceplots`` matplotlib
+style, and is
 rendered once per language (the scripts are shared; captions stay in
 English for numerics).
 

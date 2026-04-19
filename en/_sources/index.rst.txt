@@ -6,6 +6,9 @@ Welcome to the **pccx** (Parallel Compute Core eXecutor) documentation.
 pccx is a scalable NPU architecture for accelerating Transformer-based LLMs
 on edge devices. Select a section from the sidebar to begin.
 
+Ecosystem
+---------
+
 .. grid:: 1 1 2 2
    :gutter: 3 4 4 4
    :class-container: pccx-ecosystem-grid
@@ -50,8 +53,7 @@ Tooling & Lab
 -------------
 
 .. grid:: 1 1 2 2
-   :margin: 2
-   :gutter: 3
+   :gutter: 3 4 4 4
    :class-container: pccx-toolchain-grid
 
    .. grid-item-card:: :octicon:`beaker;1.2em;sd-mr-1` pccx-lab

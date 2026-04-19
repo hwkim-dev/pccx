@@ -1,7 +1,7 @@
 Library
 ========
 
-Re-usable primitives shared across compute and memory paths: BF16
+Reusable primitives shared across compute and memory paths: BF16
 numerics utilities and a FIFO queue family that all inter-stage
 hand-offs rely on.
 

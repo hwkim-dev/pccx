@@ -132,7 +132,7 @@ produces a **"borrow" from the upper bit region**.
 4.1 Mathematical Analysis
 --------------------------
 
-Let the total lower-channel sum be `-X`. In 48-bit two's complement:
+Let the total lower-channel sum be ``-X``. In 48-bit two's complement:
 
 .. math::
 

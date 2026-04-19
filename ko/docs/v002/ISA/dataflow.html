@@ -32,7 +32,7 @@
     <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
     <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo-extensions.css?v=8dab3a3b" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=582e5dde" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=7b993dbb" />
     <link rel="stylesheet" type="text/css" href="../../../_static/image-lightbox.css?v=884c9d5a" />
     <link rel="stylesheet" type="text/css" href="../../../_static/language-switcher.css?v=cc8629cf" />
     
@@ -573,7 +573,7 @@ cvo_control_uop_t → SFU 뱅크 (32×1 × 4)
 </pre></div>
 </div>
 <p><strong>Fast Path</strong>: 직전 GEMV 결과를 SFU 가 즉시 소비하는 경우,
-<cite>src_addr</cite> 를 <strong>special tag</strong> 로 지정하여 L2 왕복을 생략합니다.
+<code class="docutils literal notranslate"><span class="pre">src_addr</span></code> 를 <strong>special tag</strong> 로 지정하여 L2 왕복을 생략합니다.
 이 최적화는 Dispatcher 의 의존성 추적 로직이 자동 판단합니다.</p>
 </section>
 <section id="id6">

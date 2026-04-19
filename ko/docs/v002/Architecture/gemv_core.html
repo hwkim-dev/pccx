@@ -32,7 +32,7 @@
     <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
     <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo-extensions.css?v=8dab3a3b" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=582e5dde" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=7b993dbb" />
     <link rel="stylesheet" type="text/css" href="../../../_static/image-lightbox.css?v=884c9d5a" />
     <link rel="stylesheet" type="text/css" href="../../../_static/language-switcher.css?v=cc8629cf" />
     
@@ -525,7 +525,7 @@ N × N 행렬이며 두 피연산자의 내적 결과가 새 길이 N 의 출력
 </section>
 <section id="activation">
 <h3>3.2 Activation 재사용<a class="headerlink" href="#activation" title="Link to this heading">¶</a></h3>
-<p>액티베이션 벡터 <cite>x</cite> 는 L2 Cache 에 상주하며, 여러 GEMV 코어가 <strong>동일한
+<p>액티베이션 벡터 <code class="docutils literal notranslate"><span class="pre">x</span></code> 는 L2 Cache 에 상주하며, 여러 GEMV 코어가 <strong>동일한
 벡터를 브로드캐스트</strong> 해 소비합니다.</p>
 <ol class="arabic simple">
 <li><p>L2 → L1 Cache 로 액티베이션 타일 프리로드.</p></li>

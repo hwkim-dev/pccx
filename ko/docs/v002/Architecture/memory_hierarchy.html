@@ -32,7 +32,7 @@
     <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
     <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo-extensions.css?v=8dab3a3b" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=582e5dde" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=7b993dbb" />
     <link rel="stylesheet" type="text/css" href="../../../_static/image-lightbox.css?v=884c9d5a" />
     <link rel="stylesheet" type="text/css" href="../../../_static/language-switcher.css?v=cc8629cf" />
     
@@ -570,7 +570,7 @@ URAM</strong>).</p></li>
 <h3>3.1 L2 Cache: 중앙 공유 버퍼<a class="headerlink" href="#l2-cache" title="Link to this heading">¶</a></h3>
 <p>L2 Cache 는 <strong>소프트웨어 관리형 스크래치패드</strong> 로 동작합니다. 하드웨어
 자동 대체(replacement) 정책을 두지 않고, 명령어 레벨에서 주소를 명시
-(<cite>MEMCPY dest_addr</cite>, <cite>GEMM src_addr</cite>) 합니다. 이는 다음의 이점을 제공합니다:</p>
+(<code class="docutils literal notranslate"><span class="pre">MEMCPY</span> <span class="pre">dest_addr</span></code>, <code class="docutils literal notranslate"><span class="pre">GEMM</span> <span class="pre">src_addr</span></code>) 합니다. 이는 다음의 이점을 제공합니다:</p>
 <ul class="simple">
 <li><p>예측 가능한 레이턴시 (태그 매칭·미스 처리 없음).</p></li>
 <li><p>컴파일러가 데이터 배치를 정적으로 결정하여 인터커넥트 충돌 회피.</p></li>
@@ -578,7 +578,7 @@ URAM</strong>).</p></li>
 </section>
 <section id="constant-cache-isa">
 <h3>3.2 Constant Cache: ISA 포인터 백업<a class="headerlink" href="#constant-cache-isa" title="Link to this heading">¶</a></h3>
-<p>ISA 는 6-bit <cite>shape_ptr_addr</cite>, <cite>size_ptr_addr</cite> 를 통해 shape/size 메타데이터를
+<p>ISA 는 6-bit <code class="docutils literal notranslate"><span class="pre">shape_ptr_addr</span></code>, <code class="docutils literal notranslate"><span class="pre">size_ptr_addr</span></code> 를 통해 shape/size 메타데이터를
 참조합니다. 이 포인터들은 Constant Cache 의 64 엔트리에서 인덱싱되며,
 MEMSET 명령어로 사전 설정됩니다. 자세한 인코딩은
 <a class="reference internal" href="../ISA/instructions.html"><span class="doc">명령어 상세 인코딩</span></a> 참조.</p>

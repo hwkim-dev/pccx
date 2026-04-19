@@ -91,10 +91,7 @@ precision**:
 +---------------+---------------+------------------+------------------+
 | **Feature     | BF16          | 16-bit           | Undergoes        |
 | Map**         |               |                  | conversion from  |
-|               |               |                  | BF16             |
-|               |               |                  | :ma              |
-|               |               |                  | th:`\rightarrow` |
-|               |               |                  | 27-bit           |
+|               |               |                  | BF16 → 27-bit    |
 |               |               |                  | Fixed-Point for  |
 |               |               |                  | native MAC       |
 |               |               |                  | arithmetic       |
