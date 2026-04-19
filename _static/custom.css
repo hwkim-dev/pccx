@@ -108,6 +108,165 @@ article div.sphx-glr-thumbnails .sphx-glr-thumbcontainer:hover {
   fill: var(--color-brand-primary);
 }
 
+/* Labeled footer icons: GitHub / RTL repo / blog, each with a visible label
+ * so readers can recognize the destination without hovering. The row wraps on
+ * narrow viewports; icons inherit theme colors via currentColor. */
+.footer-icons a.pccx-footer-icon {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  padding: 0.2em 0.55em;
+  border-radius: 6px;
+  font-size: 0.9em;
+  line-height: 1;
+  color: var(--color-foreground-secondary);
+  transition:
+    background-color 120ms ease-in-out,
+    color            120ms ease-in-out;
+}
+.footer-icons a.pccx-footer-icon:hover,
+.footer-icons a.pccx-footer-icon:focus-visible {
+  background-color: var(--color-background-hover);
+  color: var(--color-brand-primary);
+}
+.footer-icons a.pccx-footer-icon svg {
+  flex: 0 0 auto;
+  width: 1.1em;
+  height: 1.1em;
+}
+.footer-icons a.pccx-footer-icon:hover svg {
+  color: var(--color-brand-primary);
+  fill: var(--color-brand-primary);
+}
+.pccx-footer-icon__label {
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+/* -- Sidebar repo-link pill row -------------------------------------------- */
+/* Sits directly below `.pccx-langswitch` in the sidebar; echoes the footer
+ * funnel so readers can jump to the implementation repo / author portfolio
+ * from any page, not just the landing. */
+.pccx-repolinks {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin: 0 0 0.9rem;
+  padding: 0 0.25rem;
+}
+.pccx-repolinks__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35em;
+  padding: 0.22em 0.6em;
+  font-size: 0.78rem;
+  font-weight: 500;
+  line-height: 1;
+  color: var(--color-foreground-secondary);
+  background: var(--color-background-secondary);
+  border: 1px solid var(--color-background-border);
+  border-radius: 999px;
+  text-decoration: none !important;
+  transition:
+    background-color 120ms ease-in-out,
+    border-color     120ms ease-in-out,
+    color            120ms ease-in-out;
+}
+.pccx-repolinks__btn:hover,
+.pccx-repolinks__btn:focus-visible {
+  color: var(--color-brand-primary);
+  background: var(--color-background-hover);
+  border-color: var(--color-brand-primary);
+}
+.pccx-repolinks__btn svg {
+  flex: 0 0 auto;
+  width: 0.95em;
+  height: 0.95em;
+}
+.pccx-repolinks__label {
+  letter-spacing: 0.02em;
+}
+@media (max-width: 67em) {
+  .pccx-repolinks {
+    font-size: 0.85rem;
+  }
+}
+
+/* -- Landing ecosystem grid — asymmetric Implementation hero --------------- */
+article .pccx-ecosystem-grid {
+  margin-top: 1.25rem;
+}
+article .pccx-hero-card {
+  border-left: 3px solid var(--color-brand-primary);
+  background: linear-gradient(
+    135deg,
+    var(--color-background-secondary) 0%,
+    var(--color-background-primary) 65%
+  );
+}
+article .pccx-hero-card .sd-card-title {
+  font-size: 1.2em;
+  font-weight: 700;
+}
+article .pccx-hero-card .sd-card-title svg {
+  color: var(--color-brand-primary);
+  vertical-align: -0.15em;
+}
+
+/* -- Tooling & Lab grid — symmetric 2-card row with accent border ---------- */
+article .pccx-toolchain-grid {
+  margin-top: 1.5rem;
+}
+article .pccx-lab-card {
+  border-left: 3px solid var(--pccx-accent, #ff7a00);
+}
+article .pccx-lab-card .sd-card-title svg {
+  color: var(--pccx-accent, #ff7a00);
+  vertical-align: -0.15em;
+}
+
+/* -- rtl_source admonition (injected by _ext/rtl_source.py) ---------------- */
+article .admonition.pccx-rtl-source {
+  border-inline-start-width: 3px;
+  border-inline-start-color: var(--color-brand-primary);
+  background: var(--color-background-secondary);
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+}
+article .admonition.pccx-rtl-source > .admonition-title {
+  background: transparent;
+  color: var(--color-brand-primary);
+  font-weight: 600;
+}
+article .admonition.pccx-rtl-source > .admonition-title::before {
+  /* Drop the default note-bell icon; our own title text is self-describing. */
+  content: none;
+}
+article .admonition.pccx-rtl-source p {
+  margin: 0.35em 0;
+}
+article .admonition.pccx-rtl-source .pccx-rtl-source__cta {
+  margin-top: 0.5em;
+}
+article .admonition.pccx-rtl-source a.pccx-rtl-source__link {
+  font-weight: 600;
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color 120ms ease-in-out;
+}
+article .admonition.pccx-rtl-source a.pccx-rtl-source__link:hover {
+  border-bottom-color: var(--color-brand-primary);
+}
+article .admonition.pccx-rtl-source ul.pccx-rtl-source__list {
+  margin: 0.25em 0 0;
+  padding-inline-start: 1.2em;
+}
+article .admonition.pccx-rtl-source ul.pccx-rtl-source__list li {
+  margin: 0.15em 0;
+}
+
 /* -- Print ----------------------------------------------------------------- */
 @media print {
   .sidebar-drawer,

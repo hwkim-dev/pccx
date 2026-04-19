@@ -1,3 +1,8 @@
+:rtl_source: hw/rtl/MAT_CORE/GEMM_systolic_top.sv,
+             hw/rtl/VEC_CORE/GEMV_top.sv,
+             hw/rtl/CVO_CORE/CVO_top.sv,
+             hw/rtl/MAT_CORE/GEMM_dsp_unit.sv
+
 ============================
 Compute Core Modules
 ============================

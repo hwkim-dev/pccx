@@ -20,6 +20,7 @@ from conf_common import (                          # noqa: F401
     exclude_patterns,
     html_theme_options,
     sphinx_gallery_conf,
+    build_footer_icons,
 )
 
 
@@ -60,6 +61,7 @@ html_theme_options = {
         '한국어 버전 · '
         '<a href="/pccx/en/">View in English →</a>'
     ),
+    "footer_icons": build_footer_icons("ko"),
 }
 
 

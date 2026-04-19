@@ -1,3 +1,5 @@
+:rtl_source: hw/rtl/NPU_Controller/NPU_Control_Unit/ISA_PACKAGE/isa_pkg.sv
+
 ============================
 ISA 타입 패키지
 ============================

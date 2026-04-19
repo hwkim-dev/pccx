@@ -102,11 +102,48 @@ risks, keeping the ecosystem safe for open-source hardware development.
 
 --------------
 
-5. Links
---------
+5. Ecosystem
+------------
 
--  Source · Issues: `github.com/hwkim-dev/pccx <https://github.com/hwkim-dev/pccx>`_
--  Author site: `hwkim-dev.github.io/hwkim-dev <https://hwkim-dev.github.io/hwkim-dev/>`_
+.. grid:: 1 1 2 2
+   :gutter: 3 4 4 4
+   :class-container: pccx-ecosystem-grid
+
+   .. grid-item-card:: :octicon:`cpu;1.5em;sd-mr-2` RTL Implementation
+      :columns: 12 12 8 8
+      :class-card: pccx-hero-card
+      :link: https://github.com/hwkim-dev/pccx-FPGA-NPU-LLM-kv260
+      :link-type: url
+      :link-alt: Open the pccx-FPGA-NPU-LLM-kv260 repository on GitHub
+
+      **github.com/hwkim-dev/pccx-FPGA-NPU-LLM-kv260**
+
+      The active **v002** SystemVerilog sources — ISA package, controller,
+      compute cores (GEMM / GEMV / CVO), memory hierarchy. Target device
+      is the Xilinx Kria **KV260** (Zynq UltraScale+ ZU5EV).
+
+      Every v002 RTL reference page on this site links back to the exact
+      ``.sv`` file in that repository.
+
+   .. grid-item::
+      :columns: 12 12 4 4
+
+      .. grid:: 1
+         :gutter: 3
+
+         .. grid-item-card:: :octicon:`book;1em;sd-mr-1` Documentation source
+            :link: https://github.com/hwkim-dev/pccx
+            :link-type: url
+            :link-alt: Open the pccx documentation repository on GitHub
+
+            **github.com/hwkim-dev/pccx** — the Sphinx project powering this site.
+
+         .. grid-item-card:: :octicon:`person;1em;sd-mr-1` Author portfolio
+            :link: https://hwkim-dev.github.io/hwkim-dev/
+            :link-type: url
+            :link-alt: Open the hwkim-dev portfolio site
+
+            **hwkim-dev.github.io/hwkim-dev** — blog, other projects, about.
 
 .. |License| image:: https://img.shields.io/badge/License-Apache_2.0-blue.svg
 .. |Architecture| image:: https://img.shields.io/badge/Architecture-Scalable_NPU-purple

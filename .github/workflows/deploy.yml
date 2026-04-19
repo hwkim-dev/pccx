@@ -53,6 +53,37 @@ jobs:
         run: |
           sphinx-build -W --keep-going -b html ko _build/html/ko
 
+      # -------- pccx-lab sibling-project integration --------------------------
+      # pccx-lab lives in its own repo and does not deploy to its own gh-pages.
+      # We clone it here and mount its docs under /lab/ on the pccx site.
+      # Every step below is guarded by hashFiles() + continue-on-error so an
+      # empty / missing / broken pccx-lab never blocks a pccx deploy.
+      # See pccx-agent-integration-task.md for the integration design.
+      - name: Checkout pccx-lab (optional sibling)
+        uses: actions/checkout@v4
+        with:
+          repository: hwkim-dev/pccx-lab
+          path: external/pccx-lab
+        continue-on-error: true
+
+      - name: Install pccx-lab docs deps (if any)
+        if: hashFiles('external/pccx-lab/docs/requirements.txt') != ''
+        continue-on-error: true
+        run: pip install -r external/pccx-lab/docs/requirements.txt
+
+      - name: Build pccx-lab English docs → /en/lab/
+        if: hashFiles('external/pccx-lab/docs/conf.py') != ''
+        continue-on-error: true
+        run: |
+          sphinx-build -b html external/pccx-lab/docs _build/html/en/lab
+
+      - name: Build pccx-lab Korean docs → /ko/lab/
+        if: hashFiles('external/pccx-lab/docs/ko/conf.py') != ''
+        continue-on-error: true
+        run: |
+          sphinx-build -b html external/pccx-lab/docs/ko _build/html/ko/lab
+      # ------------------------------------------------------------------------
+
       - name: Create root redirect page and disable Jekyll
         run: |
           mkdir -p _build/html

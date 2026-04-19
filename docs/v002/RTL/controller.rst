@@ -1,3 +1,8 @@
+:rtl_source: hw/rtl/NPU_Controller/npu_controller_top.sv,
+             hw/rtl/NPU_Controller/NPU_Control_Unit/ctrl_npu_decoder.sv,
+             hw/rtl/NPU_Controller/NPU_Control_Unit/ctrl_npu_dispatcher.sv,
+             hw/rtl/NPU_Controller/Global_Scheduler.sv
+
 ============================
 NPU Controller Modules
 ============================
