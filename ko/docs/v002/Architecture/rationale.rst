@@ -108,14 +108,12 @@ v002 의 경우: 400 MHz × 2 MAC/DSP, 그리고 HP 포트가 250 MHz × (HP2+HP
        HP3[AXI HP3] --> BUF
      end
      subgraph core[내부 400 MHz 도메인]
-       BUF -->|broadcast| SA1[Systolic Array #1<br/>32×16, 1 DSP = 2 MAC]
-       BUF -->|broadcast| SA2[Systolic Array #2<br/>32×16, 1 DSP = 2 MAC]
-       SA1 --> ACC[Result Accumulator<br/>819 GMAC/s peak]
-       SA2 --> ACC
+       BUF -->|broadcast| SA[Systolic Array<br/>32×32 · 1 DSP = 2 MAC<br/>cascade break @ 16 행]
+       SA --> ACC[Result Accumulator<br/>819 GMAC/s peak]
      end
 
-두 시스톨릭 어레이가 **각각 32 × 16 × 2 = 1,024 MAC/clk** 을 수행하므로,
-합산 2,048 MAC/clk × 400 MHz = **819 GMAC/s** 이론 피크가 산출됩니다.
+32 × 32 단일 격자가 **1,024 PE × 2 MAC = 2,048 MAC/clk** 을 수행하고,
+400 MHz 로 동작하여 **819 GMAC/s** 이론 피크가 산출됩니다.
 
 4. 새로운 트레이드오프
 =======================

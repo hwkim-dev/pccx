@@ -10,9 +10,10 @@
 1. 행렬 코어 — Systolic Top
 =============================
 
-``GEMM_systolic_top.sv``\ 는 32 × 16 × 2 시스톨릭 어레이를 감싸는 래퍼입니다.
-HP0/HP1에서 가중치 타일을, L2 캐시에서 활성화 행을 수신하고
-누산 결과를 후처리기(post-processor)로 스트리밍합니다.
+``GEMM_systolic_top.sv``\ 는 32 × 32 시스톨릭 어레이 (cascade 가 16 행
+에서 끊겨 32 × 16 서브체인 2 개로 나뉨) 를 감싸는 래퍼입니다. HP0/HP1
+에서 가중치 타일을, L2 캐시에서 활성화 행을 수신하고 누산 결과를
+후처리기 (post-processor) 로 스트리밍합니다.
 
 .. literalinclude:: ../../../../codes/v002/hw/rtl/MAT_CORE/GEMM_systolic_top.sv
    :language: systemverilog

@@ -95,7 +95,8 @@ v001 → v002 전환 배경과 3.125 배 처리량 향상 분석은
      - **W4A8 (INT8 activation)**
    * - 코어 구성
      - Matrix + Vector + CVO (경계 모호)
-     - Matrix + **GEMV 32×1 × 4** + **SFU 32×1 × 4**
+     - Matrix (32 × 32 시스톨릭) + **32-MAC GEMV 코어 × 4** +
+       **BF16 스칼라 SFU × 1**
    * - HP 포트
      - 단일 SA 에 1 개 (250 MHz 상한)
      - HP2 / HP3 분산 + 400 MHz 내부 소비

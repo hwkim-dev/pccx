@@ -59,15 +59,18 @@
    * - **Constant Cache**
      - 400 MHz
      - MEMSET 으로 설정되는 shape / size 포인터, scale factor 등 상수 저장.
-   * - **Systolic Array (32×16 ×2)**
+   * - **Systolic Array (32 × 32, cascade break @ 16 행)**
      - 400 MHz
-     - GEMM 전용 이차원 시스톨릭 어레이. :doc:`gemm_core` 참조.
-   * - **GEMV Core (32×1 ×4)**
+     - GEMM 전용 이차원 시스톨릭 어레이. 단일 인스턴스가 두 개의
+       32 × 16 서브체인으로 나뉨. :doc:`gemm_core` 참조.
+   * - **GEMV Core (×4)**
      - 400 MHz
-     - 병렬 벡터 MAC + reduction tree. :doc:`gemv_core` 참조.
-   * - **SFU (32×1 ×4)**
+     - 코어 당 32-MAC LUT + 5 단 reduction tree. 총 4 개 코어.
+       :doc:`gemv_core` 참조.
+   * - **SFU (1 개)**
      - 400 MHz
-     - Softmax/GELU/RMSNorm 등 비선형 함수. :doc:`sfu_core` 참조.
+     - Softmax/GELU/RMSNorm 등 비선형 함수 전용 스칼라 파이프라인
+       (BF16 1 원소/clk). :doc:`sfu_core` 참조.
 
 3. 클럭 도메인 전략
 ===================
@@ -99,11 +102,11 @@ AXI HP 포트의 버스트 전송은 평균 burst length × AXI clock 만큼의 
    flowchart LR
      DDR[(Host DDR4)] -->|HP2/HP3| WB[Weight Buffer]
      DDR -->|ACP DMA| L2[(L2 Cache<br/>중앙 URAM)]
-     WB --> SA[Systolic Array<br/>32×16 ×2]
+     WB --> SA[Systolic Array<br/>32×32]
      WB --> GV[GEMV Core<br/>×4]
      L2 --> SA
      L2 --> GV
-     L2 <--> SFU[SFU<br/>×4]
+     L2 <--> SFU[SFU<br/>×1]
      GV <-. 직결 FIFO .-> SFU
      SA --> L2
      GV --> L2

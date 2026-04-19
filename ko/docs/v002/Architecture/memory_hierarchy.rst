@@ -81,7 +81,8 @@ L1 / Constant Cache → PE 레지스터** 의 4 단 계층으로 구성됩니다
 **목표**: GEMM 시스톨릭 어레이의 매 클럭 MAC 요구량을 HP 포트의 대역폭이
 충족해야 합니다.
 
-- Systolic Array: **32 × 16 × 2 = 1024 DSP** @ 400 MHz.
+- Systolic Array: **32 × 32 = 1,024 DSP** @ 400 MHz (단일 격자, cascade
+  가 16 행에서 끊겨 32 × 16 서브체인 2 개로 나뉨).
 - W4A8 듀얼 채널 패킹으로 **1 DSP = 2 MAC**, 따라서 2048 MAC/clk.
 - 가중치 요구량: 2048 × 4 bit = **8,192 bit/clk @ 400 MHz**.
 - 공급량: HP0/1 각각 256 bit/clk @ 250 MHz = 총 **128 bit/clk @ 400 MHz** 상당.

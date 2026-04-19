@@ -107,7 +107,7 @@ Gemma 3N E4B 를 pccx v002 에서 실행 — Execution / Scheduling
    * - 파이프라인 단계
      - Systolic Array
      - GEMV ×4
-     - SFU ×4
+     - SFU (직렬)
    * - 임베딩 row fetch + AltUp 초기화 (×4)
      - —
      - 4 GEMV (각 ``altup_projs[k]``)

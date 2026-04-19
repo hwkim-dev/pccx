@@ -114,7 +114,7 @@ CVO 는 별도 데이터플로우 다이어그램이 없으나, 아래 경로를
    Dispatcher
        │
        ▼
-   cvo_control_uop_t → SFU 뱅크 (32×1 × 4)
+   cvo_control_uop_t → SFU (단일 BF16 스칼라 파이프라인)
                           ▲
                           │ L2 Cache ``src_addr``  ─── 입력 벡터
                           │
