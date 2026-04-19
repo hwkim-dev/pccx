@@ -33,3 +33,9 @@ codes/v002/
 .claude/
 .claudesignore
 pccx-agent-integration-task.md
+
+# Local roadmap / plan drafts (source material for public roadmap)
+pccx_master_roadmap_final.md
+pccx_v002_extended_20toks_plan.md
+tinynpu_v003_gemma4_e4b_plan(1).md
+tinynpu_v003_gemma4_e4b_plan.md

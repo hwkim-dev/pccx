@@ -85,6 +85,12 @@ Tooling & Lab
    docs/index
 
 .. toctree::
+   :maxdepth: 2
+   :caption: Roadmap
+
+   docs/roadmap
+
+.. toctree::
    :maxdepth: 1
    :caption: v002 Architecture
 

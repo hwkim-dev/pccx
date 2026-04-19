@@ -85,6 +85,12 @@ pccx는 엣지 디바이스에서 Transformer 기반 LLM을 가속하기 위한
    docs/index
 
 .. toctree::
+   :maxdepth: 2
+   :caption: 로드맵
+
+   docs/roadmap
+
+.. toctree::
    :maxdepth: 1
    :caption: v002 아키텍처
 
