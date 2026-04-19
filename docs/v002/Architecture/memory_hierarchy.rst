@@ -15,7 +15,7 @@ to **prevent data starvation** in the compute cores.
        HP["AXI HP2 / HP3<br/>256 bit/clk × 2"]
      end
      subgraph core["Internal 400 MHz"]
-       WB["Weight Buffer<br/>BRAM FIFO"]
+       WB["Weight Buffer<br/>URAM FIFO"]
        L2[("L2 Cache<br/>URAM ~1.75 MB")]
        L1["L1 Cache<br/>per-core BRAM"]
        CC["Constant Cache<br/>BRAM"]
@@ -62,9 +62,9 @@ to **prevent data starvation** in the compute cores.
      - 256 bit × 2 / clk (both slices)
      - Activations, KV cache, intermediate results
    * - **Weight Buffer**
-     - BRAM (FIFO)
-     - ~128 KB
-     - 256 bit / clk × 2 HP ports
+     - URAM (FIFO)
+     - 4 × 64 KB (4 HP ports, 4096 deep each)
+     - 128 bit/clk per HP port @ 250 MHz
      - INT4 weight stream
    * - **Host DDR4**
      - External DRAM

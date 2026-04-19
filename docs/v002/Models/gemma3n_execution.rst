@@ -32,11 +32,11 @@ themselves, see :doc:`../ISA/instructions`.
      - Current ``xs[0..3]``, ``x_norm``, ``Q/K/V``, ``attn_output``,
        ``gate_raw``, ``up_out``, ``hidden``, ``mlp_out``, ``pli_all``,
        e_max, reduction accumulators.
-   * - **Weight Buffer** (BRAM/URAM FIFO)
-     - ~512 KB
+   * - **Weight Buffer** (URAM FIFO, per HP port)
+     - 4 × 64 KB (4096-deep each)
      - 128-bit word
-     - Burst buffer between HP2/HP3 (250 MHz) and the 400 MHz compute
-       cores. Holds at most one GEMV/GEMM's worth of weights.
+     - Burst buffer between each HP port (250 MHz) and the 400 MHz
+       compute cores. Holds at most one GEMV/GEMM's worth of weights.
    * - **Constant Cache** (BRAM)
      - 64 entries × 48-bit
      - shape / scale tuple
