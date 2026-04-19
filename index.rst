@@ -68,6 +68,8 @@ Tooling & Lab
 
       :bdg-warning:`Work in Progress`
 
+      Source: github.com/hwkim-dev/pccx-lab
+
    .. grid-item-card:: :octicon:`project-roadmap;1.2em;sd-mr-1` Design rationale
       :link: https://hwkim-dev.github.io/pccx/en/lab/design/rationale.html
       :link-type: url
