@@ -58,7 +58,7 @@ Rather than reusing a generic matrix accelerator, pccx is designed around the ac
 - **W4A8 precision** — INT4 weights × INT8 activations via DSP48E2 dual-channel bit packing (1 DSP = 2 MACs)
 - **Precision promotion** — non-linear ops (Softmax, GELU, RMSNorm, RoPE) automatically upcast to BF16/FP32 for numerical stability
 - **Custom 64-bit VLIW ISA** — 5 opcodes: `GEMV`, `GEMM`, `MEMCPY`, `MEMSET`, `CVO`; decoupled decode/dispatch eliminates front-end stalls
-- **Shared L2 (URAM ~1.5 MB)** — all three cores share a central SRAM cache; GEMV↔SFU are connected via a direct-connect FIFO, bypassing L2 round-trips
+- **Shared L2 (URAM 1.75 MB)** — all three cores share a central SRAM cache; GEMV↔SFU are connected via a direct-connect FIFO, bypassing L2 round-trips
 - **Dual clock domains** — 250 MHz AXI/control plane, 400 MHz core compute (×1.6 frequency gain over v001)
 - **3.125× total throughput gain** vs. v001 (frequency × dual-MAC DSP packing)
 
@@ -70,7 +70,7 @@ S_AXIL_CTRL (HPM)    ────────►  npu_controller_top
 S_AXI_HP0/HP1        ────────►  GEMM_systolic_top      (32×16×2, W-Stationary)
 S_AXI_HP2/HP3        ────────►  GEMV_top               (4 cores × 32-MAC LUT, 5-stage tree)
 S_AXIS_ACP_FMAP      ────────►  ┌─────────────────────────────────┐
-M_AXIS_ACP_RESULT    ◄────────  │  Shared L2 Cache (URAM ~1.5 MB)│
+M_AXIS_ACP_RESULT    ◄────────  │  Shared L2 Cache (URAM 1.75 MB)│
                                 │  GEMV ──FIFO──► CVO_top (SFU)  │
                                 └─────────────────────────────────┘
 ```
