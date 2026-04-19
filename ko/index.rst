@@ -68,6 +68,8 @@ pccx는 엣지 디바이스에서 Transformer 기반 LLM을 가속하기 위한
 
       :bdg-warning:`Work in Progress`
 
+      소스: github.com/hwkim-dev/pccx-lab
+
    .. grid-item-card:: :octicon:`project-roadmap;1.2em;sd-mr-1` 설계 근거
       :link: https://hwkim-dev.github.io/pccx/ko/lab/design/rationale.html
       :link-type: url
