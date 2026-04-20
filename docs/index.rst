@@ -138,6 +138,15 @@ risks, keeping the ecosystem safe for open-source hardware development.
 
             **github.com/hwkim-dev/pccx** — the Sphinx project powering this site.
 
+         .. grid-item-card:: :octicon:`telescope;1em;sd-mr-1` pccx-lab (verify / profile)
+            :link: https://hwkim-dev.github.io/pccx/en/lab/
+            :link-type: url
+            :link-alt: Open the pccx-lab verification + profiling hub
+
+            **pccx-lab** — Tauri 2 IDE. ``.pccx`` trace loader,
+            `run_verification` runner, Roofline / Bottleneck cards,
+            Vivado synth report view. :doc:`Verification workflow guide <../lab/verification-workflow>`.
+
          .. grid-item-card:: :octicon:`person;1em;sd-mr-1` Author portfolio
             :link: https://hwkim-dev.github.io/hwkim-dev/
             :link-type: url

@@ -42,6 +42,15 @@ pccx는 엣지 디바이스에서 Transformer 기반 LLM을 가속하기 위한
 
             **github.com/hwkim-dev/pccx** — 이 사이트를 빌드하는 Sphinx 프로젝트.
 
+         .. grid-item-card:: :octicon:`telescope;1em;sd-mr-1` pccx-lab (검증 / 프로파일)
+            :link: https://hwkim-dev.github.io/pccx/ko/lab/
+            :link-type: url
+            :link-alt: pccx-lab 검증·프로파일링 허브 열기
+
+            **pccx-lab** — Tauri 2 IDE. ``.pccx`` 트레이스 로딩,
+            ``run_verification`` 러너, Roofline / Bottleneck 카드,
+            Vivado synth 리포트 뷰.
+
          .. grid-item-card:: :octicon:`person;1em;sd-mr-1` 저자 포트폴리오
             :link: https://hwkim-dev.github.io/hwkim-dev/
             :link-type: url
