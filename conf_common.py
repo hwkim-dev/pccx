@@ -102,9 +102,11 @@ exclude_patterns = [
     "pccx_v002_extended_20toks_plan.md",
     "tinynpu_v003_gemma4_e4b_plan*.md",  # the (1) variant uses a paren
     "tools/**/*.md",       # phase0 audit / vivado plan etc.
-    # external RTL repo artifacts
+    # external RTL repo artifacts — pccx-FPGA cloned at build time
     "codes/v002/README.md",
     "codes/v002/docs/**",
+    "codes/v002/**/README.md",   # e.g. codes/v002/hw/vivado/README.md
+    "codes/v002/**/*.md",        # any other markdown shipped by the RTL repo
     # sphinx-gallery writes ``sg_execution_times.rst`` at the srcdir root AND
     # inside each gallery_dirs. Neither is ever put in a toctree, so Sphinx
     # emits "undefined label" / "document isn't included in any toctree"
