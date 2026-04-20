@@ -144,8 +144,9 @@ risks, keeping the ecosystem safe for open-source hardware development.
             :link-alt: Open the pccx-lab verification + profiling hub
 
             **pccx-lab** — Tauri 2 IDE. ``.pccx`` trace loader,
-            `run_verification` runner, Roofline / Bottleneck cards,
-            Vivado synth report view. :doc:`Verification workflow guide <../lab/verification-workflow>`.
+            ``run_verification`` runner, Roofline / Bottleneck cards,
+            Vivado synth report view. See the
+            `verification workflow guide <https://hwkim-dev.github.io/pccx/en/lab/verification-workflow.html>`_.
 
          .. grid-item-card:: :octicon:`person;1em;sd-mr-1` Author portfolio
             :link: https://hwkim-dev.github.io/hwkim-dev/

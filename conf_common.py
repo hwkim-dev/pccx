@@ -96,6 +96,12 @@ exclude_patterns = [
     "pccx-*-task.md",      # agent hand-off notes, not user-facing docs
     "requirements*.txt",
     "Makefile",
+    # planning / audit markdown at the repo root — not part of the docs site
+    "USER_ACTIONS.md",
+    "pccx_master_roadmap_final.md",
+    "pccx_v002_extended_20toks_plan.md",
+    "tinynpu_v003_gemma4_e4b_plan*.md",  # the (1) variant uses a paren
+    "tools/**/*.md",       # phase0 audit / vivado plan etc.
     # external RTL repo artifacts
     "codes/v002/README.md",
     "codes/v002/docs/**",
