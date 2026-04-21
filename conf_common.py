@@ -92,6 +92,8 @@ exclude_patterns = [
     ".DS_Store",
     "node_modules",
     "CLAUDE.md",
+    "AGENTS.md",           # per-clone agent pointer (gitignored)
+    "GEMINI.md",           # per-clone agent pointer (gitignored)
     "README.md",
     "pccx-*-task.md",      # agent hand-off notes, not user-facing docs
     "requirements*.txt",

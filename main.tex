@@ -1,1263 +1,2061 @@
-% ============================================================
-% pccx v002 Instruction Set Architecture — User Guidebook
-% Compile: xelatex main.tex   (two passes for TOC)
-% Sources: docs/v002/ISA/{encoding,instructions,dataflow}.rst
-%          codes/v001/hw/rtl/NPU_Controller/NPU_Control_Unit/ISA_PACKAGE/isa_pkg.sv
-% Output:  _static/downloads/pccx-isa-v002.pdf
-% ============================================================
+% =================================================================
+%  pccx v002 Instruction Set Architecture — Software Developer's Manual
+%
+%  Authoring entry point for the offline, signoff-ready PDF mirror of
+%  the v002 ISA.  Styled after the Intel 64 and IA-32 Architectures
+%  Software Developer's Manual (per-instruction reference blocks,
+%  bit-level layouts, Operation pseudocode, Flags / Exceptions) and
+%  the NVIDIA CUDA C Programming Guide (heavy TikZ architectural
+%  diagrams, memory hierarchy, execution model).
+%
+%  Compile:  xelatex main.tex   (repeat 2x for TOC resolution)
+%  Build:    bash tools/build_isa_pdf.sh
+% =================================================================
 \documentclass[11pt,a4paper,twoside,openany]{report}
 
-% 한글 설정이 필요하면 아래 주석 해제 (XeLaTeX 환경)
+% ---- Korean support (XeLaTeX) — enabled if the system has a Korean
+% font available.  Kept optional so CI without the font still builds.
 % \usepackage[xetex]{kotex}
 
-\usepackage{colortbl}
-\usepackage{booktabs}
-\usepackage{array}
-\usepackage{makecell}
+% ---------- Typography ----------
 \usepackage{fontspec}
-\usepackage{graphicx}
-\usepackage{amsmath}
-\usepackage{amssymb}
-\usepackage{etoolbox}
-\usepackage{longtable}
-\usepackage{listings}
-\usepackage{tikz}
-\usetikzlibrary{shapes.geometric,arrows.meta,positioning,calc,fit}
+\usepackage{microtype}
 
-% 표 안의 폰트 축소 (읽기 밀도 확보)
-\AtBeginEnvironment{tabular}{\fontsize{8pt}{12pt}\selectfont}
-\AtBeginEnvironment{longtable}{\fontsize{9pt}{12pt}\selectfont}
-
-% ------------------------------------------------------------
-% Font fallback.  Prefer Courier Prime under FONT/ when present
-% (the repo's intended house font); otherwise fall back to Latin
-% Modern Mono so CI / fresh machines can still compile.
-% ------------------------------------------------------------
+% Prefer Courier Prime when present under FONT/; otherwise fall back
+% to Latin Modern.  CI passes without the house font.
 \IfFileExists{FONT/CourierPrime-Regular.ttf}{%
   \setmainfont{CourierPrime-Regular.ttf}[
-    Path = FONT/,
+    Path           = FONT/,
     BoldFont       = CourierPrime-Bold.ttf,
     ItalicFont     = CourierPrime-Italic.ttf,
     BoldItalicFont = CourierPrime-BoldItalic.ttf
   ]%
 }{%
-  % CI fallback — Latin Modern ships with every TeX Live distribution.
   \setmainfont{Latin Modern Roman}%
   \setmonofont{Latin Modern Mono}%
+  \setsansfont{Latin Modern Sans}%
 }
 
-% ------------------------------------------------------------
-% 커스텀 함수: 명령어 포맷 다이어그램 생성기
-% 사용법: \DrawInstFormat{Prefix}{Opcode}{ModR/M}{SIB}{Disp}{Imm}{Caption}
-% ------------------------------------------------------------
-\newcommand{\DrawInstFormat}[7]{
-  \begin{figure}[h]
-  \centering
-  \sffamily\small
-  \renewcommand{\arraystretch}{1.5}
-
-  \resizebox{\textwidth}{!}{
-    \begin{tabular}{|c|c|c|c|c|c|}
-    \multicolumn{1}{c}{\textbf{\color{oceanblue}Instruction Prefixes}} &
-    \multicolumn{1}{c}{\textbf{\color{oceanblue}Opcode}} &
-    \multicolumn{1}{c}{\textbf{\color{oceanblue}ModR/M}} &
-    \multicolumn{1}{c}{\textbf{\color{oceanblue}SIB}} &
-    \multicolumn{1}{c}{\textbf{\color{oceanblue}Displacement}} &
-    \multicolumn{1}{c}{\textbf{\color{oceanblue}Immediate}} \\[1ex]
-
-    \hline
-    \makecell{#1} & \makecell{#2} & \makecell{#3} & \makecell{#4} & \makecell{#5} & \makecell{#6} \\
-    \hline
-
-    \multicolumn{2}{c|}{} &
-    \multicolumn{1}{@{}c@{}|}{
-      \begin{tabular}{c|c|c}
-      \makebox[0.8cm]{\scriptsize 7\hfill 6} & \makebox[1.4cm]{\scriptsize 5\hfill 3} & \makebox[0.8cm]{\scriptsize 2\hfill 0} \\
-      \hline
-      Mod & Reg/Op & R/M
-      \end{tabular}
-    } &
-    \multicolumn{1}{@{}c@{}|}{
-      \begin{tabular}{c|c|c}
-      \makebox[0.8cm]{\scriptsize 7\hfill 6} & \makebox[1.4cm]{\scriptsize 5\hfill 3} & \makebox[0.8cm]{\scriptsize 2\hfill 0} \\
-      \hline
-      Scale & Index & Base
-      \end{tabular}
-    } &
-    \multicolumn{2}{c}{} \\
-    \cline{3-4}
-    \end{tabular}
-  }
-
-  \vspace{1em}
-  \caption{\color{oceanblue}#7}
-  \end{figure}
-}
-
-\usepackage{geometry}
-\geometry{top=2cm, bottom=2cm, left=1.7cm, right=1.7cm, headheight=12pt, headsep=20pt}
-
+% ---------- Core packages ----------
+\usepackage{colortbl}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{makecell}
+\usepackage{tabularx}
+\usepackage{longtable}
+\usepackage{multirow}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{etoolbox}
+\usepackage{listings}
 \usepackage{xcolor}
+\usepackage{geometry}
 \usepackage{fancyhdr}
 \usepackage[explicit]{titlesec}
 \usepackage{enumitem}
 \usepackage{tocloft}
+\usepackage{caption}
+\usepackage{subcaption}
 
+% ---------- Visualization packages ----------
+\usepackage{tikz}
+\usetikzlibrary{
+  arrows.meta,
+  calc,
+  positioning,
+  shapes.geometric,
+  shapes.multipart,
+  shapes.symbols,
+  shapes.misc,
+  fit,
+  matrix,
+  backgrounds,
+  decorations.pathreplacing,
+  decorations.markings,
+  decorations.pathmorphing,
+  patterns,
+  patterns.meta,
+  chains,
+  scopes
+}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+
+% ---------- Bit-level encoding diagrams (Intel-style) ----------
+\usepackage{bytefield}
+
+% ---------- Boxed instruction reference blocks (Intel SDM style) ----
+\usepackage[framemethod=TikZ]{mdframed}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+
+% ---------- Tables larger in inner text density ----------
+\AtBeginEnvironment{tabular}{\fontsize{8.5pt}{11pt}\selectfont}
+\AtBeginEnvironment{longtable}{\fontsize{8.5pt}{11pt}\selectfont}
+\AtBeginEnvironment{tabularx}{\fontsize{8.5pt}{11pt}\selectfont}
+
+% ---------- Page geometry ----------
+\geometry{top=2.3cm, bottom=2.3cm, left=2cm, right=2cm,
+          headheight=14pt, headsep=20pt, footskip=30pt}
+
+% ---------- Colour palette ----------
 \definecolor{oceanblue}{HTML}{006994}
 \definecolor{OCEANBLUE}{HTML}{006994}
+\definecolor{deepnavy}{HTML}{003E5C}
+\definecolor{skytint}{HTML}{E8F4F9}
 \definecolor{graytext}{HTML}{555555}
 \definecolor{pureblack}{HTML}{000000}
 \definecolor{codebg}{HTML}{F6F8FA}
+\definecolor{accentred}{HTML}{B22222}
+\definecolor{accentgreen}{HTML}{2E7D32}
+\definecolor{accentorange}{HTML}{CC6600}
+\definecolor{accentpurple}{HTML}{6A4C93}
+\definecolor{fadegray}{HTML}{B0B0B0}
 
+% ---------- Hyperlinks ----------
 \usepackage{hyperref}
 \hypersetup{
-    colorlinks=true,
-    linkcolor=oceanblue,
-    urlcolor=oceanblue,
-    citecolor=oceanblue,
-    pdftitle={pccx v002 Instruction Set Architecture Guidebook},
-    pdfauthor={pccx Project},
-    pdfsubject={NPU Instruction Set Architecture Reference Manual},
-    pdfkeywords={pccx, NPU, ISA, KV260, systolic array, GEMM, GEMV, LLM}
+    colorlinks = true,
+    linkcolor  = oceanblue,
+    urlcolor   = oceanblue,
+    citecolor  = oceanblue,
+    pdftitle   = {pccx v002 Instruction Set Architecture — Software Developer's Manual},
+    pdfauthor  = {pccx Project},
+    pdfsubject = {NPU Instruction Set Architecture Reference Manual},
+    pdfkeywords= {pccx, NPU, ISA, KV260, DSP48E2, systolic array, GEMM, GEMV, LLM, Transformer, CUDA, Intel SDM}
 }
 
-\renewcommand{\contentsname}{CONTENTS}
+% ---------- TOC styling ----------
+\renewcommand{\contentsname}{Table of Contents}
 \renewcommand{\cftchapfont}{\sffamily\bfseries\color{oceanblue}}
 \renewcommand{\cftchappagefont}{\sffamily\bfseries\color{oceanblue}}
+\setlength{\cftbeforechapskip}{6pt}
 
-% Chapter layout
+% ---------- Chapter / Section layout ----------
 \titleformat{\chapter}[block]
   {\normalfont\large\sffamily\bfseries\color{oceanblue}\raggedleft}
   {}
   {0pt}
-  {CHAPTER \thechapter\\[-0.5ex]#1}
+  {\MakeUppercase{Chapter \thechapter}\\[-0.4ex]\huge #1}
   [\vspace{0.5ex}\color{oceanblue}\titlerule]
 
 \titleformat{name=\chapter,numberless}[block]
   {\normalfont\large\sffamily\bfseries\color{oceanblue}\raggedleft}
   {}
   {0pt}
-  {#1}
+  {\huge #1}
   [\vspace{0.5ex}\color{oceanblue}\titlerule]
 
 \titlespacing*{\chapter}{0pt}{-45pt}{30pt}
 \titlespacing*{name=\chapter,numberless}{0pt}{-45pt}{30pt}
 
-% Section styles
 \titleformat{\section}
   {\normalfont\Large\sffamily\bfseries\color{oceanblue}}
-  {\thesection}
-  {1em}
-  {#1}
+  {\thesection}{1em}{#1}
 
 \titleformat{\subsection}
   {\normalfont\large\sffamily\bfseries\color{oceanblue}}
-  {\thesubsection}
-  {1em}
-  {#1}
+  {\thesubsection}{1em}{#1}
 
-% Header / footer
+\titleformat{\subsubsection}
+  {\normalfont\normalsize\sffamily\bfseries\color{deepnavy}}
+  {\thesubsubsection}{1em}{#1}
+
+% ---------- Header / Footer ----------
 \pagestyle{fancy}
 \fancyhf{}
-\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\headrule}{\color{oceanblue}\hrule height 0.4pt}
 \renewcommand{\chaptermark}[1]{\markboth{#1}{}}
-\renewcommand{\sectionmark}[1]{\markright{\thesection. #1}}
+\renewcommand{\sectionmark}[1]{\markright{\thesection.\ #1}}
 
 \fancyhead[LE]{\sffamily\color{oceanblue}\footnotesize\leftmark}
-\fancyfoot[LE]{\sffamily\mdseries\color{pureblack}\scriptsize\thepage \hspace{1em} \rightmark}
-\fancyhead[RO]{\sffamily\color{oceanblue}\footnotesize\leftmark}
-\fancyfoot[RO]{\sffamily\mdseries\color{pureblack}\scriptsize\rightmark \hspace{1em} \thepage}
+\fancyhead[RE]{\sffamily\color{graytext}\scriptsize pccx v002 ISA SDM}
+\fancyhead[LO]{\sffamily\color{graytext}\scriptsize pccx v002 ISA SDM}
+\fancyhead[RO]{\sffamily\color{oceanblue}\footnotesize\rightmark}
+\fancyfoot[LE]{\sffamily\mdseries\color{pureblack}\scriptsize\thepage\hspace{1em}\color{graytext}\rightmark}
+\fancyfoot[RO]{\sffamily\mdseries\color{graytext}\scriptsize\rightmark\hspace{1em}\color{pureblack}\thepage}
 
 \fancypagestyle{plain}{
   \fancyhf{}
   \renewcommand{\headrulewidth}{0pt}
-  \fancyfoot[LE]{\sffamily\mdseries\color{pureblack}\small\thepage \hspace{1em} \rightmark}
-  \fancyfoot[RO]{\sffamily\mdseries\color{pureblack}\small\rightmark \hspace{1em} \thepage}
+  \fancyfoot[LE]{\sffamily\color{pureblack}\small\thepage}
+  \fancyfoot[RO]{\sffamily\color{pureblack}\small\thepage}
 }
 
 \setlength{\parindent}{0pt}
-\setlength{\parskip}{1em}
+\setlength{\parskip}{0.8em}
 
-% Code listing style
+% ---------- Code listings ----------
 \lstdefinestyle{sv}{
-  basicstyle=\ttfamily\footnotesize,
-  keywordstyle=\bfseries\color{oceanblue},
-  commentstyle=\itshape\color{graytext},
-  backgroundcolor=\color{codebg},
-  frame=single,
-  framesep=3pt,
-  rulecolor=\color{graytext!40},
-  breaklines=true,
-  showstringspaces=false,
-  columns=fullflexible,
-  keepspaces=true,
+  basicstyle       = \ttfamily\footnotesize,
+  keywordstyle     = \bfseries\color{oceanblue},
+  commentstyle     = \itshape\color{graytext},
+  stringstyle      = \color{accentgreen},
+  backgroundcolor  = \color{codebg},
+  frame            = single,
+  framesep         = 3pt,
+  rulecolor        = \color{graytext!40},
+  breaklines       = true,
+  showstringspaces = false,
+  columns          = fullflexible,
+  keepspaces       = true,
   morekeywords={typedef,enum,struct,packed,module,endmodule,input,output,logic,
                 always_ff,always_comb,posedge,negedge,unique,case,endcase,if,else,
                 begin,end,assign,wire,reg,for,while,parameter,localparam}
 }
+\lstdefinestyle{pseudo}{
+  basicstyle       = \ttfamily\footnotesize,
+  keywordstyle     = \bfseries\color{oceanblue},
+  commentstyle     = \itshape\color{graytext},
+  backgroundcolor  = \color{skytint!30},
+  frame            = leftline,
+  framesep         = 4pt,
+  rulecolor        = \color{oceanblue!60},
+  breaklines       = true,
+  showstringspaces = false,
+  columns          = fullflexible,
+  keepspaces       = true,
+  morekeywords={IF,THEN,ELSE,ELSIF,ENDIF,WHILE,DO,ENDWHILE,FOR,TO,ENDFOR,
+                BEGIN,END,RETURN,READ,WRITE,SIGNAL,WAIT,DISPATCH,
+                DEC,ENC,CASE,OF,OTHERWISE}
+}
 \lstset{style=sv}
 
-% ============================================================
+% ---------- Intel-SDM-style Instruction Reference environment ----
+% \begin{InstructionRef}{MNEMONIC}{One-line description}
+%   ... body ...
+% \end{InstructionRef}
+\newtcolorbox{InstructionRef}[2]{
+  enhanced,
+  breakable,
+  colback   = white,
+  colframe  = oceanblue,
+  colbacktitle = oceanblue,
+  coltitle  = white,
+  fonttitle = \sffamily\bfseries\Large,
+  title     = {\MakeUppercase{#1}\hfill\mdseries\normalsize #2},
+  sharp corners = downhill,
+  boxrule   = 1.2pt,
+  leftrule  = 1.2pt,
+  rightrule = 1.2pt,
+  toprule   = 1.2pt,
+  bottomrule= 1.2pt,
+  top       = 6pt,
+  bottom    = 6pt,
+  left      = 8pt,
+  right     = 8pt,
+  before skip = 10pt,
+  after skip  = 10pt,
+}
+
+% ---------- Intel-style "sub-block" inside InstructionRef ----------
+\newcommand{\RefSection}[1]{%
+  \par\medskip
+  {\sffamily\bfseries\color{oceanblue}\normalsize\MakeUppercase{#1}}
+  \par\vspace{-0.4em}
+  {\color{oceanblue}\rule{\linewidth}{0.4pt}}\par\smallskip
+}
+
+% ---------- Compact "side-note" callout ----------
+\newtcolorbox{SideNote}[1]{
+  enhanced,
+  colback   = skytint,
+  colframe  = deepnavy,
+  sharp corners,
+  boxrule   = 0.6pt,
+  title     = {#1},
+  coltitle  = deepnavy,
+  fonttitle = \sffamily\bfseries\small,
+  fontupper = \small,
+  top=4pt, bottom=4pt, left=6pt, right=6pt,
+  before skip=6pt, after skip=6pt,
+}
+
+% ---------- "Warning" / "Caution" (compliance) ----------
+\newtcolorbox{CautionBox}{
+  enhanced,
+  colback   = accentred!5,
+  colframe  = accentred,
+  sharp corners,
+  boxrule   = 0.8pt,
+  title     = {Caution},
+  coltitle  = white,
+  colbacktitle = accentred,
+  fonttitle = \sffamily\bfseries\small,
+  fontupper = \small,
+  top=4pt, bottom=4pt, left=6pt, right=6pt,
+  before skip=6pt, after skip=6pt,
+}
+
+% ---------- Bit-field width — bytefield takes the width per environment
+% via the [bitwidth=...] option, so nothing is set globally here.
+% ----------
+
+% ---------- TikZ common styles ----------
+\tikzset{
+  arr/.style          = {-Stealth, semithick, draw=oceanblue},
+  arrfat/.style       = {-Stealth, line width=1.1pt, draw=oceanblue},
+  arrdim/.style       = {-Stealth, semithick, draw=graytext},
+  bus/.style          = {line width=2pt, draw=oceanblue!70},
+  ctrl/.style         = {-Stealth, semithick, draw=accentred, dashed},
+  databg/.style       = {fill=oceanblue!8},
+  wirelabel/.style    = {font=\footnotesize\sffamily, color=graytext, fill=white, inner sep=1pt},
+  blocknode/.style    = {rectangle, draw=oceanblue, semithick, rounded corners=2pt,
+                          fill=oceanblue!8, minimum width=2.4cm, minimum height=0.8cm,
+                          font=\sffamily\small, align=center},
+  hotblock/.style     = {rectangle, draw=accentred, thick, rounded corners=2pt,
+                          fill=accentred!10, minimum width=2.4cm, minimum height=0.8cm,
+                          font=\sffamily\small, align=center},
+  ram/.style          = {rectangle, draw=accentpurple, thick, rounded corners=1pt,
+                          fill=accentpurple!10, minimum width=2.0cm, minimum height=0.7cm,
+                          font=\sffamily\small, align=center},
+  stage/.style        = {rectangle, draw=oceanblue, thick, rounded corners=1pt,
+                          fill=oceanblue!10, minimum width=1.6cm, minimum height=1.0cm,
+                          font=\sffamily\footnotesize, align=center},
+  scheduler/.style    = {rectangle, draw=graytext, thick, dashed, rounded corners=3pt,
+                          fill=white, minimum width=3cm, minimum height=0.9cm,
+                          font=\sffamily\small, align=center},
+  port/.style         = {circle, draw=oceanblue, fill=oceanblue!20,
+                          minimum size=0.35cm, inner sep=0pt,
+                          font=\sffamily\scriptsize},
+  domainlabel/.style  = {font=\sffamily\scriptsize\color{graytext}, align=center},
+  everylabel/.style   = {font=\sffamily\footnotesize, align=center},
+  tightarr/.style     = {-{Stealth[length=1.5mm,width=1.2mm]}, thin, draw=oceanblue},
+}
+
+% =================================================================
 \begin{document}
 \color{pureblack}
 
-% ---- Title page ----
+% =================================================================
+%  Title page
+% =================================================================
 \begin{titlepage}
-  \centering
-  \vspace*{4cm}
-  {\sffamily\huge\bfseries\color{oceanblue} pccx v002 \par}
-  \vspace{0.5cm}
-  {\sffamily\LARGE\bfseries\color{oceanblue} Instruction Set Architecture \par}
-  \vspace{0.3cm}
-  {\sffamily\Large\color{graytext} User Guidebook \par}
-  \vfill
-  {\sffamily\small\color{graytext}
-    Parallel Compute Core eXecutor\\
-    Edge-FPGA NPU for Transformer-based LLM decoding\\
-    Target platform: Xilinx Kria KV260 (Zynq UltraScale+ ZU5EV)\\[2em]
-    Revision: v002\\
-    Document repository: \url{https://github.com/hwkim-dev/pccx}\par
-  }
-  \vspace{2cm}
+\thispagestyle{empty}
+\begin{tikzpicture}[remember picture, overlay]
+  % Top accent band
+  \fill[oceanblue] (current page.north west) rectangle ++(\paperwidth, -0.9cm);
+  % Side rule
+  \draw[oceanblue, line width=3pt] ([xshift=2cm, yshift=-2.4cm]current page.north west) -- ++(0, -22cm);
+\end{tikzpicture}
+
+\vspace*{3.5cm}
+\begin{flushleft}
+\hspace{2cm}%
+\begin{minipage}{0.82\textwidth}
+{\sffamily\fontsize{44pt}{48pt}\selectfont\bfseries\color{oceanblue} pccx\par}
+\vspace{0.2cm}
+{\sffamily\fontsize{22pt}{26pt}\selectfont\color{deepnavy} Parallel Compute Core eXecutor\par}
+\vspace{2cm}
+{\sffamily\fontsize{28pt}{32pt}\selectfont\bfseries\color{pureblack} Instruction Set Architecture\par}
+\vspace{0.3cm}
+{\sffamily\fontsize{22pt}{26pt}\selectfont\color{pureblack} Software Developer's Manual\par}
+\vspace{0.5cm}
+{\sffamily\Large\color{graytext} Volume 1 --- Basic Architecture\par}
+{\sffamily\Large\color{graytext} Volume 2 --- Instruction Set Reference\par}
+{\sffamily\Large\color{graytext} Volume 3 --- System Programming Guide\par}
+
+\vspace{4cm}
+{\sffamily\normalsize\color{graytext}
+Edge-FPGA NPU for Transformer-based LLM decoding\\[0.2em]
+Target platform: Xilinx Kria KV260 (Zynq UltraScale+ ZU5EV)\\[0.2em]
+Revision: v002 \quad\textbullet\quad Order Number: pccx-v002-SDM\par
+}
+\end{minipage}
+\end{flushleft}
+\vfill
+\begin{tikzpicture}[remember picture, overlay]
+  \fill[oceanblue] (current page.south west) rectangle ++(\paperwidth, 0.9cm);
+  \node[anchor=south west, text=white, font=\sffamily\small]
+    at ([xshift=2cm, yshift=0.3cm]current page.south west)
+    {Document Repository: \texttt{https://github.com/hwkim-dev/pccx}};
+  \node[anchor=south east, text=white, font=\sffamily\small]
+    at ([xshift=-2cm, yshift=0.3cm]current page.south east)
+    {Apache License 2.0};
+\end{tikzpicture}
 \end{titlepage}
 
-% ---- Front matter ----
+% =================================================================
+%  Front matter
+% =================================================================
 \pagenumbering{roman}
-\tableofcontents
+
+% ---------- Preface ----------
+\chapter*{Preface}
+\addcontentsline{toc}{chapter}{Preface}
+\markboth{Preface}{}
+
+This manual is the authoritative reference for the
+\textbf{\color{oceanblue}pccx v002 Instruction Set Architecture}, a
+fixed-length 64-bit VLIW-style ISA that drives a dedicated Neural
+Processing Unit (NPU) built to accelerate autoregressive decoding of
+Transformer-based Large Language Models on the Xilinx Kria KV260
+platform (Zynq UltraScale+ ZU5EV).
+
+The manual is organised as three conceptual volumes bound into a
+single book: Volume 1 describes the \textbf{basic architecture} of
+the NPU and its interaction with the host processing system; Volume 2
+is the per-instruction reference written in the classical Intel SDM
+format (Opcode table, Description, Operation pseudocode, Flags
+Affected, Exceptions); Volume 3 is the \textbf{system programming
+guide} covering memory ordering, completion fences, and the host
+driver surface.
+
+\RefSection{Notational Conventions}
+
+\begin{itemize}[label={\color{oceanblue}\textbullet}, leftmargin=*, itemsep=0.3ex]
+  \item Bit ranges use the \texttt{[MSB:LSB]} convention, inclusive on
+        both ends. \texttt{[63:60]} is a 4-bit field.
+  \item Hexadecimal constants use the SystemVerilog literal form,
+        e.g.\ \texttt{4'h0} (a 4-bit hex zero).
+  \item The symbol $\gets$ is used in Operation pseudocode to denote
+        assignment; $\equiv$ denotes definitional equivalence.
+  \item \texttt{dest} always precedes \texttt{src} in field ordering.
+  \item A field annotated ``reserved'' must be written as zero by
+        software. The decoder does not currently check this, but future
+        revisions may assign the field.
+\end{itemize}
+
+\RefSection{Relationship to Other Documentation}
+
+The pccx web portal at \url{https://hwkim-dev.github.io/pccx/}
+contains a living, cross-referenced copy of the encoding tables
+together with interactive Mermaid, WaveDrom, and Graphviz diagrams.
+This PDF is the \textit{offline, signoff-ready} mirror; both sources
+are regenerated from the authoritative RTL definitions in the external
+repository
+\href{https://github.com/hwkim-dev/pccx-FPGA-NPU-LLM-kv260}{\texttt{hwkim-dev/pccx-FPGA-NPU-LLM-kv260}}
+under
+\texttt{hw/rtl/NPU\_Controller/NPU\_Control\_Unit/ISA\_PACKAGE/isa\_pkg.sv}.
+Where this manual and \texttt{isa\_pkg.sv} disagree, the SystemVerilog
+package is normative.
+
+\RefSection{Feedback}
+
+File issues against the \texttt{pccx} repository or submit pull
+requests to the same. The author reads every report.
+
 \newpage
 
-% ---- Body ----
+% ---------- Table of Contents ----------
+\tableofcontents
+\clearpage
+% ---------- List of Figures ----------
+\listoffigures
+\clearpage
+
+% =================================================================
+%  Body
+% =================================================================
 \pagenumbering{arabic}
 \setcounter{chapter}{0}
 
-% =============================================================
+% =================================================================
 \chapter{ABOUT THIS MANUAL}
 
 \section{Scope}
 
-This manual is the authoritative reference for the
-\textbf{\color{oceanblue}pccx v002 Instruction Set Architecture}, the user-facing
-binary contract between the host driver running on the Zynq UltraScale+ PS and
-the NPU execution complex that lives on the PL.
-
-The ISA is a \textbf{fixed 64-bit} encoding, VLIW in spirit: one instruction
-dispatches thousands of MAC cycles across the systolic array. Five opcodes are
-defined in v002: GEMV, GEMM, MEMCPY, MEMSET, and CVO. The remaining eleven
-opcode slots (\texttt{4'h5}--\texttt{4'hF}) are reserved.
+This manual is the authoritative reference for the \textbf{pccx v002
+Instruction Set Architecture} (hereafter ``the ISA''). The ISA defines
+the exact binary contract between a host driver running on the
+Zynq~UltraScale+ Processing System (PS) and the NPU execution complex
+that lives on the Programmable Logic (PL). Every opcode, every field,
+every reserved bit documented here mirrors
+\texttt{isa\_pkg.sv} in the v002 RTL repository.
 
 \section{Audience}
 
-This document assumes familiarity with:
+This document assumes familiarity with the following:
 
-\begin{itemize}[label={\color{oceanblue}\textbullet}, leftmargin=*, itemsep=0.5ex]
-    \item Systolic arrays (Weight Stationary / Weight Streaming dataflow).
-    \item AXI4 / AXI4-Lite, in particular the Zynq UltraScale+ HP and ACP ports.
-    \item Transformer LLM decoding (Q/K/V projection, attention, FFN, RoPE).
-    \item Block-floating-point (BFloat16) numerics and INT4 weight quantization.
+\begin{itemize}[label={\color{oceanblue}\textbullet}, leftmargin=*, itemsep=0.3ex]
+  \item Systolic arrays with Weight Stationary and Weight Streaming dataflow.
+  \item The AXI4 and AXI4-Lite protocols, in particular the Zynq
+        UltraScale+ HP and ACP port semantics.
+  \item Transformer LLM decoding: Q/K/V projection, scaled
+        dot-product attention, the FFN block, RMSNorm, RoPE, and
+        token streaming.
+  \item Block-floating-point (BFloat16) numerics and INT4 weight
+        quantization (WNx/AxAy notation).
 \end{itemize}
 
-It does \textit{not} attempt to be a tutorial. For onboarding material, start at
-the pccx documentation portal: \url{https://hwkim-dev.github.io/pccx/}.
+This manual is \textit{not} a tutorial. For onboarding material,
+start from the pccx documentation portal.
 
-\section{Relationship to the HTML Documentation}
+\section{Manual Layout}
 
-The web portal at \url{https://hwkim-dev.github.io/pccx/} contains the same
-ISA tables that this PDF carries, plus live diagrams rendered via Mermaid /
-WaveDrom. This guidebook is the \textbf{offline, downloadable, signoff-ready}
-version — identical numbers, identical opcodes, typeset for print.
+\begin{center}
+\begin{tikzpicture}[
+  node distance=0.5cm and 0.55cm,
+  vol/.style={rectangle, draw=oceanblue, thick, rounded corners=2pt,
+              fill=skytint, minimum width=3.5cm, minimum height=1.8cm,
+              font=\sffamily\small, align=center, inner sep=4pt},
+]
+  \node[vol] (v1) {\textbf{Volume 1}\\Basic Architecture\\\textcolor{graytext}{\scriptsize Ch. 2 -- 3}};
+  \node[vol, right=of v1] (v2) {\textbf{Volume 2}\\Instruction Set Reference\\\textcolor{graytext}{\scriptsize Ch. 4 -- 6}};
+  \node[vol, right=of v2] (v3) {\textbf{Volume 3}\\System Programming Guide\\\textcolor{graytext}{\scriptsize Ch. 7 -- 8}};
+  \node[vol, right=of v3] (ap) {\textbf{Appendices}\\A -- D\\\textcolor{graytext}{\scriptsize Opcode Map, etc.}};
 
-Both sources are regenerated from the authoritative RTL definitions in the
-external RTL repository
-(\url{https://github.com/hwkim-dev/pccx-FPGA-NPU-LLM-kv260}) at file
-\texttt{hw/rtl/NPU\_Controller/NPU\_Control\_Unit/ISA\_PACKAGE/isa\_pkg.sv}.
-If this manual ever disagrees with \texttt{isa\_pkg.sv}, the SystemVerilog
-package wins and this manual is wrong.
-
-\section{Conventions}
-
-\begin{itemize}[label={\color{oceanblue}\textbullet}, leftmargin=*, itemsep=0.5ex]
-    \item Bit ranges are written \textbf{\texttt{[MSB:LSB]}}, inclusive at both
-          ends. \texttt{[63:60]} is a 4-bit field spanning four bits.
-    \item Opcodes are always 4 bits wide; values are written in SystemVerilog
-          literal form, e.g.\ \texttt{4'h0}.
-    \item Pointer / address widths are notated as \texttt{Nb} (e.g.\ 17b = 17
-          bits).
-    \item \texttt{dest} always precedes \texttt{src} in field ordering, mirroring
-          Intel syntax (\texttt{dest = f(src1, src2, \ldots)}).
-    \item Reserved bits MUST be written as zero by software. The decoder does
-          not check this, but future revisions may assign the fields.
-\end{itemize}
+  \draw[arr] (v1) -- (v2);
+  \draw[arr] (v2) -- (v3);
+  \draw[arr] (v3) -- (ap);
+\end{tikzpicture}
+\captionof{figure}{Manual layout — four volumes bound into one book.}
+\label{fig:manual-layout}
+\end{center}
 
 \newpage
 
-% =============================================================
-\chapter{INSTRUCTION ENCODING OVERVIEW}
+% =================================================================
+\chapter{ARCHITECTURAL OVERVIEW}
 
-\section{Top-level 64-bit Layout}
+This chapter provides the architectural context required to read
+subsequent chapters. It describes the host--device boundary, the
+internal datapath of the NPU, the memory hierarchy, and the
+execution pipeline at a block level. Subsequent chapters refer back
+to the figures defined here.
 
-Every pccx v002 instruction is exactly \textbf{64 bits wide}. The four
-most-significant bits are the opcode; the remaining 60 bits are the
-per-opcode instruction body.
+\section{System Context}
 
-\begin{figure}[h]
-\centering
-\sffamily\scriptsize
-\renewcommand{\arraystretch}{1.3}
-
-\resizebox{\textwidth}{!}{
-\fbox{
-  \begin{tabular}{c c}
-  \hline
-  \multicolumn{1}{|c|}{\makebox[2cm]{\tiny \texttt{[63:60]} — 4b}} &
-  \multicolumn{1}{c|}{\makebox[12cm]{\tiny \texttt{[59:0]} — 60b}} \\
-  \hline
-  \multicolumn{1}{|c|}{\textbf{\color{oceanblue}opcode}} &
-  \multicolumn{1}{c|}{\textbf{\color{oceanblue}instruction body}} \\
-  \hline
-  \end{tabular}
-}
-}
-\vspace{-0.5em}
-\caption{\color{oceanblue}Top-level 64-bit instruction word (opcode + body).}
-\end{figure}
-
-\section{Opcode Table}
-
-Of the sixteen possible opcodes, five are in use today. The remainder are
-reserved for future ISA extensions — decoder behavior on reserved opcodes
-is \textbf{undefined} and should not be relied upon.
-
-\begin{longtable}{|c|l|l|p{7.5cm}|}
-\hline
-\textbf{\color{oceanblue}Opcode} &
-\textbf{\color{oceanblue}Mnemonic} &
-\textbf{\color{oceanblue}Function} &
-\textbf{\color{oceanblue}Primary fields} \\
-\hline
-\endhead
-
-\texttt{4'h0} & \textbf{GEMV}   & Matrix $\times$ vector                 & dest\_reg, src\_addr, flags, shape\_ptr, size\_ptr, parallel\_lane \\
-\hline
-\texttt{4'h1} & \textbf{GEMM}   & Matrix $\times$ matrix                  & Identical layout to GEMV (dest\_reg, src\_addr, flags, shape\_ptr, size\_ptr, parallel\_lane) \\
-\hline
-\texttt{4'h2} & \textbf{MEMCPY} & Device-to-device data movement          & from\_device, to\_device, dest\_addr, src\_addr, aux\_addr, shape\_ptr, async \\
-\hline
-\texttt{4'h3} & \textbf{MEMSET} & Constant Cache write                    & dest\_cache, dest\_addr, a/b/c\_value \\
-\hline
-\texttt{4'h4} & \textbf{CVO}    & Complex Vector Op (SFU)                 & cvo\_func, src\_addr, dst\_addr, length, flags, async \\
-\hline
-\texttt{4'h5}--\texttt{4'hF} & \textit{reserved} & ---                    & Reserved for future extensions. Decoder behavior undefined. \\
-\hline
-\end{longtable}
-
-\section{Decode Flow}
-
-The host writes 64-bit instructions into the AXI-Lite \texttt{CMD\_IN} FIFO.
-The decode path is a pure combinatorial branch on \texttt{opcode[63:60]}
-followed by a dependency-checked dispatch:
+The pccx NPU sits inside the PL of the Zynq UltraScale+ and is
+driven by the ARM Cortex-A53 cluster on the PS. The host issues
+instructions via an AXI4-Lite command FIFO and receives completion
+status via a second AXI4-Lite FIFO. Bulk data crosses via four
+AXI4 High-Performance ports (HP0--HP3) and one Accelerator Coherency
+Port (ACP) for low-latency transfers.
 
 \begin{figure}[h]
 \centering
 \begin{tikzpicture}[
-  node distance=0.8cm and 1.2cm,
-  every node/.style={font=\sffamily\small, align=center},
-  box/.style={rectangle, draw=oceanblue, thick, rounded corners=3pt, minimum width=2.7cm, minimum height=0.9cm, fill=oceanblue!8},
-  fifo/.style={rectangle, draw=oceanblue, thick, minimum width=3cm, minimum height=0.9cm, fill=oceanblue!15},
-  sch/.style={rectangle, draw=graytext, thick, dashed, rounded corners=3pt, minimum width=3cm, minimum height=0.9cm, fill=white},
-  arr/.style={-Stealth, thick, draw=oceanblue}
+  node distance = 0.5cm and 1.0cm,
+  font = \sffamily\small,
 ]
-  \node[fifo] (cmd) {AXI-Lite\\CMD\_IN FIFO};
-  \node[box,  right=of cmd] (dec) {Decoder\\\scriptsize (\texttt{ctrl\_npu\_decode})};
-  \node[box,  right=of dec] (disp) {Dispatcher\\\scriptsize (\texttt{ctrl\_dispatcher})};
-  \node[sch,  above=of disp] (gs)  {Global Scheduler\\\scriptsize hazard / dependency};
+  % PS side
+  \node[blocknode, minimum width=3.0cm, minimum height=1.1cm, fill=oceanblue!15] (cpu)
+    {ARM Cortex-A53\\\scriptsize 4 cores};
+  \node[blocknode, below=of cpu, minimum width=3.0cm, minimum height=1.1cm, fill=oceanblue!15]
+    (drv) {Host Driver\\\scriptsize libpccx};
+  \node[ram, below=of drv, minimum width=3.0cm] (ddr) {DDR4\\\scriptsize 4\,GB};
+  \node[fit={(cpu) (drv) (ddr)}, draw=graytext, dashed, thick,
+        inner sep=10pt,
+        label={[font=\sffamily\bfseries\color{graytext}, anchor=south]above:Processing System (PS)}]
+        (ps) {};
 
-  \node[box, right=of disp, yshift=1.7cm]  (gemm) {GEMM ctrl};
-  \node[box, right=of disp, yshift=0.7cm]  (gemv) {GEMV ctrl};
-  \node[box, right=of disp, yshift=-0.3cm] (mc)   {MEMCTRL\\\scriptsize ACP / NPU};
-  \node[box, right=of disp, yshift=-1.3cm] (ms)   {MEMSET\\\scriptsize Constant};
-  \node[box, right=of disp, yshift=-2.3cm] (cvo)  {CVO ctrl};
+  % PL side
+  \node[hotblock, right=4.0cm of cpu, minimum width=3.2cm, minimum height=1.3cm]
+    (ctrl) {Control Unit\\\scriptsize decode · dispatch};
+  \node[blocknode, below=of ctrl, minimum width=3.2cm, minimum height=1.3cm, fill=accentpurple!10, draw=accentpurple]
+    (comp) {Compute Cluster\\\scriptsize GEMM · GEMV · SFU};
+  \node[ram, below=of comp, minimum width=3.2cm]
+    (l2) {L2 Cache\\\scriptsize 1.75\,MB URAM};
+  \node[fit={(ctrl) (comp) (l2)}, draw=graytext, dashed, thick,
+        inner sep=10pt,
+        label={[font=\sffamily\bfseries\color{graytext}, anchor=south]above:Programmable Logic (PL) --- pccx NPU}]
+        (pl) {};
 
-  \draw[arr] (cmd)  -- (dec);
-  \draw[arr] (dec)  -- node[above, font=\scriptsize]{μop} (disp);
-  \draw[arr] (gs)   -- (disp);
-  \draw[arr] (disp.east) -- (gemm.west);
-  \draw[arr] (disp.east) -- (gemv.west);
-  \draw[arr] (disp.east) -- (mc.west);
-  \draw[arr] (disp.east) -- (ms.west);
-  \draw[arr] (disp.east) -- (cvo.west);
+  % AXI links
+  \draw[arrfat] (cpu.east) -- node[above=0pt, font=\sffamily\scriptsize]{AXI4-Lite CMD\_IN}
+                            node[below=0pt, font=\sffamily\scriptsize]{64\,b instr.}  (ctrl.west);
+  \draw[arrfat] (ctrl.west) ++(0,-0.35cm) -- ++(-2.3cm,0) -- ++(0,-0.55cm) -| (drv.east)
+      node[pos=0.2, above, font=\sffamily\scriptsize]{STAT\_OUT};
+  \draw[bus] (ddr.east) -- node[above=0pt, font=\sffamily\scriptsize, pos=0.5]{AXI-HP $\times$ 4}
+                          node[below=0pt, font=\sffamily\scriptsize, pos=0.5]{128\,b @ 250\,MHz}
+                          (l2.west);
 \end{tikzpicture}
-\caption{\color{oceanblue}Instruction decode and dispatch path inside the NPU Control Unit.}
+\caption{Host--device partition. PS issues 64-bit instructions to the
+Control Unit over AXI4-Lite, while bulk activations and weights cross
+via four 128-bit HP ports.}
+\label{fig:system-context}
 \end{figure}
 
-\section{μop Decomposition}
+\section{NPU Top-Level Block Diagram}
 
-Inside the dispatcher, each opcode decomposes into a narrower μop that
-carries only the back-end-relevant fields.
-
-\begin{longtable}{|l|p{10.5cm}|}
-\hline
-\textbf{\color{oceanblue}μop type} & \textbf{\color{oceanblue}Fields} \\
-\hline
-\endhead
-\texttt{gemm\_control\_uop\_t}          & flags (6b) + size\_ptr\_addr (6b) + parallel\_lane (5b) \\
-\hline
-\texttt{GEMV\_control\_uop\_t}          & Same layout as \texttt{gemm\_control\_uop\_t}. \\
-\hline
-\texttt{memory\_control\_uop\_t} (49b) & data\_route (8b) + dest\_addr + src\_addr + shape\_ptr + async \\
-\hline
-\texttt{memory\_set\_uop\_t}           & dest\_cache (2b) + dest\_addr + a/b/c\_value (16b $\times$ 3) \\
-\hline
-\texttt{cvo\_control\_uop\_t}          & cvo\_func (4b) + src\_addr + dst\_addr + length + flags + async \\
-\hline
-\end{longtable}
-
-\section{Compute vs Memory vs SFU — Instruction Format Families}
-
-The 60-bit body falls into three structural \textit{families} that share a
-header (opcode + control flags) but differ in payload layout.
-
-\subsection{Type A: Compute \& Data Processing Format (GEMV / GEMM)}
-
-This format drives the systolic array. The 17-bit addresses reach anywhere
-in the L2 cache; the 6-bit pointers index the Constant Cache where shape and
-size metadata live.
+Figure~\ref{fig:npu-top} expands the PL side of Figure~\ref{fig:system-context}.
+The Control Unit decodes each 64-bit instruction in one cycle and
+emits micro-ops (\textit{μops}) into the Dispatcher, which resolves
+hazards and feeds the GEMM, GEMV, SFU, and DMA back-end resources.
 
 \begin{figure}[h]
 \centering
-\sffamily\small
-\renewcommand{\arraystretch}{1.5}
+\begin{tikzpicture}[
+  node distance = 0.45cm and 0.9cm,
+  font = \sffamily\small,
+]
+  % Row 1 — Control path
+  \node[blocknode, minimum width=2.5cm] (cmd) {CMD\_IN\\FIFO};
+  \node[blocknode, right=of cmd, minimum width=2.2cm] (dec) {Decoder};
+  \node[hotblock,  right=of dec, minimum width=2.6cm] (disp) {Dispatcher};
+  \node[scheduler, above=0.35cm of disp] (gs) {Global Scheduler};
 
-\resizebox{\textwidth}{!}{
-  \begin{tabular}{|*{11}{c|}}
-  \multicolumn{1}{c}{\textbf{\color{oceanblue}Opcode}} &
-  \multicolumn{3}{c}{\textbf{\color{oceanblue}Control Flags}} &
-  \multicolumn{2}{c}{\textbf{\color{oceanblue}Addresses}} &
-  \multicolumn{2}{c}{\textbf{\color{oceanblue}Pointers}} &
-  \multicolumn{2}{c}{\textbf{\color{oceanblue}Options}} &
-  \multicolumn{1}{c}{\textbf{\color{oceanblue}Reserved}} \\[1ex]
+  % Row 2 — Back-end resources
+  \node[blocknode, below=1.0cm of disp, xshift=-4.8cm, minimum width=2.3cm, fill=accentpurple!10, draw=accentpurple] (gemm) {GEMM\\\scriptsize 32$\times$32 SA};
+  \node[blocknode, right=0.35cm of gemm, minimum width=2.3cm, fill=accentpurple!10, draw=accentpurple] (gemv) {GEMV\\\scriptsize 4$\times$32 MAC};
+  \node[blocknode, right=0.35cm of gemv, minimum width=2.3cm, fill=accentpurple!10, draw=accentpurple] (sfu)  {SFU (CVO)\\\scriptsize CORDIC/LUT};
+  \node[blocknode, right=0.35cm of sfu, minimum width=2.3cm, fill=accentorange!15, draw=accentorange] (dma) {DMA\\\scriptsize ACP/HP};
 
-  \hline
-  \makebox[1.2cm]{\scriptsize 4b} &
-  \makebox[0.6cm]{\scriptsize 1b} &
-  \makebox[0.6cm]{\scriptsize 1b} &
-  \makebox[0.8cm]{\scriptsize 1b} &
-  \makebox[1.8cm]{\scriptsize 17b} &
-  \makebox[1.8cm]{\scriptsize 17b} &
-  \makebox[1.4cm]{\scriptsize 6b} &
-  \makebox[1.4cm]{\scriptsize 6b} &
-  \makebox[1.2cm]{\scriptsize 3b} &
-  \makebox[1.2cm]{\scriptsize 3b} &
-  \makebox[1.2cm]{\scriptsize 5b} \\
-  \hline
+  % Row 3 — Memory
+  \node[ram, below=1.0cm of gemm, minimum width=2.3cm] (l1g) {L1\\\scriptsize GEMM};
+  \node[ram, below=1.0cm of gemv, minimum width=2.3cm] (l1v) {L1\\\scriptsize GEMV};
+  \node[ram, below=1.0cm of sfu,  minimum width=2.3cm] (l1s) {L1\\\scriptsize SFU};
+  \node[ram, below=1.0cm of dma,  minimum width=2.3cm] (wfif){Weight FIFO\\\scriptsize 4$\times$URAM};
 
-  \textbf{\color{oceanblue}Opcode} &
-  \textbf{OVR} & \textbf{CMD} & \textbf{CHN} &
-  \textbf{Dest Addr} & \textbf{Src Addr} &
-  \textbf{Size Ptr} & \textbf{Shape Ptr} &
-  \textbf{Lane} & \textbf{Emax/ACC} & \textbf{-} \\
-  \hline
-  \end{tabular}
-}
-\vspace{1em}
-\caption{\color{oceanblue}Type A layout shared by GEMV (\texttt{4'h0}) and GEMM (\texttt{4'h1}).}
+  % L2
+  \node[ram, below=0.9cm of l1v, minimum width=10cm, minimum height=1cm, fill=accentpurple!18]
+    (l2) {L2 Cache (Unified FMAP + KV) --- 1.75\,MB URAM};
+  \node[ram, below=0.4cm of l2, minimum width=10cm, minimum height=0.8cm, fill=skytint]
+    (cc) {Constant Cache --- 64 entries};
+
+  % Arrows
+  \draw[arr] (cmd) -- (dec);
+  \draw[arr] (dec) -- node[above, font=\sffamily\scriptsize]{μop} (disp);
+  \draw[arr, <->] (disp) -- (gs);
+
+  \draw[arr] (disp.south) -- ++(0,-0.35cm) -| (gemm.north);
+  \draw[arr] (disp.south) -- ++(0,-0.35cm) -| (gemv.north);
+  \draw[arr] (disp.south) -- ++(0,-0.35cm) -| (sfu.north);
+  \draw[arr] (disp.south) -- ++(0,-0.35cm) -| (dma.north);
+
+  \draw[bus] (gemm) -- (l1g);
+  \draw[bus] (gemv) -- (l1v);
+  \draw[bus] (sfu)  -- (l1s);
+  \draw[bus] (dma)  -- (wfif);
+
+  \draw[bus] (l1g) -- (l2);
+  \draw[bus] (l1v) -- (l2);
+  \draw[bus] (l1s) -- (l2);
+  \draw[bus] (wfif) -- (l2);
+  \draw[arr] (cc.east) -| ++(0.6cm,1.6cm) |- (disp.east);
+\end{tikzpicture}
+\caption{NPU top-level block diagram. Control flows top-down; data
+flows bottom-up via the unified L2 cache.}
+\label{fig:npu-top}
 \end{figure}
 
-\subsection{Type B: Memory \& Device Control Format (MEMCPY)}
+\section{Clock Domains and CDC}
 
-High-bandwidth data movement between host DDR4, the L2 cache, and the L1
-caches in front of each compute core. Three 17-bit addresses, because the
-auxiliary slot carries the host-side offset when the data crosses ACP.
+Two clock domains meet inside the NPU: the 250\,MHz AXI domain
+adjacent to the PS, and the 400\,MHz compute core. A bank of Xilinx
+Parameterized Macro (XPM) asynchronous FIFOs in
+\texttt{independent\_clock} mode is the only path that crosses the
+boundary; there is no manual synchronizer logic.
 
 \begin{figure}[h]
 \centering
-\sffamily\small
-\renewcommand{\arraystretch}{1.5}
+\begin{tikzpicture}[
+  node distance = 0.3cm and 0.8cm,
+  font = \sffamily\small,
+]
+  \node[blocknode, minimum width=2.4cm, fill=accentorange!15, draw=accentorange]
+    (wr) {Write\\\scriptsize 250 MHz};
+  \node[ram, right=of wr, minimum width=3.5cm, fill=skytint] (fifo) {XPM Async FIFO\\\scriptsize 4096$\times$128\,b};
+  \node[blocknode, right=of fifo, minimum width=2.4cm, fill=accentgreen!15, draw=accentgreen]
+    (rd) {Read\\\scriptsize 400 MHz};
 
-\resizebox{\textwidth}{!}{
-  \begin{tabular}{|*{8}{c|}}
-  \multicolumn{1}{c}{\textbf{\color{oceanblue}Opcode}} &
-  \multicolumn{3}{c}{\textbf{\color{oceanblue}Control Flags}} &
-  \multicolumn{3}{c}{\textbf{\color{oceanblue}Device \& Cache Addresses}} &
-  \multicolumn{1}{c}{\textbf{\color{oceanblue}Pointers}} \\[1ex]
-  \hline
+  \draw[arr] (wr) -- node[above, font=\sffamily\scriptsize]{data+wr\_en} (fifo.west);
+  \draw[arr] (fifo.east) -- node[above, font=\sffamily\scriptsize]{data+rd\_en} (rd);
 
-  \makebox[1.2cm]{\scriptsize 4b} &
-  \makebox[0.6cm]{\scriptsize 1b} &
-  \makebox[0.6cm]{\scriptsize 1b} &
-  \makebox[0.8cm]{\scriptsize 1b} &
-  \makebox[2.2cm]{\scriptsize 17b} &
-  \makebox[2.2cm]{\scriptsize 17b} &
-  \makebox[2.2cm]{\scriptsize 17b} &
-  \makebox[1.8cm]{\scriptsize 6b} \\
-  \hline
+  % Clock arrows
+  \node[font=\sffamily\scriptsize, above=0.05cm of wr] {\color{accentorange}CLK\_PS};
+  \node[font=\sffamily\scriptsize, above=0.05cm of rd] {\color{accentgreen}CLK\_PL};
 
-  \textbf{\color{oceanblue}Opcode} &
-  \textbf{OVR} & \textbf{CMD} & \textbf{CHN} &
-  \textbf{A Addr} & \textbf{B Addr} & \textbf{C Addr} &
-  \textbf{Shape Ptr} \\
-  \hline
-  \end{tabular}
-}
-\vspace{1em}
-\caption{\color{oceanblue}Type B layout — MEMCPY (\texttt{4'h2}).}
+  % Boundary dashed line
+  \draw[graytext, dashed, thick] ($(fifo.north west)+(0,0.4cm)$) -- ($(fifo.south west)+(0,-0.4cm)$);
+  \draw[graytext, dashed, thick] ($(fifo.north east)+(0,0.4cm)$) -- ($(fifo.south east)+(0,-0.4cm)$);
+
+  \node[domainlabel, above=0.55cm of wr] {PS clock domain};
+  \node[domainlabel, above=0.55cm of rd] {PL clock domain};
+\end{tikzpicture}
+\caption{Clock-domain crossing path: a 4096$\times$128\,b XPM FIFO in
+\texttt{independent\_clock} mode decouples the 250\,MHz AXI side from
+the 400\,MHz compute core.}
+\label{fig:cdc}
 \end{figure}
 
-\subsection{Type C: Memory Set Format (MEMSET)}
-
-The only instruction that writes directly into the Constant Cache rather
-than the L2 cache. Because the Constant Cache entries are small (shape
-tuples, scale factors), MEMSET ships three 16-bit values per instruction.
+\section{Instruction Pipeline}
 
 \begin{figure}[h]
 \centering
-\sffamily\small
-\renewcommand{\arraystretch}{1.5}
+\begin{tikzpicture}[
+  node distance = 0.25cm,
+  font = \sffamily\footnotesize,
+]
+  \node[stage] (fe)  {IF\\\scriptsize Fetch};
+  \node[stage, right=of fe]  (de) {ID\\\scriptsize Decode};
+  \node[stage, right=of de]  (ds) {DS\\\scriptsize Dispatch};
+  \node[stage, right=of ds, fill=accentpurple!15, draw=accentpurple]  (ex) {EX\\\scriptsize Execute};
+  \node[stage, right=of ex]  (mem){ME\\\scriptsize Memory};
+  \node[stage, right=of mem] (wb) {WB\\\scriptsize Writeback};
+  \node[stage, right=of wb, fill=accentgreen!15, draw=accentgreen]  (co) {CO\\\scriptsize Commit};
 
-\resizebox{\textwidth}{!}{
-  \begin{tabular}{|*{10}{c|}}
-  \multicolumn{1}{c}{\textbf{\color{oceanblue}Opcode}} &
-  \multicolumn{3}{c}{\textbf{\color{oceanblue}Control Flags}} &
-  \multicolumn{3}{c}{\textbf{\color{oceanblue}RAM Config}} &
-  \multicolumn{2}{c}{\textbf{\color{oceanblue}Address \& Value}} &
-  \multicolumn{1}{c}{\textbf{\color{oceanblue}Reserved}} \\[1ex]
-  \hline
+  \foreach \a/\b in {fe/de, de/ds, ds/ex, ex/mem, mem/wb, wb/co}
+    \draw[arr] (\a) -- (\b);
 
-  \makebox[1.2cm]{\scriptsize 4b} &
-  \makebox[0.6cm]{\scriptsize 1b} &
-  \makebox[0.6cm]{\scriptsize 1b} &
-  \makebox[0.8cm]{\scriptsize 1b} &
-  \makebox[1.2cm]{\scriptsize 2b} &
-  \makebox[1.5cm]{\scriptsize 6b} &
-  \makebox[1.5cm]{\scriptsize 6b} &
-  \makebox[2.0cm]{\scriptsize 17b} &
-  \makebox[2.0cm]{\scriptsize 17b} &
-  \makebox[1.2cm]{\scriptsize 9b} \\
-  \hline
+  % Hazard feedback
+  \draw[ctrl] (ds.north) ++(0,0.1cm) -- ++(0,0.5cm)
+    -| node[pos=0.25, above, font=\sffamily\scriptsize]{stall on hazard} (fe.north);
+\end{tikzpicture}
+\caption{Conceptual 7-stage NPU pipeline. Because each instruction can
+launch thousands of MAC cycles, the \textbf{Execute} stage dominates
+real latency; the front end merely streams instructions in as fast as
+resources free up.}
+\label{fig:pipeline}
+\end{figure}
 
-  \textbf{\color{oceanblue}Opcode} &
-  \textbf{OVR} & \textbf{CMD} & \textbf{CHN} &
-  \textbf{Sel RAM} & \textbf{Shape Ptr} & \textbf{Weight Ptr} &
-  \textbf{A Addr} & \textbf{A Value} & \textbf{-} \\
-  \hline
-  \end{tabular}
-}
-\vspace{1em}
-\caption{\color{oceanblue}Type C layout — MEMSET (\texttt{4'h3}).}
+\section{Memory Hierarchy}
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[
+  node distance = 0.3cm,
+  font = \sffamily\small,
+]
+  % Layer stack
+  \node[rectangle, draw=graytext,  thick, fill=graytext!10,  minimum width=10cm, minimum height=0.9cm, rounded corners=2pt] (ddr) {DDR4 --- 4\,GB @ 12.8\,GB/s};
+  \node[rectangle, draw=accentorange, thick, fill=accentorange!15, minimum width=8.5cm, minimum height=0.9cm, rounded corners=2pt, below=of ddr] (acp) {AXI-HP $\times$ 4 + ACP --- 16\,GB/s burst};
+  \node[rectangle, draw=accentpurple, thick, fill=accentpurple!15, minimum width=7.0cm, minimum height=0.9cm, rounded corners=2pt, below=of acp] (l2) {Unified L2 --- 1.75\,MB URAM (FMAP + KV)};
+  \node[rectangle, draw=oceanblue,   thick, fill=oceanblue!15, minimum width=5.5cm, minimum height=0.9cm, rounded corners=2pt, below=of l2]  (l1) {Per-core L1 --- 128\,KB BRAM};
+  \node[rectangle, draw=accentgreen, thick, fill=accentgreen!18, minimum width=4.0cm, minimum height=0.9cm, rounded corners=2pt, below=of l1]  (rf) {Systolic Array / RegFile};
+
+  % Latency labels (right side)
+  \node[font=\sffamily\scriptsize\color{graytext}, right=0.2cm of ddr] {$\sim$200 cyc};
+  \node[font=\sffamily\scriptsize\color{graytext}, right=0.2cm of acp] {$\sim$40 cyc};
+  \node[font=\sffamily\scriptsize\color{graytext}, right=0.2cm of l2]  {$\sim$6 cyc};
+  \node[font=\sffamily\scriptsize\color{graytext}, right=0.2cm of l1]  {$\sim$2 cyc};
+  \node[font=\sffamily\scriptsize\color{graytext}, right=0.2cm of rf]  {0 cyc};
+
+  % Capacity labels (left)
+  \node[font=\sffamily\scriptsize\color{graytext}, left=0.2cm of ddr] {$2^{32}$ B};
+  \node[font=\sffamily\scriptsize\color{graytext}, left=0.2cm of l2]  {$2^{21}$ B};
+  \node[font=\sffamily\scriptsize\color{graytext}, left=0.2cm of l1]  {$2^{17}$ B};
+  \node[font=\sffamily\scriptsize\color{graytext}, left=0.2cm of rf]  {$2^{10}$ B};
+\end{tikzpicture}
+\caption{Memory hierarchy pyramid. Latency increases upward; capacity
+increases upward; bandwidth decreases upward. The unified 1.75\,MB L2
+dominates the on-chip budget.}
+\label{fig:mem-hier}
+\end{figure}
+
+\begin{SideNote}{URAM allocation breakdown}
+Of the 64 URAM blocks on the KV260, 8 are claimed by the 4-port
+Weight FIFO (2 per port) and the remaining 56 are paired into 28
+structural pairs to form the unified L2 (28 pairs $\times$ 4096
+depth $\times$ 128-bit = 114\,688 entries $\times$ 16 B =
+$\sim$1.75 MB). See Figure~\ref{fig:uram-alloc}.
+\end{SideNote}
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[
+  font = \sffamily\scriptsize,
+]
+  % 64 cells in an 8×8 grid
+  \foreach \i in {0,...,7} {
+    \foreach \j in {0,...,7} {
+      \pgfmathtruncatemacro{\n}{\i*8+\j}
+      \pgfmathtruncatemacro{\isWeight}{\n < 8 ? 1 : 0}
+      \ifnum\isWeight=1
+        \draw[fill=accentorange!35, draw=accentorange] (\j*0.6,-\i*0.6) rectangle ++(0.55,0.55);
+      \else
+        \draw[fill=accentpurple!25, draw=accentpurple] (\j*0.6,-\i*0.6) rectangle ++(0.55,0.55);
+      \fi
+      \node at (\j*0.6 + 0.275, -\i*0.6 + 0.275) {\n};
+    }
+  }
+
+  % Legend
+  \draw[fill=accentorange!35, draw=accentorange] (6,1) rectangle ++(0.4,0.4);
+  \node[right=0.15cm, font=\sffamily\footnotesize] at (6.4,1.2) {Weight FIFO (8 URAMs, 2 per port $\times$ 4 ports)};
+  \draw[fill=accentpurple!25, draw=accentpurple] (6,0.4) rectangle ++(0.4,0.4);
+  \node[right=0.15cm, font=\sffamily\footnotesize] at (6.4,0.6) {Unified L2 --- FMAP + KV Cache (56 URAMs, 28 pairs)};
+\end{tikzpicture}
+\caption{Physical URAM allocation on the Kria KV260 (64 blocks total).
+Blocks 0--7 form the 4-port Weight FIFO; blocks 8--63 pair up to
+create the 1.75 MB unified L2.}
+\label{fig:uram-alloc}
 \end{figure}
 
 \newpage
 
-% =============================================================
-\chapter{PER-INSTRUCTION REFERENCE}
+% =================================================================
+\chapter{NUMERICS AND EXECUTION MODEL}
 
-This chapter is the normative reference for every v002 opcode. Each section
-gives (1) the exact bit-by-bit body layout, (2) the semantics of every flag,
-and (3) the typical use case in Transformer decoding.
+\section{Block Floating Point + INT4 Weight Quantization}
 
-% -----------------------------------------------------------
-\section{GEMV / GEMM (opcode = \texttt{4'h0} / \texttt{4'h1})}
+pccx performs dot products with exact integer arithmetic by aligning
+activation exponents to a common Block Floating Point (BF16) scale
+factor, then multiplying by INT4-quantized weights. A single
+DSP48E2 executes the 9-bit $\times$ 4-bit inner multiplication
+natively; the BF16 scale collapses out to a cheap scalar multiply
+at the end of the accumulation.
 
-GEMV and GEMM share an identical body layout; only the back-end resources
-they target differ (GEMV routes to the 4-wide GEMV lane, GEMM routes to the
-32$\times$32 systolic array).
+For two activation--weight pairs sharing scale factors
+$S_{\mathrm{fmap}}$ (for BF16) and $S_{\mathrm{weight}}$ (for INT4):
 
-\subsection{Body Layout}
+\begin{equation}
+\begin{aligned}
+A &= a \cdot S_{\mathrm{fmap}}, \quad  &  B &= b \cdot S_{\mathrm{fmap}} \\
+C &= c \cdot S_{\mathrm{weight}}, \quad  &  D &= d \cdot S_{\mathrm{weight}}
+\end{aligned}
+\end{equation}
 
-\begin{longtable}{|c|c|l|p{8cm}|}
+The quantity $(A \cdot C) + (B \cdot D)$ factors to:
+
+\begin{equation}
+\mathrm{Result} = \underbrace{(a \cdot c + b \cdot d)}_{\text{DSP48E2 integer MAC}} \cdot \underbrace{S_{\mathrm{fmap}} \cdot S_{\mathrm{weight}}}_{\text{post-process scalar}}
+\end{equation}
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[
+  font = \sffamily\small,
+  node distance = 0.3cm and 0.6cm,
+]
+  % Inputs
+  \node[blocknode, fill=accentorange!15, draw=accentorange] (act) {Activation\\\scriptsize BF16};
+  \node[blocknode, below=of act, fill=accentpurple!15, draw=accentpurple] (w)  {Weight\\\scriptsize INT4};
+
+  % Exponent alignment
+  \node[blocknode, right=of act] (emax) {$E_{\max}$\\align};
+  \node[blocknode, right=of w]   (signx){Sign-extend\\INT4$\to$INT9};
+
+  % DSP48E2
+  \node[hotblock, right=1cm of $(emax)!0.5!(signx)$, minimum height=2.2cm, minimum width=2.3cm] (dsp)
+    {DSP48E2\\\scriptsize $A \cdot B + C$\\\scriptsize 48-bit ACC};
+
+  % Post
+  \node[blocknode, right=of dsp, minimum width=2.8cm] (post) {Post-process\\$\times (S_f \cdot S_w)$};
+  \node[blocknode, right=of post, fill=accentgreen!15, draw=accentgreen] (o) {Output\\\scriptsize BF16};
+
+  \draw[arr] (act)  -- (emax);
+  \draw[arr] (w)    -- (signx);
+  \draw[arr] (emax) -- (dsp);
+  \draw[arr] (signx) -- (dsp);
+  \draw[arr] (dsp)  -- (post);
+  \draw[arr] (post) -- (o);
+\end{tikzpicture}
+\caption{DSP48E2 datapath. INT9 $\times$ INT4 multiplication executes
+natively; the BF16 scale factor product is applied once per MAC epoch
+by the post-process stage.}
+\label{fig:dsp-datapath}
+\end{figure}
+
+\section{Systolic Dataflow — Weight Stationary (GEMM)}
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[
+  font = \sffamily\scriptsize,
+  pe/.style={rectangle, draw=oceanblue, fill=oceanblue!8,
+             minimum width=0.6cm, minimum height=0.6cm, inner sep=0pt},
+  peW/.style={rectangle, draw=accentpurple, fill=accentpurple!20,
+              minimum width=0.6cm, minimum height=0.6cm, inner sep=0pt,
+              node contents={W}},
+]
+  % 6×6 systolic array (illustrative; actual hw is 32×32)
+  \foreach \i in {0,...,5}
+    \foreach \j in {0,...,5} {
+      \node[pe] (pe\i\j) at (\j*0.65, -\i*0.65) {\tiny PE};
+    }
+
+  % Stationary weights (inside each PE)
+  \foreach \i in {0,...,5}
+    \foreach \j in {0,...,5} {
+      \node[font=\tiny\sffamily\bfseries, color=accentpurple]
+        at (\j*0.65, -\i*0.65 - 0.12) {$W_{\i\j}$};
+    }
+
+  % Activation arrows coming in from left
+  \foreach \i in {0,...,5} {
+    \draw[arr] (-1.2, -\i*0.65) -- (pe\i0);
+    \node[anchor=east, font=\scriptsize] at (-1.2, -\i*0.65) {$a_\i$};
+  }
+
+  % Partial sums flowing down
+  \foreach \j in {0,...,5} {
+    \draw[arr, draw=accentgreen, -Stealth, thick] (\j*0.65, 0.55) -- (\j*0.65, 0.15);
+    \node[anchor=south, font=\scriptsize, color=accentgreen] at (\j*0.65, 0.55) {$\psi_\j^{\mathrm{in}}$};
+  }
+
+  % Partial sum out (bottom)
+  \foreach \j in {0,...,5} {
+    \draw[arr, draw=accentgreen, -Stealth, thick] (\j*0.65, -3.4) -- (\j*0.65, -3.8);
+    \node[anchor=north, font=\scriptsize, color=accentgreen] at (\j*0.65, -3.8) {$\psi_\j^{\mathrm{out}}$};
+  }
+
+  % Activation out (right edge)
+  \foreach \i in {0,...,5} {
+    \draw[arr] (\i*0 + 5*0.65 + 0.35, -\i*0.65) -- ++(0.6, 0);
+  }
+
+  % Annotation
+  \node[anchor=north west, font=\sffamily\small\color{graytext}, align=left]
+    at (0, -4.1) {Weights $W_{ij}$ stay resident in PEs (Weight Stationary).\\
+                   Activations $a_i$ stream left-to-right; partial sums $\psi$ stream top-to-bottom.};
+\end{tikzpicture}
+\caption{Systolic array dataflow (illustrated on a 6$\times$6; actual
+hardware is 32$\times$32). Weights are preloaded once per tile;
+activations and partial sums march through the array every cycle.}
+\label{fig:systolic}
+\end{figure}
+
+\section{Systolic Dataflow — Weight Streaming (GEMV)}
+
+GEMV differs from GEMM in that the weight matrix is streamed through
+4 parallel cores row-partition-wise rather than pinned inside PEs. A
+single GEMV dispatches 32-lane LUT-based MAC units followed by a
+5-stage reduction tree, producing one scalar per decoded token.
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[
+  font = \sffamily\small,
+  node distance = 0.3cm and 0.5cm,
+  core/.style={rectangle, draw=accentpurple, fill=accentpurple!10,
+               minimum width=2.4cm, minimum height=1.1cm, rounded corners=2pt,
+               font=\sffamily\small, align=center},
+]
+  \node[ram, minimum width=2cm] (wbuf) {Weight FIFO\\\scriptsize URAM};
+  \node[core, right=1.2cm of wbuf, yshift=2.0cm]  (c0) {GEMV Core 0\\\scriptsize 32-MAC + 5-stg red.};
+  \node[core, right=1.2cm of wbuf, yshift=0.7cm]  (c1) {GEMV Core 1};
+  \node[core, right=1.2cm of wbuf, yshift=-0.6cm] (c2) {GEMV Core 2};
+  \node[core, right=1.2cm of wbuf, yshift=-1.9cm] (c3) {GEMV Core 3};
+  \node[blocknode, right=1.0cm of c1, yshift=-0.65cm, minimum width=2.5cm, fill=accentgreen!15, draw=accentgreen] (red) {Row-partition\\concat};
+  \node[ram, right=of red, minimum width=2cm] (l2) {L2\\result};
+
+  \foreach \c in {c0, c1, c2, c3} \draw[bus] (wbuf.east) -- (\c.west);
+  \foreach \c in {c0, c1, c2, c3} \draw[arr] (\c.east)   -- (red.west);
+  \draw[arr] (red) -- (l2);
+\end{tikzpicture}
+\caption{GEMV weight streaming: the 4 GEMV cores each consume a
+row-partition stream; results concatenate into a single vector.}
+\label{fig:gemv-stream}
+\end{figure}
+
+\newpage
+
+% =================================================================
+\chapter{INSTRUCTION ENCODING}
+
+\section{Top-Level 64-Bit Layout}
+
+Every pccx v002 instruction is exactly \textbf{64 bits wide} and
+encodes a 4-bit opcode in the most-significant nibble followed by a
+60-bit instruction body whose shape depends on the opcode.
+
+\begin{figure}[h]
+\centering
+\begin{bytefield}[bitwidth=1.0em, bitheight=2.3em, boxformatting={\centering\sffamily\scriptsize}]{64}
+  \bitheader[endianness=big,lsb=0]{0,15,20,26,43,59,63} \\
+  \bitbox{4}{\color{oceanblue}\textbf{opcode}\\[0.2em]\scriptsize[63:60]} &
+  \bitbox{60}{\color{graytext}\textbf{instruction body --- opcode-specific}\\[0.2em]\scriptsize[59:0]}
+\end{bytefield}
+\caption{Top-level 64-bit instruction word.}
+\label{fig:top-layout}
+\end{figure}
+
+\section{Opcode Map}
+
+Of the 16 possible opcodes, five are defined in v002; the remaining
+eleven are reserved. Decoder behaviour on reserved opcodes is
+\textbf{undefined}.
+
+\begin{longtable}{|c|l|l|p{7.0cm}|}
 \hline
-\textbf{\color{oceanblue}Bits} &
-\textbf{\color{oceanblue}Width} &
-\textbf{\color{oceanblue}Field} &
-\textbf{\color{oceanblue}Description} \\
+\rowcolor{skytint}
+\textbf{Opcode} & \textbf{Mnemonic} & \textbf{Family} & \textbf{Function} \\
 \hline
-\endhead
-\texttt{[59:43]} & 17 & \texttt{dest\_reg}       & L2 address where the result is written. \\
+\endfirsthead
+
+\texttt{4'h0} & \texttt{GEMV}   & Type A & Matrix $\times$ vector. Drives 4-core 32-MAC streaming engine. \\
 \hline
-\texttt{[42:26]} & 17 & \texttt{src\_addr}       & L2 address of the activation source. \\
+\texttt{4'h1} & \texttt{GEMM}   & Type A & Matrix $\times$ matrix. Drives 32$\times$32 weight-stationary systolic array. \\
 \hline
-\texttt{[25:20]} &  6 & \texttt{flags}           & See \S\ref{sec:gemm-flags}. \\
+\texttt{4'h2} & \texttt{MEMCPY} & Type B & Bulk data movement: host $\leftrightarrow$ device, L2 $\leftrightarrow$ L2. \\
 \hline
-\texttt{[19:14]} &  6 & \texttt{size\_ptr\_addr} & Constant Cache index for the size entry. \\
+\texttt{4'h3} & \texttt{MEMSET} & Type C & Constant Cache writes (shape / size / scale). \\
 \hline
-\texttt{[13:8]}  &  6 & \texttt{shape\_ptr\_addr}& Constant Cache index for the shape entry. \\
+\texttt{4'h4} & \texttt{CVO}    & Type D & Complex Vector Op. Transcendentals + reductions via SFU. \\
 \hline
-\texttt{[7:3]}   &  5 & \texttt{parallel\_lane}  & Number of core lanes to activate; 0 = all. \\
-\hline
-\texttt{[2:0]}   &  3 & reserved                 & Must be zero. \\
+\texttt{4'h5}--\texttt{4'hF} & --- & --- & \textit{Reserved.} \\
 \hline
 \end{longtable}
 
-\subsection{Flags Field (6 bits)}
-\label{sec:gemm-flags}
+\section{Decode and Dispatch Pathway}
 
-\begin{longtable}{|c|l|p{9cm}|}
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[
+  font = \sffamily\footnotesize,
+  node distance = 0.4cm and 0.9cm,
+  branch/.style={rectangle, draw=oceanblue, fill=skytint, rounded corners=2pt,
+                 minimum width=2.2cm, minimum height=0.7cm, align=center,
+                 font=\sffamily\footnotesize},
+]
+  \node[blocknode, minimum width=2.4cm] (cmd)  {CMD\_IN FIFO};
+  \node[blocknode, right=of cmd, minimum width=2.3cm] (dec)  {opcode[63:60]\\branch};
+
+  % 5 branches
+  \node[branch, right=1.6cm of dec, yshift=2.4cm]  (b0) {GEMV μop};
+  \node[branch, right=1.6cm of dec, yshift=1.4cm]  (b1) {GEMM μop};
+  \node[branch, right=1.6cm of dec, yshift=0.4cm]  (b2) {MEMCTRL μop};
+  \node[branch, right=1.6cm of dec, yshift=-0.6cm] (b3) {MEMSET μop};
+  \node[branch, right=1.6cm of dec, yshift=-1.6cm] (b4) {CVO μop};
+  \node[font=\sffamily\scriptsize\color{graytext}, right=1.6cm of dec, yshift=-2.4cm]
+    (res) {reserved $\to$ UB};
+
+  \node[hotblock, right=1.5cm of b2, minimum width=2.4cm] (disp) {Dispatcher};
+  \node[scheduler, above=0.4cm of disp] (gs) {Hazard check};
+
+  \draw[arr] (cmd) -- (dec);
+  \foreach \b/\lbl in {b0/4'h0, b1/4'h1, b2/4'h2, b3/4'h3, b4/4'h4} {
+    \draw[arr] (dec.east) -- node[above, pos=0.45, font=\sffamily\scriptsize]{\lbl} (\b.west);
+    \draw[arr] (\b) -- (disp.west);
+  }
+  \draw[arr, <->] (disp) -- (gs);
+\end{tikzpicture}
+\caption{Decode and dispatch pathway. The opcode selects one of five
+μop types; the dispatcher resolves inter-instruction hazards before
+handing off to the back end.}
+\label{fig:decode-dispatch}
+\end{figure}
+
+\section{μop Decomposition Summary}
+
+\begin{longtable}{|l|p{10cm}|}
 \hline
-\textbf{\color{oceanblue}Bit} &
-\textbf{\color{oceanblue}Name} &
-\textbf{\color{oceanblue}Description} \\
+\rowcolor{skytint}
+\textbf{μop type} & \textbf{Constituent fields (width)} \\
 \hline
-\endhead
-\texttt{[5]}   & \texttt{findemax}  & Update the \texttt{e\_max} register for output normalization (used in softmax). \\
+\endfirsthead
+
+\texttt{gemm\_control\_uop\_t}   & \texttt{flags}~(6\,b) + \texttt{size\_ptr\_addr}~(6\,b) + \texttt{parallel\_lane}~(5\,b) \\
 \hline
-\texttt{[4]}   & \texttt{accm}      & Accumulate into \texttt{dest} (default is overwrite). \\
+\texttt{GEMV\_control\_uop\_t}   & Identical layout to \texttt{gemm\_control\_uop\_t}. \\
 \hline
-\texttt{[3]}   & \texttt{w\_scale}  & Apply the weight scale factor during MAC. \\
+\texttt{memory\_control\_uop\_t} & \texttt{data\_route}~(8\,b) + \texttt{dest\_addr}~(17\,b) + \texttt{src\_addr}~(17\,b) + \texttt{shape\_ptr}~(6\,b) + \texttt{async}~(1\,b) \\
 \hline
-\texttt{[2:0]} & reserved           & Must be zero. \\
+\texttt{memory\_set\_uop\_t}     & \texttt{dest\_cache}~(2\,b) + \texttt{dest\_addr}~(6\,b) + \texttt{a\_value}~(16\,b) + \texttt{b\_value}~(16\,b) + \texttt{c\_value}~(16\,b) \\
+\hline
+\texttt{cvo\_control\_uop\_t}    & \texttt{cvo\_func}~(4\,b) + \texttt{src\_addr}~(17\,b) + \texttt{dst\_addr}~(17\,b) + \texttt{length}~(16\,b) + \texttt{flags}~(5\,b) + \texttt{async}~(1\,b) \\
 \hline
 \end{longtable}
 
-\subsection{Use case in Transformer decoding}
+\section{Instruction Format Families — Bit-Level Diagrams}
 
-\begin{itemize}[label={\color{oceanblue}\textbullet}, leftmargin=*, itemsep=0.5ex]
-    \item \textbf{GEMM} drives \textbf{prefill} — all Q/K/V projections plus
-          the FFN up/down projections over an entire prompt tile.
-    \item \textbf{GEMV} drives \textbf{autoregressive decoding} — every
-          projection in the single-token-per-step loop. Weight Streaming is
-          used so the 4 GEMV cores consume a shared weight partition
-          concurrently.
+The 60-bit body falls into four structural families. Figures
+\ref{fig:type-a}, \ref{fig:type-b}, \ref{fig:type-c}, and
+\ref{fig:type-d} show each layout as a true bit-field diagram.
+
+\subsection{Type A --- Compute Format (GEMV / GEMM)}
+
+\begin{figure}[h]
+\centering
+\begin{bytefield}[bitwidth=1.05em, bitheight=2.3em, boxformatting={\centering\sffamily\scriptsize}]{64}
+  \bitheader[endianness=big,lsb=0]{0,3,8,14,20,26,43,60,63} \\
+  \bitbox{4}{\color{oceanblue}\textbf{opcode}} &
+  \bitbox{17}{\color{accentgreen}\textbf{dest\_reg}\\\scriptsize [59:43]} &
+  \bitbox{17}{\color{accentgreen}\textbf{src\_addr}\\\scriptsize [42:26]} &
+  \bitbox{6}{\color{accentred}\textbf{flags}\\\scriptsize[25:20]} &
+  \bitbox{6}{\color{accentorange}\textbf{size\_ptr}\\\scriptsize[19:14]} &
+  \bitbox{6}{\color{accentorange}\textbf{shape\_ptr}\\\scriptsize[13:8]} &
+  \bitbox{5}{\color{accentpurple}\textbf{lane}\\\scriptsize[7:3]} &
+  \bitbox{3}{\color{graytext}rsv\\\scriptsize[2:0]}
+\end{bytefield}
+\caption{\textbf{Type A} body layout, used by \texttt{GEMV} (opcode
+\texttt{4'h0}) and \texttt{GEMM} (opcode \texttt{4'h1}).}
+\label{fig:type-a}
+\end{figure}
+
+\subsection{Type B --- Memory Control Format (MEMCPY)}
+
+\begin{figure}[h]
+\centering
+\begin{bytefield}[bitwidth=1.05em, bitheight=2.3em, boxformatting={\centering\sffamily\scriptsize}]{64}
+  \bitheader[endianness=big,lsb=0]{0,1,7,24,41,58,59,60,63} \\
+  \bitbox{4}{\color{oceanblue}\textbf{opcode}} &
+  \bitbox{1}{\color{accentred}\textbf{fd}\\\tiny[59]} &
+  \bitbox{1}{\color{accentred}\textbf{td}\\\tiny[58]} &
+  \bitbox{17}{\color{accentgreen}\textbf{dest\_addr}\\\scriptsize [57:41]} &
+  \bitbox{17}{\color{accentgreen}\textbf{src\_addr}\\\scriptsize [40:24]} &
+  \bitbox{17}{\color{accentgreen}\textbf{aux\_addr}\\\scriptsize [23:7]} &
+  \bitbox{6}{\color{accentorange}\textbf{shape\_ptr}\\\scriptsize[6:1]} &
+  \bitbox{1}{\color{accentpurple}\textbf{as}\\\tiny[0]}
+\end{bytefield}
+\caption{\textbf{Type B} body layout, used by \texttt{MEMCPY} (opcode
+\texttt{4'h2}). \texttt{fd}=\texttt{from\_device}, \texttt{td}=\texttt{to\_device},
+\texttt{as}=\texttt{async}.}
+\label{fig:type-b}
+\end{figure}
+
+\subsection{Type C --- Memory Set Format (MEMSET)}
+
+\begin{figure}[h]
+\centering
+\begin{bytefield}[bitwidth=1.05em, bitheight=2.3em, boxformatting={\centering\sffamily\scriptsize}]{64}
+  \bitheader[endianness=big,lsb=0]{0,4,20,36,52,58,60,63} \\
+  \bitbox{4}{\color{oceanblue}\textbf{opcode}} &
+  \bitbox{2}{\color{accentred}\textbf{dc}\\\tiny[59:58]} &
+  \bitbox{6}{\color{accentgreen}\textbf{dest\_addr}\\\scriptsize[57:52]} &
+  \bitbox{16}{\color{accentpurple}\textbf{a\_value}\\\scriptsize[51:36]} &
+  \bitbox{16}{\color{accentpurple}\textbf{b\_value}\\\scriptsize[35:20]} &
+  \bitbox{16}{\color{accentpurple}\textbf{c\_value}\\\scriptsize[19:4]} &
+  \bitbox{4}{\color{graytext}rsv\\\scriptsize[3:0]}
+\end{bytefield}
+\caption{\textbf{Type C} body layout, used by \texttt{MEMSET} (opcode
+\texttt{4'h3}). \texttt{dc}=\texttt{dest\_cache}.}
+\label{fig:type-c}
+\end{figure}
+
+\subsection{Type D --- Complex Vector Op Format (CVO)}
+
+\begin{figure}[h]
+\centering
+\begin{bytefield}[bitwidth=1.05em, bitheight=2.3em, boxformatting={\centering\sffamily\scriptsize}]{64}
+  \bitheader[endianness=big,lsb=0]{0,1,6,22,39,56,60,63} \\
+  \bitbox{4}{\color{oceanblue}\textbf{opcode}} &
+  \bitbox{4}{\color{accentred}\textbf{func}\\\scriptsize[59:56]} &
+  \bitbox{17}{\color{accentgreen}\textbf{src\_addr}\\\scriptsize[55:39]} &
+  \bitbox{17}{\color{accentgreen}\textbf{dst\_addr}\\\scriptsize[38:22]} &
+  \bitbox{16}{\color{accentorange}\textbf{length}\\\scriptsize[21:6]} &
+  \bitbox{5}{\color{accentred}\textbf{flags}\\\scriptsize[5:1]} &
+  \bitbox{1}{\color{accentpurple}\textbf{as}\\\tiny[0]}
+\end{bytefield}
+\caption{\textbf{Type D} body layout, used by \texttt{CVO} (opcode
+\texttt{4'h4}). \texttt{as}=\texttt{async}.}
+\label{fig:type-d}
+\end{figure}
+
+\newpage
+
+% =================================================================
+\chapter{INSTRUCTION SET REFERENCE (A-Z)}
+
+This chapter is the normative per-instruction reference. Each entry
+follows the \textbf{Intel SDM} format: an Opcode / Instruction /
+Description summary table, a Description paragraph, an Operation
+pseudocode block, a Flags Affected subsection, and an Exceptions
+subsection where applicable.
+
+% =====================================================
+% GEMM / GEMV
+% =====================================================
+\begin{InstructionRef}{GEMM / GEMV}{Matrix-matrix / matrix-vector multiply}
+
+\RefSection{Opcode \& Instruction summary}
+
+\begin{tabularx}{\linewidth}{|c|c|c|X|}
+\hline
+\rowcolor{skytint}
+\textbf{Opcode} & \textbf{Instruction} & \textbf{Op/En} & \textbf{Description} \\
+\hline
+\texttt{4'h0}\ \ \textit{body} & \texttt{GEMV dest, src, flags, size\_ptr, shape\_ptr, lane} & A & Matrix-vector multiply. 4 GEMV cores consume weights via Weight Streaming. \\
+\hline
+\texttt{4'h1}\ \ \textit{body} & \texttt{GEMM dest, src, flags, size\_ptr, shape\_ptr, lane} & A & Matrix-matrix multiply. 32$\times$32 systolic array runs Weight Stationary. \\
+\hline
+\end{tabularx}
+
+\RefSection{Instruction operand encoding}
+
+\begin{tabularx}{\linewidth}{|c|X|}
+\hline
+\rowcolor{skytint}
+\textbf{Op/En} & \textbf{Operand 1 --- Operand 6} \\
+\hline
+A & \texttt{dest} (Mod ModReg, W) $\vert$ \texttt{src} (Mod ModReg, R) $\vert$ \texttt{flags} (Imm, R) $\vert$ \texttt{size\_ptr} (Ptr, R) $\vert$ \texttt{shape\_ptr} (Ptr, R) $\vert$ \texttt{lane} (Imm, R) \\
+\hline
+\end{tabularx}
+
+\RefSection{Bit-level encoding (Type A)}
+
+\begin{center}
+\begin{bytefield}[bitwidth=1.05em, bitheight=2.2em, boxformatting={\centering\sffamily\scriptsize}]{64}
+  \bitheader[endianness=big,lsb=0]{0,3,8,14,20,26,43,60,63} \\
+  \bitbox{4}{opcode} &
+  \bitbox{17}{dest\_reg\\[-0.1em]\scriptsize[59:43]} &
+  \bitbox{17}{src\_addr\\[-0.1em]\scriptsize[42:26]} &
+  \bitbox{6}{flags\\\scriptsize[25:20]} &
+  \bitbox{6}{size\_ptr\\\scriptsize[19:14]} &
+  \bitbox{6}{shape\_ptr\\\scriptsize[13:8]} &
+  \bitbox{5}{lane\\\scriptsize[7:3]} &
+  \bitbox{3}{rsv}
+\end{bytefield}
+\end{center}
+
+\RefSection{Description}
+
+Performs a tiled matrix multiplication. \texttt{src} points at the
+activation source in L2; \texttt{dest} receives the result. The
+dispatcher reads \texttt{shape\_ptr} and \texttt{size\_ptr} from the
+Constant Cache to obtain $(M, N, K)$ and tile sizes, then streams a
+weight tile into either (a) the 32$\times$32 systolic array for
+\texttt{GEMM}, or (b) the 4 parallel GEMV cores for \texttt{GEMV}.
+Accumulation is done by the DSP48E2 integer MAC; the BF16 scale
+product is applied at post-process.
+
+Setting \texttt{lane = 0} activates all lanes. Values 1--31 restrict
+execution to the specified lane count — useful for partial-tile
+fallbacks at the trailing edge of a matrix.
+
+\RefSection{Flags field}
+
+\begin{tabularx}{\linewidth}{|c|l|X|}
+\hline
+\rowcolor{skytint}
+\textbf{Bit} & \textbf{Name} & \textbf{Description} \\
+\hline
+\texttt{[5]}   & \texttt{findemax} & Update the \texttt{e\_max} register for output normalization (used by softmax). \\
+\hline
+\texttt{[4]}   & \texttt{accm}     & Accumulate into \texttt{dest} (default is overwrite). \\
+\hline
+\texttt{[3]}   & \texttt{w\_scale} & Apply the weight scale factor during MAC. \\
+\hline
+\texttt{[2:0]} & reserved          & Must be zero. \\
+\hline
+\end{tabularx}
+
+\RefSection{Operation}
+
+\begin{lstlisting}[style=pseudo]
+DISPATCH gemm_or_gemv:
+    shape  <- CONST_CACHE[shape_ptr_addr]       // (M, N, K)
+    size   <- CONST_CACHE[size_ptr_addr]        // tile sizes
+    FOR each tile (m, n, k) IN iteration_space(shape, size):
+        IF opcode == GEMM:
+            ARRAY_PRELOAD_WEIGHTS(tile_weights)     // Weight Stationary
+            STREAM_ACTIVATIONS(src_addr + offset)
+        ELSE:                                       // GEMV
+            PARTITION_WEIGHTS_OVER_4_CORES(tile_weights)
+            STREAM_ACTIVATIONS(src_addr + offset)
+        ENDIF
+
+        IF flags.accm = 1:
+            acc <- L2[dest_reg + offset]
+        ELSE:
+            acc <- 0
+        ENDIF
+
+        acc <- acc + INT_MAC(activations, weights) * (S_fmap * S_weight)
+        IF flags.findemax = 1:
+            EMAX_REG <- max(EMAX_REG, exp(acc))
+        ENDIF
+        L2[dest_reg + offset] <- acc
+    ENDFOR
+END DISPATCH
+\end{lstlisting}
+
+\RefSection{Flags affected}
+
+\texttt{e\_max} is updated when \texttt{findemax = 1}. No other
+architectural flags are affected.
+
+\RefSection{Exceptions}
+
+\begin{itemize}[leftmargin=*, itemsep=0.2ex]
+  \item \textbf{\texttt{\#UD} --- undefined instruction.} Raised if
+        \texttt{shape\_ptr} or \texttt{size\_ptr} reference an
+        uninitialised Constant Cache entry.
+  \item \textbf{\texttt{\#RSV}} --- reserved bits \texttt{[2:0]}
+        must be zero; decoder asserts on non-zero.
 \end{itemize}
 
-% -----------------------------------------------------------
-\section{MEMCPY (opcode = \texttt{4'h2})}
+\RefSection{Use case}
 
-\subsection{Body Layout}
+\begin{itemize}[leftmargin=*, itemsep=0.2ex]
+  \item \texttt{GEMM} --- prefill. Q/K/V projection, FFN up/down
+        projection over a prompt tile.
+  \item \texttt{GEMV} --- autoregressive decoding. Every projection
+        in the single-token-per-step loop.
+\end{itemize}
+\end{InstructionRef}
 
-\begin{longtable}{|c|c|l|p{8cm}|}
-\hline
-\textbf{\color{oceanblue}Bits} &
-\textbf{\color{oceanblue}Width} &
-\textbf{\color{oceanblue}Field} &
-\textbf{\color{oceanblue}Description} \\
-\hline
-\endhead
-\texttt{[59]}    & 1  & \texttt{from\_device}    & 0 = NPU, 1 = Host. \\
-\hline
-\texttt{[58]}    & 1  & \texttt{to\_device}      & 0 = NPU, 1 = Host. \\
-\hline
-\texttt{[57:41]} & 17 & \texttt{dest\_addr}      & Destination address in the target address space. \\
-\hline
-\texttt{[40:24]} & 17 & \texttt{src\_addr}       & Source address in the source address space. \\
-\hline
-\texttt{[23:7]}  & 17 & \texttt{aux\_addr}       & Auxiliary address (e.g.\ host DDR offset when crossing ACP). \\
-\hline
-\texttt{[6:1]}   & 6  & \texttt{shape\_ptr\_addr}& Shape pointer describing the transfer geometry. \\
-\hline
-\texttt{[0]}     & 1  & \texttt{async}           & 0 = wait for completion, 1 = fire-and-forget. \\
-\hline
-\end{longtable}
+% =====================================================
+% MEMCPY
+% =====================================================
+\begin{InstructionRef}{MEMCPY}{Move a block between host and device / L2 and L2}
 
-\subsection{Supported from/to Combinations}
+\RefSection{Opcode \& Instruction summary}
 
-\begin{longtable}{|c|c|p{9cm}|}
+\begin{tabularx}{\linewidth}{|c|c|c|X|}
 \hline
-\textbf{\color{oceanblue}from\_device} & \textbf{\color{oceanblue}to\_device} & \textbf{\color{oceanblue}Path} \\
+\rowcolor{skytint}
+\textbf{Opcode} & \textbf{Instruction} & \textbf{Op/En} & \textbf{Description} \\
 \hline
-\endhead
-1 (Host) & 0 (NPU)  & ACP $\to$ L2 cache write. Used for weight / input loads. \\
+\texttt{4'h2}\ \ \textit{body} & \texttt{MEMCPY from\_dev, to\_dev, dest, src, aux, shape\_ptr, async} & B & Bulk data move. \texttt{from\_dev}/\texttt{to\_dev} determines direction and path. \\
+\hline
+\end{tabularx}
+
+\RefSection{Bit-level encoding (Type B)}
+
+\begin{center}
+\begin{bytefield}[bitwidth=1.05em, bitheight=2.2em, boxformatting={\centering\sffamily\scriptsize}]{64}
+  \bitheader[endianness=big,lsb=0]{0,1,7,24,41,58,59,60,63} \\
+  \bitbox{4}{opcode} &
+  \bitbox{1}{fd} & \bitbox{1}{td} &
+  \bitbox{17}{dest\_addr\\\scriptsize[57:41]} &
+  \bitbox{17}{src\_addr\\\scriptsize[40:24]} &
+  \bitbox{17}{aux\_addr\\\scriptsize[23:7]} &
+  \bitbox{6}{shape\_ptr\\\scriptsize[6:1]} &
+  \bitbox{1}{as}
+\end{bytefield}
+\end{center}
+
+\RefSection{Description}
+
+Moves a shape-defined block between two address spaces. The
+\texttt{from\_device}/\texttt{to\_device} pair encodes one of four
+source--destination combinations; the decoder expands the pair into
+the 8-bit \texttt{data\_route\_e} enum consumed by the back-end DMA
+engines. See Table~\ref{tab:data-route}.
+
+\texttt{aux\_addr} carries the host-side DDR offset when the transfer
+crosses ACP; for NPU-to-NPU transfers it is ignored.
+
+When \texttt{async = 0} the dispatcher stalls the front end until the
+completion fence returns. When \texttt{async = 1} the instruction
+retires immediately and completion is surfaced to the host via
+\texttt{STAT\_OUT}.
+
+\RefSection{Supported (\texttt{from\_device}, \texttt{to\_device}) combinations}
+
+\begin{tabularx}{\linewidth}{|c|c|X|}
+\hline
+\rowcolor{skytint}
+\textbf{from\_dev} & \textbf{to\_dev} & \textbf{Path} \\
+\hline
+1 (Host) & 0 (NPU)  & ACP $\to$ L2 cache. Used for weight / input loads. \\
 \hline
 0 (NPU)  & 1 (Host) & L2 cache $\to$ ACP. Returns output tokens / KV entries. \\
 \hline
 0 (NPU)  & 0 (NPU)  & Intra-L2 block move (on-device rearrangement). \\
 \hline
-1 (Host) & 1 (Host) & \textit{Reserved} — decoder will raise a control-unit error. \\
+1 (Host) & 1 (Host) & \textit{Reserved} --- Control Unit raises \texttt{\#UD}. \\
 \hline
-\end{longtable}
+\end{tabularx}
 
-\subsection{Async semantics}
+\RefSection{Operation}
 
-When \texttt{async = 0}, the dispatcher stalls the front end until the
-MEMCPY completion fence is returned. When \texttt{async = 1}, execution
-continues to the next instruction immediately and completion is tracked by
-the \texttt{fsmout\_npu\_stat\_collector} block and surfaced to the host via
-the AXI-Lite \texttt{STAT\_OUT} register.
+\begin{lstlisting}[style=pseudo]
+DISPATCH memcpy:
+    route <- ENCODE_ROUTE(from_device, to_device)   // data_route_e
+    shape <- CONST_CACHE[shape_ptr_addr]
+    CASE route OF
+        from_host_to_L2: DMA_ACP_READ(dest_addr, src_addr, aux_addr, shape)
+        from_L2_to_host: DMA_ACP_WRITE(dest_addr, src_addr, aux_addr, shape)
+        from_L2_to_L1_GEMM: DMA_L1_FWD(dest_addr, src_addr, GEMM, shape)
+        from_L2_to_L1_GEMV: DMA_L1_FWD(dest_addr, src_addr, GEMV, shape)
+        OTHERWISE: RAISE #UD
+    ENDCASE
 
-% -----------------------------------------------------------
-\section{MEMSET (opcode = \texttt{4'h3})}
-
-MEMSET writes directly into the Constant Cache's shape / size / scale
-registers. It is the only opcode that does \textit{not} traverse the L2
-cache.
-
-\subsection{Body Layout}
-
-\begin{longtable}{|c|c|l|p{8cm}|}
-\hline
-\textbf{\color{oceanblue}Bits} &
-\textbf{\color{oceanblue}Width} &
-\textbf{\color{oceanblue}Field} &
-\textbf{\color{oceanblue}Description} \\
-\hline
-\endhead
-\texttt{[59:58]} & 2  & \texttt{dest\_cache} & 0 = \texttt{fmap\_shape}, 1 = \texttt{weight\_shape}. \\
-\hline
-\texttt{[57:52]} & 6  & \texttt{dest\_addr}  & Constant Cache index. \\
-\hline
-\texttt{[51:36]} & 16 & \texttt{a\_value}    & First 16-bit value. \\
-\hline
-\texttt{[35:20]} & 16 & \texttt{b\_value}    & Second 16-bit value. \\
-\hline
-\texttt{[19:4]}  & 16 & \texttt{c\_value}    & Third 16-bit value. \\
-\hline
-\texttt{[3:0]}   & 4  & reserved             & Must be zero. \\
-\hline
-\end{longtable}
-
-\subsection{Common usage pattern}
-
-The three slots \texttt{a / b / c} let a single MEMSET write an entire
-\textbf{(M, N, K)} tuple in one shot. The typical layer-boundary idiom is:
-
-\begin{lstlisting}
-MEMSET dest_cache=fmap_shape,   dest_addr=0, a=M, b=N, c=K
-MEMSET dest_cache=weight_shape, dest_addr=0, a=scale, b=zero_point, c=0
+    IF async = 1:
+        SIGNAL fence_id TO STAT_OUT    // fire-and-forget
+        RETURN
+    ELSE:
+        WAIT fence_id
+    ENDIF
+END DISPATCH
 \end{lstlisting}
 
-% -----------------------------------------------------------
-\section{CVO (opcode = \texttt{4'h4})}
+\RefSection{Exceptions}
 
-CVO ("Complex Vector Operation") is the SFU-bound instruction. A CVO
-dispatches a function code plus a vector source / destination pair to a
-single-precision BF16 pipeline; the pipeline is CORDIC- and LUT-driven so
-that transcendentals cost one cycle per element in steady state.
+\begin{itemize}[leftmargin=*, itemsep=0.2ex]
+  \item \textbf{\texttt{\#UD}} on reserved (Host,\,Host) combination.
+  \item \textbf{\texttt{\#RSV}} on shape pointer referencing an
+        uninitialised Constant Cache entry.
+  \item \textbf{\texttt{\#AXI}} if the HP / ACP read returns an
+        error response (SLVERR / DECERR). Surfaced via
+        \texttt{STAT\_OUT}.
+\end{itemize}
+\end{InstructionRef}
 
-\subsection{Body Layout}
+% =====================================================
+% MEMSET
+% =====================================================
+\begin{InstructionRef}{MEMSET}{Constant Cache write (shape / size / scale)}
 
-\begin{longtable}{|c|c|l|p{8cm}|}
-\hline
-\textbf{\color{oceanblue}Bits} &
-\textbf{\color{oceanblue}Width} &
-\textbf{\color{oceanblue}Field} &
-\textbf{\color{oceanblue}Description} \\
-\hline
-\endhead
-\texttt{[59:56]} & 4  & \texttt{cvo\_func} & Function code (see below). \\
-\hline
-\texttt{[55:39]} & 17 & \texttt{src\_addr} & L2 address of the input vector. \\
-\hline
-\texttt{[38:22]} & 17 & \texttt{dst\_addr} & L2 address for the result. \\
-\hline
-\texttt{[21:6]}  & 16 & \texttt{length}    & Number of elements to process. \\
-\hline
-\texttt{[5:1]}   & 5  & \texttt{flags}     & See \S\ref{sec:cvo-flags}. \\
-\hline
-\texttt{[0]}     & 1  & \texttt{async}     & 0 = synchronous, 1 = asynchronous. \\
-\hline
-\end{longtable}
+\RefSection{Opcode \& Instruction summary}
 
-\subsection{CVO Function Codes}
-\label{sec:cvo-funcs}
+\begin{tabularx}{\linewidth}{|c|c|c|X|}
+\hline
+\rowcolor{skytint}
+\textbf{Opcode} & \textbf{Instruction} & \textbf{Op/En} & \textbf{Description} \\
+\hline
+\texttt{4'h3}\ \ \textit{body} & \texttt{MEMSET dest\_cache, dest\_addr, a, b, c} & C & Write three 16-bit values to a Constant Cache entry. \\
+\hline
+\end{tabularx}
 
-\begin{longtable}{|l|c|p{8cm}|}
-\hline
-\textbf{\color{oceanblue}Function} & \textbf{\color{oceanblue}Code} & \textbf{\color{oceanblue}Description} \\
-\hline
-\endhead
-\texttt{CVO\_EXP}        & \texttt{4'h0} & $\exp(x)$ — softmax numerator. \\
-\hline
-\texttt{CVO\_SQRT}       & \texttt{4'h1} & $\sqrt{x}$ — RMSNorm denominator. \\
-\hline
-\texttt{CVO\_GELU}       & \texttt{4'h2} & $\mathrm{gelu}(x)$ — FFN non-linearity. \\
-\hline
-\texttt{CVO\_SIN}        & \texttt{4'h3} & $\sin(x)$ — RoPE. \\
-\hline
-\texttt{CVO\_COS}        & \texttt{4'h4} & $\cos(x)$ — RoPE. \\
-\hline
-\texttt{CVO\_REDUCE\_SUM}& \texttt{4'h5} & Sum of vector elements. \\
-\hline
-\texttt{CVO\_SCALE}      & \texttt{4'h6} & Scalar $\times$ vector. \\
-\hline
-\texttt{CVO\_RECIP}      & \texttt{4'h7} & $1/x$. \\
-\hline
-\texttt{4'h8}--\texttt{4'hF} & --- & Reserved. \\
-\hline
-\end{longtable}
+\RefSection{Bit-level encoding (Type C)}
 
-\subsection{CVO Flags Field (5 bits)}
-\label{sec:cvo-flags}
+\begin{center}
+\begin{bytefield}[bitwidth=1.05em, bitheight=2.2em, boxformatting={\centering\sffamily\scriptsize}]{64}
+  \bitheader[endianness=big,lsb=0]{0,4,20,36,52,58,60,63} \\
+  \bitbox{4}{opcode} &
+  \bitbox{2}{dc\\\scriptsize[59:58]} &
+  \bitbox{6}{dest\_addr\\\scriptsize[57:52]} &
+  \bitbox{16}{a\_value\\\scriptsize[51:36]} &
+  \bitbox{16}{b\_value\\\scriptsize[35:20]} &
+  \bitbox{16}{c\_value\\\scriptsize[19:4]} &
+  \bitbox{4}{rsv}
+\end{bytefield}
+\end{center}
 
-\begin{longtable}{|c|l|p{9cm}|}
+\RefSection{Description}
+
+Writes directly into the Constant Cache. This is the \textit{only}
+opcode that does not touch the L2 cache. \texttt{dest\_cache} selects
+which bank is targeted: 0 = \texttt{fmap\_shape}, 1 =
+\texttt{weight\_shape} (2--3 reserved).
+
+The three value slots \texttt{a / b / c} let a single instruction
+write an entire $(M, N, K)$ tuple in one shot; this is the idiomatic
+use at layer boundaries.
+
+\RefSection{Operation}
+
+\begin{lstlisting}[style=pseudo]
+DISPATCH memset:
+    CASE dest_cache OF
+        0: CONST_CACHE.fmap_shape[dest_addr]   <- (a_value, b_value, c_value)
+        1: CONST_CACHE.weight_shape[dest_addr] <- (a_value, b_value, c_value)
+        OTHERWISE: RAISE #UD
+    ENDCASE
+END DISPATCH
+\end{lstlisting}
+
+\RefSection{Flags affected} None.
+
+\RefSection{Exceptions}
+
+\begin{itemize}[leftmargin=*, itemsep=0.2ex]
+  \item \textbf{\texttt{\#UD}} on reserved \texttt{dest\_cache} values (2--3).
+  \item \textbf{\texttt{\#RSV}} on non-zero reserved bits \texttt{[3:0]}.
+\end{itemize}
+\end{InstructionRef}
+
+% =====================================================
+% CVO
+% =====================================================
+\begin{InstructionRef}{CVO}{Complex Vector Op --- transcendentals \& reductions via SFU}
+
+\RefSection{Opcode \& Instruction summary}
+
+\begin{tabularx}{\linewidth}{|c|c|c|X|}
 \hline
-\textbf{\color{oceanblue}Bit} &
-\textbf{\color{oceanblue}Name} &
-\textbf{\color{oceanblue}Description} \\
+\rowcolor{skytint}
+\textbf{Opcode} & \textbf{Instruction} & \textbf{Op/En} & \textbf{Description} \\
 \hline
-\endhead
-\texttt{[4]}   & \texttt{sub\_emax}    & Subtract \texttt{e\_max} before computing (softmax stabilization). \\
+\texttt{4'h4}\ \ \textit{body} & \texttt{CVO func, src, dst, length, flags, async} & D & Run an SFU function (exp, sqrt, gelu, sin, cos, reduce, scale, recip) over a length-N vector. \\
 \hline
-\texttt{[3]}   & \texttt{recip\_scale} & Use the reciprocal of the scalar (turns multiplication into division). \\
+\end{tabularx}
+
+\RefSection{Bit-level encoding (Type D)}
+
+\begin{center}
+\begin{bytefield}[bitwidth=1.05em, bitheight=2.2em, boxformatting={\centering\sffamily\scriptsize}]{64}
+  \bitheader[endianness=big,lsb=0]{0,1,6,22,39,56,60,63} \\
+  \bitbox{4}{opcode} &
+  \bitbox{4}{func\\\scriptsize[59:56]} &
+  \bitbox{17}{src\_addr\\\scriptsize[55:39]} &
+  \bitbox{17}{dst\_addr\\\scriptsize[38:22]} &
+  \bitbox{16}{length\\\scriptsize[21:6]} &
+  \bitbox{5}{flags\\\scriptsize[5:1]} &
+  \bitbox{1}{as}
+\end{bytefield}
+\end{center}
+
+\RefSection{Description}
+
+Dispatches an SFU (``Scalar Function Unit'') operation on a
+\texttt{length}-element BF16 vector. Functions are implemented via a
+combination of CORDIC iterations and LUT interpolation; in steady
+state the SFU retires one element per cycle.
+
+The \texttt{flags.sub\_emax} bit enables the numerical-stability
+pre-subtraction used by softmax ($e^{x - e_{\max}}$). The
+\texttt{flags.recip\_scale} bit turns \texttt{CVO\_SCALE} into a
+division by flipping the scalar at the input (softmax denominator
+divide is implemented this way).
+
+\RefSection{Function codes}
+
+\begin{tabularx}{\linewidth}{|l|c|X|l|}
+\hline
+\rowcolor{skytint}
+\textbf{Function} & \textbf{Code} & \textbf{Semantics} & \textbf{Use} \\
+\hline
+\texttt{CVO\_EXP}         & \texttt{4'h0} & $e^{x}$                  & Softmax \\
+\hline
+\texttt{CVO\_SQRT}        & \texttt{4'h1} & $\sqrt{x}$               & RMSNorm \\
+\hline
+\texttt{CVO\_GELU}        & \texttt{4'h2} & $\mathrm{gelu}(x)$       & FFN nonlinearity \\
+\hline
+\texttt{CVO\_SIN}         & \texttt{4'h3} & $\sin(x)$                & RoPE \\
+\hline
+\texttt{CVO\_COS}         & \texttt{4'h4} & $\cos(x)$                & RoPE \\
+\hline
+\texttt{CVO\_REDUCE\_SUM} & \texttt{4'h5} & $\sum_i x_i$             & Softmax denominator \\
+\hline
+\texttt{CVO\_SCALE}       & \texttt{4'h6} & $\alpha \cdot x$         & Bias / scale fuse \\
+\hline
+\texttt{CVO\_RECIP}       & \texttt{4'h7} & $1/x$                    & Softmax / RMSNorm \\
+\hline
+\texttt{4'h8}--\texttt{4'hF} & --- & \textit{Reserved} & --- \\
+\hline
+\end{tabularx}
+
+\RefSection{Flags field}
+
+\begin{tabularx}{\linewidth}{|c|l|X|}
+\hline
+\rowcolor{skytint}
+\textbf{Bit} & \textbf{Name} & \textbf{Description} \\
+\hline
+\texttt{[4]}   & \texttt{sub\_emax}    & Subtract \texttt{e\_max} before computing. \\
+\hline
+\texttt{[3]}   & \texttt{recip\_scale} & Use the reciprocal of the scalar. \\
 \hline
 \texttt{[2]}   & \texttt{accm}         & Accumulate into \texttt{dst}. \\
 \hline
 \texttt{[1:0]} & reserved              & Must be zero. \\
 \hline
-\end{longtable}
+\end{tabularx}
 
-\section{Summary: Role in Transformer Decoding}
+\RefSection{Operation}
 
-\begin{longtable}{|c|p{11cm}|}
-\hline
-\textbf{\color{oceanblue}Opcode} & \textbf{\color{oceanblue}Primary use case} \\
-\hline
-\endhead
-\textbf{GEMM}   & Prefill. Q/K/V projection, FFN up / down projection. \\
-\hline
-\textbf{GEMV}   & Decoding. Every projection in the autoregressive step. \\
-\hline
-\textbf{CVO}    & Softmax, RMSNorm, RoPE, GELU. \\
-\hline
-\textbf{MEMCPY} & Host $\leftrightarrow$ device weight loads, KV cache updates, token output. \\
-\hline
-\textbf{MEMSET} & Preset shape / size pointers at layer start; inject scale factors. \\
-\hline
-\end{longtable}
+\begin{lstlisting}[style=pseudo]
+DISPATCH cvo:
+    FOR i FROM 0 TO length - 1 DO
+        x <- L2[src_addr + i]
+        IF flags.sub_emax = 1:
+            x <- x - EMAX_REG
+        ENDIF
+        CASE func OF
+            CVO_EXP:        y <- exp(x)
+            CVO_SQRT:       y <- sqrt(x)
+            CVO_GELU:       y <- 0.5 * x * (1 + tanh(sqrt(2/pi) * (x + 0.044715*x^3)))
+            CVO_SIN:        y <- sin(x)
+            CVO_COS:        y <- cos(x)
+            CVO_REDUCE_SUM: acc <- acc + x; CONTINUE
+            CVO_SCALE:      y <- (flags.recip_scale ? 1/scalar : scalar) * x
+            CVO_RECIP:      y <- 1 / x
+            OTHERWISE:      RAISE #UD
+        ENDCASE
+
+        IF flags.accm = 1:
+            y <- y + L2[dst_addr + i]
+        ENDIF
+        L2[dst_addr + i] <- y
+    ENDFOR
+
+    IF func = CVO_REDUCE_SUM:
+        L2[dst_addr] <- acc
+    ENDIF
+    IF async = 1: SIGNAL fence_id; RETURN
+    ELSE:         WAIT fence_id
+    ENDIF
+END DISPATCH
+\end{lstlisting}
+
+\RefSection{Fast path}
+
+If the preceding instruction is a \texttt{GEMV} whose \texttt{dest\_reg}
+matches a special \textit{bypass tag}, the SFU consumes the output
+directly from the GEMV FIFO and skips the L2 round trip.
+Figure~\ref{fig:cvo-pipeline} illustrates the data path.
+
+\RefSection{Exceptions}
+
+\begin{itemize}[leftmargin=*, itemsep=0.2ex]
+  \item \textbf{\texttt{\#UD}} on reserved function codes (\texttt{4'h8}--\texttt{4'hF}).
+  \item \textbf{\texttt{\#RSV}} on non-zero reserved flag bits.
+\end{itemize}
+\end{InstructionRef}
+
+\section{CVO Pipeline Internal Structure}
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[
+  font=\sffamily\small,
+  node distance = 0.3cm and 0.55cm,
+  st/.style={rectangle, draw=oceanblue, fill=oceanblue!10,
+             minimum width=1.7cm, minimum height=0.9cm, rounded corners=2pt,
+             font=\sffamily\footnotesize, align=center},
+  sfu/.style={rectangle, draw=accentpurple, fill=accentpurple!15,
+              minimum width=1.9cm, minimum height=0.9cm, rounded corners=2pt,
+              font=\sffamily\footnotesize, align=center},
+]
+  \node[st] (s1) {Issue};
+  \node[st, right=of s1] (s2) {$E_{\max}$\\subtract};
+  \node[sfu, right=of s2] (s3) {CORDIC\\iter};
+  \node[sfu, right=of s3] (s4) {LUT\\interp.};
+  \node[st, right=of s4] (s5) {Scale /\\accm};
+  \node[st, right=of s5] (s6) {L2 WB\\or FIFO};
+
+  \draw[arr] (s1) -- (s2);
+  \draw[arr] (s2) -- (s3);
+  \draw[arr] (s3) -- (s4);
+  \draw[arr] (s4) -- (s5);
+  \draw[arr] (s5) -- (s6);
+
+  % Bypass arrow from a GEMV FIFO into s1
+  \node[ram, above=0.5cm of s1, minimum width=2.2cm] (bp) {GEMV FIFO\\(bypass)};
+  \draw[arr, dashed, draw=accentred] (bp) -- (s1);
+\end{tikzpicture}
+\caption{CVO pipeline internals. Dashed red arrow is the fast-path
+from a preceding \texttt{GEMV}.}
+\label{fig:cvo-pipeline}
+\end{figure}
 
 \newpage
 
-% =============================================================
-\chapter{MEMORY ROUTING AND ADDRESS SPACES}
+% =================================================================
+\chapter{MEMORY ROUTING \& ADDRESS SPACES}
 
-\section{Memory Routing Encoding}
+\section{Data-Route Encoding (\texttt{data\_route\_e})}
 
-The \texttt{from\_device} + \texttt{to\_device} pair in MEMCPY is expanded
-inside the Control Unit into an 8-bit route enum (\texttt{data\_route\_e}).
-Consumers in the back end (DMA engines, cache controllers, FIFOs) decode
-this single byte instead of having to re-interpret the two MEMCPY bits.
+The \texttt{from\_device}/\texttt{to\_device} pair on \texttt{MEMCPY}
+expands inside the Control Unit into an 8-bit route enum. Every DMA
+controller in the back end consumes this single byte rather than
+re-interpret the two encoding bits.
+
+\begin{longtable}{|l|c|c|p{6.5cm}|}
+\hline
+\rowcolor{skytint}
+\textbf{Route symbol} & \textbf{Hex} & \textbf{Direction} & \textbf{Path} \\
+\hline
+\endfirsthead
+\texttt{from\_host\_to\_L2}      & \texttt{8'h01} & Ingress   & Host DDR4 $\to$ L2 cache \\
+\hline
+\texttt{from\_L2\_to\_host}      & \texttt{8'h10} & Egress    & L2 cache $\to$ Host DDR4 \\
+\hline
+\texttt{from\_L2\_to\_L1\_GEMM}  & \texttt{8'h12} & Compute   & L2 $\to$ GEMM L1 \\
+\hline
+\texttt{from\_L2\_to\_L1\_GEMV}  & \texttt{8'h13} & Compute   & L2 $\to$ GEMV L1 \\
+\hline
+\texttt{from\_L2\_to\_CVO}       & \texttt{8'h14} & Compute   & L2 $\to$ SFU \\
+\hline
+\texttt{from\_GEMM\_res\_to\_L2} & \texttt{8'h21} & Writeback & GEMM result $\to$ L2 \\
+\hline
+\texttt{from\_GEMV\_res\_to\_L2} & \texttt{8'h31} & Writeback & GEMV result $\to$ L2 \\
+\hline
+\texttt{from\_CVO\_res\_to\_L2}  & \texttt{8'h41} & Writeback & SFU result $\to$ L2 \\
+\hline
+\caption{\texttt{data\_route\_e} encoding and associated datapath.}
+\label{tab:data-route}
+\end{longtable}
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[
+  font=\sffamily\footnotesize,
+  node distance=0.45cm and 0.85cm,
+]
+  \node[ram, minimum width=2.6cm, fill=accentorange!20, draw=accentorange] (host) {Host DDR4};
+  \node[ram, right=2.0cm of host, minimum width=2.6cm] (l2) {L2 Cache};
+  \node[blocknode, above=0.8cm of l2, minimum width=2.6cm, fill=accentpurple!15, draw=accentpurple] (gemm) {GEMM L1};
+  \node[blocknode, below=0.8cm of l2, minimum width=2.6cm, fill=accentpurple!15, draw=accentpurple] (gemv) {GEMV L1};
+  \node[blocknode, right=2.0cm of l2, minimum width=2.6cm, fill=accentpurple!15, draw=accentpurple] (sfu)  {SFU};
+
+  \draw[arr]  (host)    -- node[above, pos=0.5]{\texttt{8'h01}} (l2);
+  \draw[arr]  (l2) to [bend right=30] node[below, pos=0.5]{\texttt{8'h10}} (host);
+  \draw[arr]  (l2)      -- node[right, pos=0.5]{\texttt{8'h12}} (gemm);
+  \draw[arr]  (l2)      -- node[right, pos=0.5]{\texttt{8'h13}} (gemv);
+  \draw[arr]  (l2)      -- node[above, pos=0.5]{\texttt{8'h14}} (sfu);
+  \draw[arr, dashed] (gemm) -- node[left, pos=0.5]{\texttt{8'h21}} (l2);
+  \draw[arr, dashed] (gemv) -- node[left, pos=0.5]{\texttt{8'h31}} (l2);
+  \draw[arr, dashed] (sfu) to [bend right=30] node[below, pos=0.5]{\texttt{8'h41}} (l2);
+\end{tikzpicture}
+\caption{Visual summary of Table~\ref{tab:data-route}. Solid arrows
+are ingress / compute reads; dashed arrows are writeback paths.}
+\label{fig:data-route}
+\end{figure}
+
+\section{Constant Cache \& Pointer Registers}
+
+The Constant Cache is 64 entries deep and holds shape metadata, tile
+sizes, and scale factors. ISA-visible pointers into this cache are
+6 bits wide (since $\log_2 64 = 6$).
 
 \begin{longtable}{|l|c|p{8cm}|}
 \hline
-\textbf{\color{oceanblue}Route} & \textbf{\color{oceanblue}Encoding} & \textbf{\color{oceanblue}Path} \\
+\rowcolor{skytint}
+\textbf{Pointer} & \textbf{Width} & \textbf{Content} \\
 \hline
-\endhead
-\texttt{from\_host\_to\_L2}          & \texttt{8'h01} & Host DDR4 $\to$ L2 cache. \\
+\endfirsthead
+\texttt{shape\_ptr\_addr}  & 6 & $(M, N, K)$ tuple for the tile dimension. \\
 \hline
-\texttt{from\_L2\_to\_host}          & \texttt{8'h10} & L2 cache $\to$ host DDR4. \\
+\texttt{size\_ptr\_addr}   & 6 & Tile sizes, loop bounds, stride. \\
 \hline
-\texttt{from\_L2\_to\_L1\_GEMM}      & \texttt{8'h12} & L2 $\to$ GEMM L1. \\
-\hline
-\texttt{from\_L2\_to\_L1\_GEMV}      & \texttt{8'h13} & L2 $\to$ GEMV L1. \\
-\hline
-\texttt{from\_L2\_to\_CVO}           & \texttt{8'h14} & L2 $\to$ SFU. \\
-\hline
-\texttt{from\_GEMM\_res\_to\_L2}     & \texttt{8'h21} & GEMM result $\to$ L2. \\
-\hline
-\texttt{from\_GEMV\_res\_to\_L2}     & \texttt{8'h31} & GEMV result $\to$ L2. \\
-\hline
-\texttt{from\_CVO\_res\_to\_L2}      & \texttt{8'h41} & SFU result $\to$ L2. \\
+\texttt{ptr\_addr\_t}      & 6 & Generic index into the 64-entry Constant Cache. \\
 \hline
 \end{longtable}
 
-\section{Pointer \& Parameter Registers}
+Pointer entries are populated by \texttt{MEMSET}. A canonical layer
+prologue is:
 
-The ISA uses 6-bit pointers to index small entries in the Constant Cache.
-The Constant Cache is 64 entries deep, so the pointer width matches
-$\log_{2}(64)=6$.
-
-\begin{longtable}{|l|c|p{9cm}|}
-\hline
-\textbf{\color{oceanblue}Pointer} &
-\textbf{\color{oceanblue}Width} &
-\textbf{\color{oceanblue}Content} \\
-\hline
-\endhead
-\texttt{shape\_ptr\_addr} & 6 bit & Tensor shape metadata $(M, N, K)$. \\
-\hline
-\texttt{size\_ptr\_addr}  & 6 bit & Tile sizes, loop bounds, etc. \\
-\hline
-\texttt{ptr\_addr\_t} (shared) & 6 bit & Generic index into the 64-entry Constant Cache. \\
-\hline
-\end{longtable}
-
-Pointer entries are populated by \textbf{MEMSET}. A typical prologue looks
-like:
-
-\begin{lstlisting}
-MEMSET fmap_shape,   idx=0, M, N, K          // shape(M,N,K)
-MEMSET weight_shape, idx=0, scale, zp, 0     // weight scale & zero-point
-GEMM   dest, src, shape_ptr=0, size_ptr=0, flags=0  // first tile
+\begin{lstlisting}[style=pseudo]
+MEMSET fmap_shape,   idx=0, a=M, b=N, c=K
+MEMSET weight_shape, idx=0, a=scale, b=zero_point, c=0
+GEMM   dest=..., src=..., flags={w_scale=1}, size_ptr=0, shape_ptr=0, lane=0
 \end{lstlisting}
 
 \section{Address Space}
 
 \begin{longtable}{|l|c|p{9cm}|}
 \hline
-\textbf{\color{oceanblue}Field} & \textbf{\color{oceanblue}Width} & \textbf{\color{oceanblue}Address space} \\
+\rowcolor{skytint}
+\textbf{Field} & \textbf{Width} & \textbf{Address space} \\
 \hline
-\endhead
-\texttt{dest\_addr} / \texttt{src\_addr} & 17 bit & 128 K entries (indexed by L2 cache block). \\
+\endfirsthead
+\texttt{dest\_addr} / \texttt{src\_addr} & 17 & $2^{17}$ entries = 128\,K, indexed by L2 cache block. \\
 \hline
-\texttt{aux\_addr}                       & 17 bit & MEMCPY auxiliary address (e.g., host DDR offset in units of the block size). \\
+\texttt{aux\_addr}                       & 17 & MEMCPY auxiliary address (e.g., host DDR offset in units of the block size). \\
 \hline
 \end{longtable}
 
-Entry size is defined at the device layer (128 bit per word on KV260), so
-$17\,\text{bit} \times 16\,\text{byte}$ yields a \textbf{2\,MB} linear L2
-address space.
+With an on-device block size of 128 bits (16 B) on KV260, the 17-bit
+field yields a \textbf{2\,MB} linear L2 address space.
+
+\begin{CautionBox}
+\texttt{aux\_addr} is measured in \textbf{block units}, not bytes.
+A host-side byte offset must be divided by 16 before loading into
+\texttt{aux\_addr}.
+\end{CautionBox}
 
 \newpage
 
-% =============================================================
-\chapter{DATA FLOW ARCHITECTURE}
+% =================================================================
+\chapter{DATA FLOW \& COMPLETION}
 
-This chapter describes the memory hierarchy and data flow pipeline for the
-pccx NPU, from the external DDR4 memory down to the execution units. The
-architecture is designed to sustain high bandwidth while crossing multiple
-clock domains between the PS and the PL.
+\section{Per-Instruction Dataflow Summary}
 
-\section{Top-level Pipeline}
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[
+  font=\sffamily\footnotesize,
+  node distance=0.3cm and 0.6cm,
+  dfstep/.style={rectangle, draw=oceanblue, fill=oceanblue!10,
+               minimum width=2.6cm, minimum height=0.8cm, rounded corners=2pt,
+               font=\sffamily\footnotesize, align=center},
+]
+  % GEMM path
+  \node[dfstep] (g1) {Const\,Cache\\lookup};
+  \node[dfstep, right=of g1] (g2) {Weight\\preload};
+  \node[dfstep, right=of g2] (g3) {Activation\\stream};
+  \node[dfstep, right=of g3] (g4) {Systolic\\accumulate};
+  \node[dfstep, right=of g4] (g5) {Post-proc\\(scale,bias)};
+  \node[dfstep, right=of g5] (g6) {WB L2};
+  \node[above=0.15cm of g1, font=\sffamily\bfseries\color{oceanblue}] {GEMM};
+  \foreach \a/\b in {g1/g2, g2/g3, g3/g4, g4/g5, g5/g6} \draw[arr] (\a)--(\b);
 
-\begin{itemize}[label={\color{oceanblue}\textbullet}, leftmargin=*, itemsep=1ex]
-    \item \textbf{\color{oceanblue}DDR4 to PS-PL Interface (HP Ports):} \\
-    Data is fetched from external DDR4 through four High-Performance (HP)
-    ports (HP0--HP3). Each HP port is 128 bits wide and clocked at
-    \textbf{250 MHz}.
+  % GEMV path
+  \node[dfstep, below=0.55cm of g1] (v1) {Const\,Cache\\lookup};
+  \node[dfstep, right=of v1] (v2) {Row-part.\\weight};
+  \node[dfstep, right=of v2] (v3) {4 cores\\32-MAC};
+  \node[dfstep, right=of v3] (v4) {5-stage\\reduce};
+  \node[dfstep, right=of v4] (v5) {Post-proc};
+  \node[dfstep, right=of v5] (v6) {WB L2\\or SFU};
+  \node[above=0.15cm of v1, font=\sffamily\bfseries\color{oceanblue}] {GEMV};
+  \foreach \a/\b in {v1/v2, v2/v3, v3/v4, v4/v5, v5/v6} \draw[arr] (\a)--(\b);
 
-    \item \textbf{\color{oceanblue}Clock Domain Crossing (Async FIFO):} \\
-    The main FPGA compute core is driven by a \textbf{400 MHz} clock. Data
-    crossing the PS$\to$PL boundary is safely transferred via Xilinx
-    Parameterized Macro (XPM) asynchronous FIFOs configured in
-    \texttt{independent\_clock} mode.
+  % MEMCPY path
+  \node[dfstep, below=0.55cm of v1] (m1) {Resolve\\route};
+  \node[dfstep, right=of m1] (m2) {Shape\\lookup};
+  \node[dfstep, right=of m2] (m3) {DMA\\issue};
+  \node[dfstep, right=of m3] (m4) {Bus\\transfer};
+  \node[dfstep, right=of m4] (m5) {Fence\\register};
+  \node[dfstep, right=of m5] (m6) {STAT\_OUT\\report};
+  \node[above=0.15cm of m1, font=\sffamily\bfseries\color{oceanblue}] {MEMCPY};
+  \foreach \a/\b in {m1/m2, m2/m3, m3/m4, m4/m5, m5/m6} \draw[arr] (\a)--(\b);
 
-    \item \textbf{\color{oceanblue}L2 and L1 Cache Routing:} \\
-    FIFO-buffered data is routed to the L2 cache, then loaded into per-core
-    L1 caches for low-latency operand access by the execution engines.
+  % CVO path
+  \node[dfstep, below=0.55cm of m1] (c1) {Func\\decode};
+  \node[dfstep, right=of c1] (c2) {L2 read\\src};
+  \node[dfstep, right=of c2] (c3) {$E_{\max}$\\sub};
+  \node[dfstep, right=of c3] (c4) {CORDIC/\\LUT};
+  \node[dfstep, right=of c4] (c5) {Scale/\\accm};
+  \node[dfstep, right=of c5] (c6) {WB L2\\or FIFO};
+  \node[above=0.15cm of c1, font=\sffamily\bfseries\color{oceanblue}] {CVO};
+  \foreach \a/\b in {c1/c2, c2/c3, c3/c4, c4/c5, c5/c6} \draw[arr] (\a)--(\b);
+\end{tikzpicture}
+\caption{Per-instruction dataflow summary. Each row is one
+instruction's journey through the NPU from dispatch to writeback.}
+\label{fig:dataflow-summary}
+\end{figure}
 
-    \item \textbf{\color{oceanblue}Execution Engine:} \\
-    Systolic arrays (GEMM) and 32-lane MAC banks (GEMV) fetch pre-aligned
-    operands directly from L1 cache. Post-process stages (scale, bias,
-    \texttt{e\_max} update) write results back to L2.
-\end{itemize}
+\section{Hazards and Completion Tracking}
 
-\section{Per-Instruction Dataflow}
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[
+  font=\sffamily\footnotesize,
+  node distance=0.3cm and 0.6cm,
+]
+  \node[blocknode, minimum width=3cm] (in) {Incoming μop};
+  \node[blocknode, right=1.3cm of in, minimum width=3.4cm, fill=accentorange!15, draw=accentorange]
+    (ah) {Address hazard check\\\scriptsize RAW on dest/src};
+  \node[blocknode, right=1.3cm of ah, minimum width=3.4cm, fill=accentorange!15, draw=accentorange]
+    (rh) {Resource hazard check\\\scriptsize GEMM/GEMV/SFU};
+  \node[hotblock, right=1.3cm of rh, minimum width=2.4cm] (ex) {Execute};
+  \node[scheduler, below=0.55cm of rh, minimum width=7cm]
+    (fence) {Fence tracker --- \texttt{fsmout\_npu\_stat\_collector}};
+  \node[ram, right=0.6cm of ex, minimum width=2.5cm] (stat) {STAT\_OUT};
 
-\subsection{GEMM}
+  \draw[arr] (in) -- (ah);
+  \draw[arr] (ah) -- (rh);
+  \draw[arr] (rh) -- (ex);
+  \draw[arr] (ex.south) -- ++(0,-0.4cm) -| (fence.east);
+  \draw[arr] (fence.east) -| (stat.south);
+\end{tikzpicture}
+\caption{Hazard pipeline. Each μop passes an address-hazard and a
+resource-hazard check before executing; \texttt{async} completion is
+reported via the Fence tracker into \texttt{STAT\_OUT}.}
+\label{fig:hazard}
+\end{figure}
 
-\begin{enumerate}[label=\textbf{\color{oceanblue}\arabic*.}, leftmargin=*, itemsep=0.5ex]
-    \item Dispatcher reads \texttt{shape\_ptr\_addr} / \texttt{size\_ptr\_addr}
-          from the Constant Cache to obtain the tile parameters.
-    \item Weight Buffer prefetches one tile of weights via the HP ports.
-    \item L2 cache \texttt{src\_addr} streams activations into the systolic
-          array.
-    \item The array runs \textbf{Weight Stationary} $\to$ Accumulator
-          $\to$ Post-Process.
-    \item Result is written back to L2 cache at \texttt{dest\_reg}.
-\end{enumerate}
+\section{Asynchronous Completion Protocol}
 
-\subsection{GEMV}
+For \texttt{async = 1} instructions (MEMCPY or CVO), the dispatcher
+retires immediately and the host tracks completion through
+\texttt{STAT\_OUT}. Figure~\ref{fig:async-seq} shows the wire-level
+sequence.
 
-\begin{enumerate}[label=\textbf{\color{oceanblue}\arabic*.}, leftmargin=*, itemsep=0.5ex]
-    \item Dispatcher resolves pointers $\to$ per-core shape distribution.
-    \item Weight Buffer $\to$ 4 GEMV cores, streaming \textbf{by row partition}.
-    \item L2 cache $\to$ per-core L1 cache for activation preload.
-    \item 32-lane LUT-based MAC inside each core + 5-stage reduction tree
-          $\to$ scalar result.
-    \item Post-Process (scale, bias) $\to$ L2 cache or direct SFU FIFO.
-\end{enumerate}
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[
+  font=\sffamily\small,
+  node distance=0.2cm and 1.2cm,
+  agent/.style={rectangle, draw=oceanblue, fill=skytint, rounded corners=2pt,
+                minimum width=2.4cm, minimum height=0.7cm, font=\sffamily\small, align=center},
+]
+  \node[agent] (host) {Host driver};
+  \node[agent, right=3.5cm of host] (ctrl) {Control Unit};
+  \node[agent, right=3.5cm of ctrl] (be)   {Back end (DMA/SFU)};
 
-\subsection{MEMCPY}
+  \coordinate (h0) at ($(host.south) + (0,-0.2cm)$);
+  \coordinate (c0) at ($(ctrl.south) + (0,-0.2cm)$);
+  \coordinate (b0) at ($(be.south)   + (0,-0.2cm)$);
 
-The \texttt{from\_device} / \texttt{to\_device} combination selects one of
-the routing paths tabulated in \S3.1. When \texttt{async = 1}, execution
-continues to the next instruction immediately; the Global Scheduler tracks
-the completion fence.
+  \draw[graytext, thick] (h0) -- ++(0,-5.5cm);
+  \draw[graytext, thick] (c0) -- ++(0,-5.5cm);
+  \draw[graytext, thick] (b0) -- ++(0,-5.5cm);
 
-\subsection{MEMSET}
-
-MEMSET writes directly from the Dispatcher into the Constant Cache — the
-only instruction that bypasses L2. A single instruction can write up to
-three 16-bit values \texttt{(a, b, c)} at once.
-
-\subsection{CVO}
-
-\begin{itemize}[label={\color{oceanblue}\textbullet}, leftmargin=*, itemsep=0.5ex]
-    \item Dispatcher emits a \texttt{cvo\_control\_uop\_t} to the SFU (single
-          BF16 scalar pipeline).
-    \item Input vector streams in from L2 cache via \texttt{src\_addr}.
-    \item The function pipeline (CORDIC / LUT) produces one result per
-          cycle in steady state.
-    \item Output goes to L2 cache at \texttt{dst\_addr}, or to the GEMV
-          direct FIFO if the next instruction can fuse.
-    \item \textbf{Fast Path:} if the SFU consumes the output of the
-          preceding GEMV immediately, \texttt{src\_addr} carries a
-          \textit{special tag} and the L2 round trip is skipped.
-\end{itemize}
-
-\section{Dependencies and Completion}
-
-Inter-instruction dependencies are resolved in the Global Scheduler via
-two checks:
-
-\begin{itemize}[label={\color{oceanblue}\textbullet}, leftmargin=*, itemsep=0.5ex]
-    \item \textbf{\color{oceanblue}Address hazard:} read-after-write on
-          dest / src L2 addresses.
-    \item \textbf{\color{oceanblue}Resource hazard:} occupancy of the
-          GEMM / GEMV / SFU resources.
-\end{itemize}
-
-Completion of an asynchronous instruction (\texttt{async = 1}) is collected
-by the \texttt{fsmout\_npu\_stat\_collector} block and reported to the host
-through the AXI-Lite \texttt{STAT\_OUT} register.
-
-\newpage
-
-% =============================================================
-\chapter{MEMORY SUBSYSTEM \& CACHE ARCHITECTURE}
-
-To sustain 400 MHz operation and maximize DSP48E2 utilization, the pccx
-NPU employs a hybrid memory architecture: deeply buffered asynchronous
-FIFOs for deterministic weight streaming, combined with a
-Software-Managed Cache (SMC) for dynamic Feature Map (FMAP) and KV token
-routing.
-
-\section{Weight Data Streaming via URAM FIFOs}
-
-Unlike traditional address-mapped caches, weight parameters are
-continuously buffered through UltraRAM-based asynchronous FIFOs. This
-stream-centric architecture gives several advantages:
-
-\begin{itemize}[label={\color{oceanblue}\textbullet}, leftmargin=*, itemsep=1ex]
-    \item \textbf{\color{oceanblue}Automatic CDC (Clock Domain Crossing):}
-    By instantiating XPM macros in \texttt{independent\_clock} mode, the
-    transition between the 250 MHz AXI domain and the 400 MHz compute
-    core is natively and safely resolved without manual synchronization.
-
-    \item \textbf{\color{oceanblue}Control Simplicity:} The NPU dispatcher
-    is freed from complex address generation. Execution units fetch
-    weights through standard \texttt{valid}/\texttt{ready} handshaking,
-    reducing critical-path delays.
-
-    \item \textbf{\color{oceanblue}Massive Stream Depth:} Cascading two
-    URAM blocks gives 4096 depth $\times$ 128-bit width per port, or
-    about 64 KB. Aggregating all 4 ports provides a 256 KB weight buffer.
-\end{itemize}
-
-\section{Physical URAM Allocation and Capacity Maximization}
-
-The Kria KV260 provides 64 URAM blocks (roughly 2.25 MB). The pccx NPU
-allocates all available blocks to maximize on-chip bandwidth without
-causing synthesis or routing congestion.
-
-\begin{itemize}[label={\color{oceanblue}\textbullet}, leftmargin=*, itemsep=1ex]
-    \item \textbf{\color{oceanblue}Weight FIFO Allocation (8 URAMs):} \\
-    The 4-port Weight FIFO requires 2 URAM blocks per port for a 128-bit
-    datapath.
-
-    \item \textbf{\color{oceanblue}FMAP \& KV Cache Allocation (56 URAMs):} \\
-    The remaining 56 URAM blocks are dedicated to the unified FMAP and
-    KV Cache. Pairing the 56 blocks for 128-bit data width yields 28
-    structural pairs.
-    \begin{itemize}[label={\color{graytext}\textendash}, leftmargin=*, itemsep=0.5ex, topsep=0.5ex]
-        \item \textbf{Maximum Depth:} 28 pairs $\times$ 4096 = \textbf{114,688}
-        \item \textbf{Total Capacity:} 114,688 $\times$ 16 B = \textbf{$\sim$1.75 MB}
-    \end{itemize}
-
-    \item \textbf{\color{oceanblue}Architectural Implications:} \\
-    The ultra-large unified L2 cache easily accommodates the FMAP
-    dimension expansion during large-scale Transformer inference, and
-    retains tens of thousands of KV Cache tokens on-chip, eliminating
-    aggressive DDR4 swapping.
-\end{itemize}
-
-\section{Mathematical Principles of Execution}
-
-The NPU applies integer block-floating-point quantization so that the DSP48E2
-blocks can compute exact dot products without any floating-point multipliers.
-
-For inputs aligned to a common Block Floating Point (BF16) scale factor:
-
-$$A = a \times S_{\mathrm{bf16}}, \quad B = b \times S_{\mathrm{bf16}}$$
-
-And INT4 quantized weights:
-
-$$C = c \times S_{\mathrm{int4}}, \quad D = d \times S_{\mathrm{int4}}$$
-
-The original mathematical operation is:
-
-$$\mathrm{Result} = (A \times C) + (B \times D)$$
-
-Applying the scale factors:
-
-$$\mathrm{Result} = (a \times S_{\mathrm{bf16}} \times c \times S_{\mathrm{int4}}) + (b \times S_{\mathrm{bf16}} \times d \times S_{\mathrm{int4}})$$
-
-Factoring out the common scale factors gives the final hardware-optimized
-equation:
-
-$$\mathrm{Result} = \underbrace{(a \times c + b \times d)}_{\text{DSP48E2 integer calc}} \times (S_{\mathrm{fmap}} \times S_{\mathrm{weight}})$$
-
-\vspace{0.5em}
-
-Linear memory access calculation for tile walks:
-
-$$\mathrm{Current\_Addr} = \mathrm{Base\_Addr} + (\mathrm{Current\_Row} \times \mathrm{Stride}) + \mathrm{Current\_Col}$$
+  % Message arrows
+  \draw[arrfat] ($(h0)+(0,-0.5cm)$) -- node[above, font=\sffamily\scriptsize]{\texttt{CMD\_IN} 64\,b (async=1)} ($(c0)+(0,-0.5cm)$);
+  \draw[arrfat] ($(c0)+(0,-1.2cm)$) -- node[above, font=\sffamily\scriptsize]{μop + \texttt{fence\_id}} ($(b0)+(0,-1.2cm)$);
+  \draw[arrfat] ($(c0)+(0,-1.9cm)$) -- node[above, font=\sffamily\scriptsize]{ack (retire to host)} ($(h0)+(0,-1.9cm)$);
+  \draw[arrdim, dashed] ($(b0)+(0,-2.6cm)$) -- node[below, font=\sffamily\scriptsize]{(bus transfer \ldots\ latency)} ($(c0)+(0,-2.6cm)$);
+  \draw[arrfat] ($(b0)+(0,-3.8cm)$) -- node[above, font=\sffamily\scriptsize]{fence done} ($(c0)+(0,-3.8cm)$);
+  \draw[arrfat] ($(c0)+(0,-4.5cm)$) -- node[above, font=\sffamily\scriptsize]{\texttt{STAT\_OUT} update} ($(h0)+(0,-4.5cm)$);
+\end{tikzpicture}
+\caption{Asynchronous completion sequence. The host can issue the
+next instruction as soon as it receives the retire ack; true
+completion arrives later via \texttt{STAT\_OUT}.}
+\label{fig:async-seq}
+\end{figure}
 
 \newpage
 
-% =============================================================
-\chapter{PROGRAMMING EXAMPLES}
+% =================================================================
+\chapter{PROGRAMMING GUIDE}
 
-This chapter walks through short, real instruction sequences that the host
-driver would emit. Each example shows the instruction stream, the
-preconditions on Constant Cache state, and the expected side effects on L2.
+This chapter walks through representative instruction streams that a
+host driver emits.
 
-\section{Example 1 — Single GEMM tile (Q projection for one prompt tile)}
+\section{Example 1 --- Single GEMM tile (Q projection for one prompt tile)}
 
-\textbf{Goal:} compute $Q = X W_Q$ for a tile of shape $(M, N, K) = (64, 256, 256)$.
+\textbf{Goal:} compute $Q = X W_Q$ for a tile of shape
+$(M, N, K) = (64, 256, 256)$.
 
-\begin{lstlisting}
-# 1. Preload shape + size pointers
-MEMSET fmap_shape,   idx=0, a=64,  b=256, c=256   # (M, N, K)
+\begin{lstlisting}[style=sv]
+// 1. Preload shape + size pointers
+MEMSET fmap_shape,   idx=0, a=64,  b=256, c=256     // (M, N, K)
 MEMSET weight_shape, idx=0, a=scale_wq, b=zp_wq, c=0
 
-# 2. Load weights if not already streaming
+// 2. Load weights if not already streaming
 MEMCPY from_device=1, to_device=0, dest=L2_W_BASE,
        src=HOST_WQ_OFFSET, aux=HOST_BASE,
        shape_ptr=0, async=0
 
-# 3. Dispatch the GEMM
+// 3. Dispatch the GEMM
 GEMM   dest_reg=L2_Q_BASE, src_addr=L2_X_BASE,
        flags={findemax=0, accm=0, w_scale=1},
-       size_ptr=0, shape_ptr=0, lane=0        # lane=0 → use all lanes
+       size_ptr=0, shape_ptr=0, lane=0                // lane=0 -> all lanes
 \end{lstlisting}
 
-\section{Example 2 — Autoregressive step (GEMV + Softmax + RoPE)}
+\section{Example 2 --- Autoregressive step (GEMV + softmax + RoPE)}
 
-\textbf{Goal:} run one decoder step for a single new token. Uses GEMV for every
-projection, CVO for softmax and RoPE.
-
-\begin{lstlisting}
-# --- Q, K, V projection (all three use the same X) ---
+\begin{lstlisting}[style=sv]
+// --- Q, K, V projection ---
 GEMV dest=L2_Q, src=L2_X, flags=w_scale, size_ptr=0, shape_ptr=0
 GEMV dest=L2_K, src=L2_X, flags=w_scale, size_ptr=1, shape_ptr=1
 GEMV dest=L2_V, src=L2_X, flags=w_scale, size_ptr=2, shape_ptr=2
 
-# --- RoPE rotation on Q and K ---
+// --- RoPE rotation on Q and K ---
 CVO  func=CVO_COS, src=L2_Q, dst=L2_Q_R, length=D_HEAD, flags=0
 CVO  func=CVO_SIN, src=L2_K, dst=L2_K_R, length=D_HEAD, flags=0
 
-# --- Attention score + softmax ---
+// --- Attention score + softmax ---
 GEMV dest=L2_SCORES, src=L2_Q_R, flags={findemax=1, w_scale=0},
-     size_ptr=3, shape_ptr=3             # Q · K^T
+     size_ptr=3, shape_ptr=3                        // Q . K^T
 CVO  func=CVO_EXP, src=L2_SCORES, dst=L2_SCORES,
      length=SEQ_LEN, flags=sub_emax
 CVO  func=CVO_REDUCE_SUM, src=L2_SCORES, dst=L2_DENOM,
      length=SEQ_LEN, flags=0
 CVO  func=CVO_SCALE, src=L2_SCORES, dst=L2_SCORES,
-     length=SEQ_LEN, flags=recip_scale   # divide by denom
+     length=SEQ_LEN, flags=recip_scale              // divide by denom
 
-# --- Attention-weighted V gather ---
+// --- Attention-weighted V gather ---
 GEMV dest=L2_CTX, src=L2_SCORES, flags=w_scale,
-     size_ptr=4, shape_ptr=4             # V · P
+     size_ptr=4, shape_ptr=4                        // V . P
 \end{lstlisting}
 
-\section{Example 3 — Weight hot-swap for a different layer}
+\section{Example 3 --- Weight hot-swap (async prefetch overlapped with compute)}
 
-\textbf{Goal:} while the compute path is processing layer $N$, preload the
-weights for layer $N+1$ asynchronously so the next layer starts at zero cost.
-
-\begin{lstlisting}
-# Fire and forget — continues to next instruction immediately
+\begin{lstlisting}[style=sv]
+// Fire and forget -- continues to the next instruction immediately
 MEMCPY from_device=1, to_device=0,
        dest=L2_W_NEXT_BASE,
        src=HOST_W_LAYER_NP1_OFFSET,
        aux=HOST_BASE,
        shape_ptr=5, async=1
 
-# ... overlap with layer N GEMMs ...
+// ... overlap with layer N GEMMs ...
 GEMM   dest=..., src=..., ...
 GEMM   dest=..., src=..., ...
 
-# Before starting layer N+1, the scheduler already knows the MEMCPY
-# fence has been retired, so no explicit barrier is required.
+// Before starting layer N+1, the scheduler knows the MEMCPY fence has
+// retired, so no explicit barrier is required.
 \end{lstlisting}
+
+\section{Performance Rules of Thumb}
+
+\begin{itemize}[label={\color{oceanblue}\textbullet}, leftmargin=*, itemsep=0.3ex]
+    \item Amortize \texttt{MEMSET} --- one at the top of each layer is
+          enough; avoid per-tile MEMSETs.
+    \item Prefer \texttt{async = 1} for MEMCPY when the transfer is
+          followed by $\ge 2$ compute instructions that do not depend
+          on its result. The scheduler's fence tracker will stall
+          automatically when the consumer arrives.
+    \item Keep \texttt{parallel\_lane = 0} unless you are deliberately
+          executing a trailing partial tile — the dispatcher's
+          resource allocator is more efficient when given the full
+          lane set.
+    \item Fuse softmax: on the same SFU dispatch, chain
+          \texttt{CVO\_EXP} $\to$ \texttt{CVO\_REDUCE\_SUM} $\to$
+          \texttt{CVO\_SCALE(recip\_scale)} so the pipeline drains
+          once rather than three times.
+    \item If a GEMV feeds directly into a CVO, pre-tag the GEMV
+          \texttt{dest} with the SFU-bypass marker so the L2 round
+          trip is skipped.
+\end{itemize}
 
 \newpage
 
-% =============================================================
+% =================================================================
 \appendix
 
-\chapter{OPCODE QUICK REFERENCE}
+\chapter{OPCODE MAP}
 
-\begin{longtable}{|c|l|l|p{7cm}|}
+\section{Single-Byte Opcode Quick Reference}
+
+\begin{longtable}{|c|l|l|p{5.5cm}|c|}
 \hline
-\textbf{\color{oceanblue}opcode[3:0]} & \textbf{\color{oceanblue}Mnemonic} &
-\textbf{\color{oceanblue}Body layout family} & \textbf{\color{oceanblue}Primary back-end} \\
+\rowcolor{skytint}
+\textbf{opcode[3:0]} & \textbf{Mnemonic} & \textbf{Body layout} & \textbf{Primary back-end} & \textbf{Family} \\
 \hline
-\endhead
-\texttt{4'h0} & GEMV   & Type A & 4 $\times$ 32-MAC GEMV lanes with 5-stage reduction. \\
+\endfirsthead
+\texttt{4'h0} & GEMV   & Type A & 4 $\times$ 32-MAC streaming cores.   & Compute \\
 \hline
-\texttt{4'h1} & GEMM   & Type A & 32 $\times$ 32 systolic array (Weight Stationary). \\
+\texttt{4'h1} & GEMM   & Type A & 32 $\times$ 32 systolic array.       & Compute \\
 \hline
-\texttt{4'h2} & MEMCPY & Type B & DMA engines (ACP and HP). \\
+\texttt{4'h2} & MEMCPY & Type B & ACP + HP DMA engines.                & Memory \\
 \hline
-\texttt{4'h3} & MEMSET & Type C & Constant Cache write port (bypasses L2). \\
+\texttt{4'h3} & MEMSET & Type C & Constant Cache (bypasses L2).        & Memory \\
 \hline
-\texttt{4'h4} & CVO    & CVO    & SFU (BF16 scalar pipeline with CORDIC/LUT). \\
+\texttt{4'h4} & CVO    & Type D & SFU (BF16 CORDIC + LUT).             & SFU \\
 \hline
-\texttt{4'h5}--\texttt{4'hF} & reserved & --- & Undefined. \\
+\texttt{4'h5}--\texttt{4'hF} & --- & --- & \textit{Undefined}. & --- \\
 \hline
 \end{longtable}
 
-\chapter{DATA ROUTE ENCODING TABLE}
+\chapter{DATA-ROUTE ENUM REFERENCE}
 
-\begin{longtable}{|l|c|c|p{7cm}|}
+See Table~\ref{tab:data-route} on the corresponding page for the
+full text; this appendix reproduces only the 8-bit hex values for
+quick lookup.
+
+\begin{longtable}{|c|l|}
 \hline
-\textbf{\color{oceanblue}Route} & \textbf{\color{oceanblue}Hex} & \textbf{\color{oceanblue}Direction} & \textbf{\color{oceanblue}Path} \\
+\rowcolor{skytint}
+\textbf{Hex} & \textbf{Route symbol} \\
 \hline
-\endhead
-\texttt{from\_host\_to\_L2}        & \texttt{8'h01} & Ingress  & Host DDR4 $\to$ L2 cache \\
+\endfirsthead
+\texttt{8'h01} & \texttt{from\_host\_to\_L2} \\
 \hline
-\texttt{from\_L2\_to\_host}        & \texttt{8'h10} & Egress   & L2 cache $\to$ Host DDR4 \\
+\texttt{8'h10} & \texttt{from\_L2\_to\_host} \\
 \hline
-\texttt{from\_L2\_to\_L1\_GEMM}    & \texttt{8'h12} & Compute  & L2 $\to$ GEMM L1 \\
+\texttt{8'h12} & \texttt{from\_L2\_to\_L1\_GEMM} \\
 \hline
-\texttt{from\_L2\_to\_L1\_GEMV}    & \texttt{8'h13} & Compute  & L2 $\to$ GEMV L1 \\
+\texttt{8'h13} & \texttt{from\_L2\_to\_L1\_GEMV} \\
 \hline
-\texttt{from\_L2\_to\_CVO}         & \texttt{8'h14} & Compute  & L2 $\to$ SFU \\
+\texttt{8'h14} & \texttt{from\_L2\_to\_CVO} \\
 \hline
-\texttt{from\_GEMM\_res\_to\_L2}   & \texttt{8'h21} & Writeback& GEMM result $\to$ L2 \\
+\texttt{8'h21} & \texttt{from\_GEMM\_res\_to\_L2} \\
 \hline
-\texttt{from\_GEMV\_res\_to\_L2}   & \texttt{8'h31} & Writeback& GEMV result $\to$ L2 \\
+\texttt{8'h31} & \texttt{from\_GEMV\_res\_to\_L2} \\
 \hline
-\texttt{from\_CVO\_res\_to\_L2}    & \texttt{8'h41} & Writeback& SFU result $\to$ L2 \\
+\texttt{8'h41} & \texttt{from\_CVO\_res\_to\_L2} \\
 \hline
 \end{longtable}
 
-\chapter{CVO FUNCTION CODE QUICK REFERENCE}
+\chapter{CVO FUNCTION-CODE REFERENCE}
 
-\begin{longtable}{|l|c|p{7cm}|l|}
+\begin{longtable}{|l|c|l|l|}
 \hline
-\textbf{\color{oceanblue}Function} & \textbf{\color{oceanblue}Code} &
-\textbf{\color{oceanblue}Semantics} & \textbf{\color{oceanblue}Use} \\
+\rowcolor{skytint}
+\textbf{Function} & \textbf{Code} & \textbf{Semantics} & \textbf{Use} \\
 \hline
-\endhead
-\texttt{CVO\_EXP}         & \texttt{4'h0} & $e^{x}$                   & Softmax \\
+\endfirsthead
+\texttt{CVO\_EXP}         & \texttt{4'h0} & $e^{x}$             & Softmax numerator \\
 \hline
-\texttt{CVO\_SQRT}        & \texttt{4'h1} & $\sqrt{x}$                & RMSNorm \\
+\texttt{CVO\_SQRT}        & \texttt{4'h1} & $\sqrt{x}$          & RMSNorm denominator \\
 \hline
-\texttt{CVO\_GELU}        & \texttt{4'h2} & $\mathrm{gelu}(x)$        & FFN \\
+\texttt{CVO\_GELU}        & \texttt{4'h2} & $\mathrm{gelu}(x)$  & FFN nonlinearity \\
 \hline
-\texttt{CVO\_SIN}         & \texttt{4'h3} & $\sin(x)$                 & RoPE \\
+\texttt{CVO\_SIN}         & \texttt{4'h3} & $\sin(x)$           & RoPE \\
 \hline
-\texttt{CVO\_COS}         & \texttt{4'h4} & $\cos(x)$                 & RoPE \\
+\texttt{CVO\_COS}         & \texttt{4'h4} & $\cos(x)$           & RoPE \\
 \hline
-\texttt{CVO\_REDUCE\_SUM} & \texttt{4'h5} & $\sum_i x_i$              & Softmax denominator \\
+\texttt{CVO\_REDUCE\_SUM} & \texttt{4'h5} & $\sum_i x_i$        & Softmax denominator \\
 \hline
-\texttt{CVO\_SCALE}       & \texttt{4'h6} & $\alpha \cdot x$          & Bias / scale fuse \\
+\texttt{CVO\_SCALE}       & \texttt{4'h6} & $\alpha \cdot x$    & Bias / scale fuse \\
 \hline
-\texttt{CVO\_RECIP}       & \texttt{4'h7} & $1/x$                     & Softmax / RMSNorm \\
+\texttt{CVO\_RECIP}       & \texttt{4'h7} & $1/x$               & Softmax / RMSNorm \\
 \hline
-\texttt{4'h8}--\texttt{4'hF} & --- & \textit{reserved} & --- \\
+\texttt{4'h8}--\texttt{4'hF} & --- & \textit{Reserved} & --- \\
 \hline
 \end{longtable}
 
 \chapter{REVISION HISTORY}
 
-\begin{longtable}{|l|l|p{10cm}|}
+\begin{longtable}{|l|l|p{9.5cm}|}
 \hline
-\textbf{\color{oceanblue}Revision} & \textbf{\color{oceanblue}Date} & \textbf{\color{oceanblue}Notes} \\
+\rowcolor{skytint}
+\textbf{Revision} & \textbf{Date} & \textbf{Notes} \\
 \hline
-\endhead
-v002 & 2026-04-21 & Initial guidebook release — 5 opcodes (GEMV, GEMM, MEMCPY, MEMSET, CVO); 8 data-route enums; 8 CVO function codes. Numbers mirror \texttt{isa\_pkg.sv} in the RTL repo. \\
+\endfirsthead
+v002 & 2026-04-21 &
+Initial Software Developer's Manual release.  Intel-SDM-style
+per-instruction reference blocks, bit-level Type A/B/C/D
+\texttt{bytefield} diagrams, CUDA-grade TikZ architectural
+illustrations (system context, NPU top-level, memory hierarchy,
+URAM allocation, CDC FIFO, DSP48E2 datapath, systolic array, GEMV
+streaming, decode/dispatch, hazard tracker, async completion
+sequence, CVO pipeline).  Numbers mirror \texttt{isa\_pkg.sv} in
+the RTL repo. \\
 \hline
 \end{longtable}
 
