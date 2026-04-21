@@ -23,6 +23,11 @@ ISA 타입 패키지
    :language: systemverilog
    :caption: hw/rtl/NPU_Controller/NPU_Control_Unit/ISA_PACKAGE/isa_pkg.sv
 
+.. admonition:: 마지막 검증 대상
+   :class: note
+
+   커밋 ``773bd82`` @ ``hwkim-dev/pccx-FPGA-NPU-LLM-kv260`` (2026-04-21).
+
 .. seealso::
 
    :doc:`/docs/v002/ISA/encoding` — 동일 인코딩의 사람이 읽기 쉬운 설명.

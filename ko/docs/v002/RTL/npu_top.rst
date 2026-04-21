@@ -18,6 +18,11 @@ NPU 최상위 모듈
    :language: systemverilog
    :caption: hw/rtl/NPU_top.sv
 
+.. admonition:: 마지막 검증 대상
+   :class: note
+
+   커밋 ``773bd82`` @ ``hwkim-dev/pccx-FPGA-NPU-LLM-kv260`` (2026-04-21).
+
 .. seealso::
 
    :doc:`/docs/v002/Architecture/top_level` — 블록 다이어그램 및 설계 근거.
