@@ -7,6 +7,7 @@ Pre-RTL bottleneck detection, UVM co-simulation, and LLM-driven testbench genera
    :maxdepth: 2
    :hidden:
 
+   getting-started
    modules/overview
    modules/node-editor
    design/rationale
