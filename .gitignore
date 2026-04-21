@@ -33,6 +33,8 @@ codes/v002/
 .claude/
 .claudesignore
 pccx-agent-integration-task.md
+CLAUDE.md
+AGENTS.md
 
 # Local roadmap / plan drafts (source material for public roadmap)
 pccx_master_roadmap_final.md
