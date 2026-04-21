@@ -11,6 +11,19 @@ Top-Level Architecture
    between host DDR4 and the device-side L2 cache, the clock domain
    crossings, and the placement of each heterogeneous compute core.
 
+.. figure:: ../../../_static/diagrams/v002_system_context.svg
+   :align: center
+   :width: 92%
+   :alt: pccx v002 system context — PS, PL NPU, and external DRAM
+
+   **Figure 2.** System context. The AXI-Lite command path (``CMD_IN``)
+   moves 64-bit instructions from the host driver into the Dispatcher;
+   the dual-direction AXI-Lite ``STAT_OUT`` reports async completion.
+   Four 128-bit AXI-HP ports plus one ACP port handle the bulk data
+   path (weights, activations, KV cache) between external DDR4 and the
+   L2 cache. Coloured panels mark the three structural regions: PS
+   (blue), PL NPU (orange), external DRAM (purple).
+
 1. Design Principles
 =====================
 

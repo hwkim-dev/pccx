@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" role="img"
+     aria-labelledby="title-sysctx desc-sysctx">
+  <title id="title-sysctx">pccx v002 system context on KV260</title>
+  <desc id="desc-sysctx">Host CPU on the Zynq UltraScale+ PS communicates
+    with the pccx v002 NPU on the PL through an AXI-Lite command channel
+    for dispatch and status, and through four 128-bit AXI-HP ports plus
+    one ACP port for DDR4 access. The NPU internally contains a control
+    unit, a dispatcher, the GEMM systolic array, four GEMV streaming
+    cores, an SFU, and DMA engines.</desc>
+
+  <defs>
+    <!-- Arrow markers -->
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#006994"/>
+    </marker>
+    <marker id="arr-gray" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#6b7280"/>
+    </marker>
+    <marker id="arr-red" viewBox="0 0 10 10" refX="9" refY="5"
+            markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#b22222"/>
+    </marker>
+
+    <!-- Shared styles -->
+    <style><![CDATA[
+      .panel-ps { fill: #e6f2f8; stroke: #006994; stroke-width: 1.5; }
+      .panel-pl { fill: #fff7e6; stroke: #cc6600; stroke-width: 1.5; }
+      .panel-ddr { fill: #f0ecf9; stroke: #6a4c93; stroke-width: 1.5; }
+      .block     { fill: #ffffff; stroke: #003e5c; stroke-width: 1.25; rx: 4; }
+      .block-hot { fill: #fde6e6; stroke: #b22222; stroke-width: 1.4; rx: 4; }
+      .block-cold{ fill: #e6f9f0; stroke: #2e7d32; stroke-width: 1.25; rx: 4; }
+      .block-mem { fill: #f0ecf9; stroke: #6a4c93; stroke-width: 1.25; rx: 4; }
+      .label-title { fill: #003e5c; font: 700 16px ui-sans-serif, system-ui, sans-serif; }
+      .label-sub   { fill: #555555; font: 400 12px ui-sans-serif, system-ui, sans-serif; }
+      .label-block { fill: #003e5c; font: 600 13px ui-sans-serif, system-ui, sans-serif; text-anchor: middle; }
+      .label-dim   { fill: #555555; font: 400 10.5px ui-sans-serif, system-ui, sans-serif; text-anchor: middle; }
+      .flow-cmd  { stroke: #006994; stroke-width: 1.6; fill: none; marker-end: url(#arr); }
+      .flow-data { stroke: #6b7280; stroke-width: 1.8; fill: none; marker-end: url(#arr-gray); }
+      .flow-hot  { stroke: #b22222; stroke-width: 1.6; fill: none; marker-end: url(#arr-red); }
+      .axi-label { fill: #006994; font: 600 10.5px ui-sans-serif, system-ui, sans-serif; }
+    ]]></style>
+  </defs>
+
+  <!-- ============================== -->
+  <!-- Processing System (PS) panel   -->
+  <!-- ============================== -->
+  <rect class="panel-ps" x="30" y="30" width="260" height="150" rx="8"/>
+  <text class="label-title" x="40" y="54">Processing System (PS)</text>
+  <text class="label-sub"   x="40" y="70">ARM Cortex-A53 × 4 + Cortex-R5 × 2</text>
+
+  <rect class="block" x="50"  y="90"  width="100" height="40"/>
+  <text class="label-block" x="100" y="114">Host CPU</text>
+
+  <rect class="block" x="170" y="90"  width="100" height="40"/>
+  <text class="label-block" x="220" y="108">Driver (uCA)</text>
+  <text class="label-dim"   x="220" y="122">libpccx.so</text>
+
+  <rect class="block-mem" x="50" y="140" width="220" height="30"/>
+  <text class="label-block" x="160" y="160">L0 DDR4 — 4 GB (KV260)</text>
+
+  <!-- ============================== -->
+  <!-- External DDR panel             -->
+  <!-- ============================== -->
+  <rect class="panel-ddr" x="700" y="30" width="230" height="150" rx="8"/>
+  <text class="label-title" x="710" y="54">External DRAM</text>
+  <text class="label-sub"   x="710" y="70">Weights • Activations • KV cache</text>
+
+  <rect class="block-mem" x="720" y="90"  width="190" height="30"/>
+  <text class="label-block" x="815" y="110">Weights (INT4, packed)</text>
+
+  <rect class="block-mem" x="720" y="125" width="190" height="30"/>
+  <text class="label-block" x="815" y="145">Activations (INT8)</text>
+
+  <rect class="block-mem" x="720" y="160" width="190" height="15"/>
+  <text class="label-dim"   x="815" y="172">KV cache (BF16)</text>
+
+  <!-- ============================== -->
+  <!-- Programmable Logic (PL) panel  -->
+  <!-- ============================== -->
+  <rect class="panel-pl" x="30" y="220" width="900" height="290" rx="8"/>
+  <text class="label-title" x="40" y="244">Programmable Logic (PL) — pccx v002 NPU</text>
+  <text class="label-sub"   x="40" y="260">Xilinx Kria KV260 • ZU5EV • 400 MHz core</text>
+
+  <!-- Control Unit -->
+  <rect class="block" x="55" y="285" width="140" height="70"/>
+  <text class="label-block" x="125" y="308">Control Unit</text>
+  <text class="label-dim"   x="125" y="324">64-bit VLIW decode</text>
+  <text class="label-dim"   x="125" y="340">opcode [63:60] → branch</text>
+
+  <!-- Dispatcher -->
+  <rect class="block-hot" x="215" y="285" width="140" height="70"/>
+  <text class="label-block" x="285" y="308">Dispatcher</text>
+  <text class="label-dim"   x="285" y="324">hazard &amp; fence tracker</text>
+  <text class="label-dim"   x="285" y="340">route μops</text>
+
+  <!-- GEMM -->
+  <rect class="block-hot" x="385" y="285" width="140" height="70"/>
+  <text class="label-block" x="455" y="308">GEMM Core</text>
+  <text class="label-dim"   x="455" y="324">32×32 systolic array</text>
+  <text class="label-dim"   x="455" y="340">DSP48E2 W4A8 × 1024</text>
+
+  <!-- GEMV -->
+  <rect class="block-hot" x="545" y="285" width="140" height="70"/>
+  <text class="label-block" x="615" y="308">GEMV Cores ×4</text>
+  <text class="label-dim"   x="615" y="324">32-MAC streaming</text>
+  <text class="label-dim"   x="615" y="340">row-partitioned</text>
+
+  <!-- SFU -->
+  <rect class="block-cold" x="705" y="285" width="90" height="70"/>
+  <text class="label-block" x="750" y="308">SFU</text>
+  <text class="label-dim"   x="750" y="324">BF16 CORDIC</text>
+  <text class="label-dim"   x="750" y="340">+ LUT</text>
+
+  <!-- DMA -->
+  <rect class="block-cold" x="805" y="285" width="105" height="70"/>
+  <text class="label-block" x="857" y="308">DMA Engines</text>
+  <text class="label-dim"   x="857" y="324">HP (weights,</text>
+  <text class="label-dim"   x="857" y="340">activations), ACP</text>
+
+  <!-- Memory strip -->
+  <rect class="block-mem" x="55"  y="380" width="170" height="55"/>
+  <text class="label-block" x="140" y="402">Constant Cache</text>
+  <text class="label-dim"   x="140" y="418">shape / size ptrs</text>
+
+  <rect class="block-mem" x="245" y="380" width="230" height="55"/>
+  <text class="label-block" x="360" y="402">L2 — URAM FIFO + BRAM</text>
+  <text class="label-dim"   x="360" y="418">~2 MB • 17-bit byte-block addr</text>
+
+  <rect class="block-mem" x="495" y="380" width="180" height="55"/>
+  <text class="label-block" x="585" y="402">L1 GEMM / GEMV</text>
+  <text class="label-dim"   x="585" y="418">weight buffers, URAM</text>
+
+  <rect class="block-mem" x="695" y="380" width="215" height="55"/>
+  <text class="label-block" x="802" y="402">Fence Tracker / STAT_OUT</text>
+  <text class="label-dim"   x="802" y="418">async completion</text>
+
+  <!-- Bottom row: AXI port aggregator -->
+  <rect class="block" x="55"  y="455" width="855" height="45"/>
+  <text class="label-block" x="482" y="478">AXI Interconnect — ACP • HP2 • HP3 • HP4 • HP5</text>
+  <text class="label-dim"   x="482" y="493">4 × 128-bit @ 250 MHz HP • 128-bit @ 333 MHz ACP</text>
+
+  <!-- ============================== -->
+  <!-- Arrows: PS ↔ NPU               -->
+  <!-- ============================== -->
+  <!-- CMD_IN -->
+  <path class="flow-cmd" d="M160 130 L160 205 L285 205 L285 285"/>
+  <text class="axi-label" x="170" y="225">AXI-Lite CMD_IN (64 b)</text>
+
+  <!-- STAT_OUT -->
+  <path class="flow-cmd" d="M220 130 L220 200 L810 200 L810 380" stroke-dasharray="5 3"/>
+  <text class="axi-label" x="450" y="195">AXI-Lite STAT_OUT</text>
+
+  <!-- DDR to AXI -->
+  <path class="flow-data" d="M815 180 L815 220 L815 455"/>
+  <text class="axi-label" x="825" y="215">HP × 4</text>
+
+  <!-- Dispatcher → compute cores -->
+  <path class="flow-hot" d="M355 320 L385 320"/>
+  <path class="flow-hot" d="M355 320 C 430 360, 520 360, 545 320"/>
+  <path class="flow-hot" d="M355 320 C 460 370, 670 370, 705 320"/>
+  <path class="flow-hot" d="M355 320 C 470 380, 750 380, 805 320"/>
+
+  <!-- compute cores → L2 (down) -->
+  <path class="flow-data" d="M455 355 L455 380"/>
+  <path class="flow-data" d="M615 355 L615 380"/>
+  <path class="flow-data" d="M750 355 L750 380"/>
+
+  <!-- AXI to DMA (up) -->
+  <path class="flow-data" d="M857 455 L857 355"/>
+
+  <!-- L2 to AXI (for DMA handoff) -->
+  <path class="flow-data" d="M360 435 L360 455"/>
+
+  <!-- Legend -->
+  <g transform="translate(35, 515)">
+    <line class="flow-cmd" x1="0"  y1="5"  x2="40" y2="5"/>
+    <text class="label-sub" x="46" y="9">Control / status (AXI-Lite)</text>
+    <line class="flow-hot" x1="220" y1="5" x2="260" y2="5"/>
+    <text class="label-sub" x="266" y="9">μop dispatch</text>
+    <line class="flow-data" x1="380" y1="5" x2="420" y2="5"/>
+    <text class="label-sub" x="426" y="9">Data path (AXI-HP / internal)</text>
+  </g>
+
+</svg>

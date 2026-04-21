@@ -11,6 +11,19 @@
    호스트(DDR4)와 디바이스(L2 Cache) 간의 데이터 경로, 클럭 도메인 크로싱,
    이기종 컴퓨트 코어의 배치를 나타냅니다.
 
+.. figure:: ../../../../_static/diagrams/v002_system_context.svg
+   :align: center
+   :width: 92%
+   :alt: pccx v002 시스템 컨텍스트 — PS, PL NPU, 외부 DRAM
+
+   **Figure 2.** 시스템 컨텍스트. AXI-Lite 제어 경로(``CMD_IN``)는 호스트
+   드라이버에서 64-bit 명령어를 Dispatcher 로 전달하고, 반대 방향의
+   AXI-Lite ``STAT_OUT`` 이 비동기 완료를 리포트한다. 벌크 데이터 경로는
+   4 × 128-bit AXI-HP 포트와 1 × ACP 포트가 담당하며, 외부 DDR4 와
+   L2 캐시 사이의 가중치·액티베이션·KV 캐시 전송을 처리한다. 색상
+   패널은 세 구조 영역을 구분한다 — PS(파란색), PL NPU(주황색),
+   외부 DRAM(보라색).
+
 1. 설계 원칙
 =============
 
