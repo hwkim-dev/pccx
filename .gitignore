@@ -35,6 +35,7 @@ codes/v002/
 pccx-agent-integration-task.md
 CLAUDE.md
 AGENTS.md
+GEMINI.md
 
 # Local roadmap / plan drafts (source material for public roadmap)
 pccx_master_roadmap_final.md
@@ -47,3 +48,43 @@ USER_ACTIONS.md
 
 # Phase 0 downloaded artifacts (weights + datasets, huge)
 data/
+
+# ─── LaTeX ISA guidebook build artefacts ─────────────────────────
+# main.tex (and any future *.tex at the repo root) produces a heavy
+# debris trail on every xelatex pass.  The .tex source itself is
+# tracked; only the generated intermediate files are ignored.  The
+# published PDF lives at _static/downloads/pccx-isa-v002.pdf and IS
+# tracked so the Furo site can serve it directly without a CI round-
+# trip.
+*.aux
+*.log
+*.out
+*.toc
+*.lof
+*.lot
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.synctex
+*.bcf
+*.run.xml
+*.blg
+*.bbl
+*.nav
+*.snm
+*.vrb
+*.idx
+*.ilg
+*.ind
+*.xdv
+*.dvi
+*.ps
+*.tex.bak
+
+# Root-level PDF is a build artefact — the tracked copy is under
+# _static/downloads/ only.
+/main.pdf
+
+# MiKTeX / TeX Live scratch directories
+auxiliary/
+/latex.out/

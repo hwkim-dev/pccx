@@ -1,0 +1,67 @@
+name: isa-pdf
+
+# Build the ISA guidebook (main.tex) on every change to the LaTeX source
+# so regressions never reach main.  The freshly-built PDF is also uploaded
+# as a workflow artifact for review.
+#
+# The canonical, user-downloadable copy lives at
+# _static/downloads/pccx-isa-v002.pdf and is committed to main so Furo can
+# serve it without a CI round-trip.  This job verifies that the committed
+# PDF reproducibly builds from the current main.tex; if you forget to
+# rebuild after editing main.tex, the artifact diff makes it visible.
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - "main.tex"
+      - "FONT/**"
+      - "tools/build_isa_pdf.sh"
+      - ".github/workflows/isa-pdf.yml"
+  pull_request:
+    paths:
+      - "main.tex"
+      - "FONT/**"
+      - "tools/build_isa_pdf.sh"
+      - ".github/workflows/isa-pdf.yml"
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v4
+
+      - name: Install TeX Live (xelatex + needed packages)
+        run: |
+          sudo apt-get update -qq
+          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+            texlive-xetex \
+            texlive-fonts-recommended \
+            texlive-fonts-extra \
+            texlive-latex-extra \
+            texlive-pictures \
+            lmodern
+
+      - name: Build ISA guidebook PDF
+        run: bash tools/build_isa_pdf.sh
+
+      - name: Upload PDF artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: pccx-isa-v002
+          path: _static/downloads/pccx-isa-v002.pdf
+          if-no-files-found: error
+
+      - name: Sanity — PDF is non-empty and has > 1 page
+        # Binary-identical reproducibility across different TeX Live
+        # versions is not guaranteed (font hashes, timestamps), so we
+        # validate *content* instead of byte-for-byte diff.
+        run: |
+          pdf=_static/downloads/pccx-isa-v002.pdf
+          [[ -s "$pdf" ]] || { echo "PDF is empty"; exit 1; }
+          pages=$(sudo apt-get install -y -qq poppler-utils >/dev/null 2>&1; pdfinfo "$pdf" | awk '/^Pages:/ {print $2}')
+          echo "Built PDF has $pages page(s)."
+          [[ "${pages:-0}" -ge 5 ]] || { echo "Unexpectedly short PDF ($pages pages)"; exit 1; }

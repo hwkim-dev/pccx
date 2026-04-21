@@ -21,9 +21,24 @@ three principles:
    instructions
    dataflow
 
+.. admonition:: Download the offline guidebook (PDF)
+   :class: tip
+
+   A signoff-ready typeset version of this ISA reference — same tables,
+   same numbers, offline-readable — is downloadable as a PDF:
+
+   :download:`pccx v002 ISA Guidebook (PDF) <../../../_static/downloads/pccx-isa-v002.pdf>`
+
+   The PDF is regenerated from ``main.tex`` at the repository root; the
+   LaTeX source is the single authoring entry point for the offline
+   book, while this HTML portal remains the living reference for the
+   web.
+
 .. note::
 
-   The current ISA type definitions live in the v001 codebase
-   (:file:`codes/v001/hw/rtl/NPU_Controller/NPU_Control_Unit/ISA_PACKAGE/isa_pkg.sv`)
-   as a SystemVerilog package. They will be migrated and finalized as
-   part of v002.
+   The authoritative ISA type definitions live in the v002 RTL repo at
+   :file:`hw/rtl/NPU_Controller/NPU_Control_Unit/ISA_PACKAGE/isa_pkg.sv`
+   (external: `hwkim-dev/pccx-FPGA-NPU-LLM-kv260
+   <https://github.com/hwkim-dev/pccx-FPGA-NPU-LLM-kv260>`_). Encoding
+   tables on the pages below must stay in sync with that package — see
+   :doc:`../RTL/isa_pkg`.
