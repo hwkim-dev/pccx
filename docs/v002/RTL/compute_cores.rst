@@ -58,3 +58,8 @@ bit-packing derivation.
 .. literalinclude:: ../../../codes/v002/hw/rtl/MAT_CORE/GEMM_dsp_unit.sv
    :language: systemverilog
    :caption: hw/rtl/MAT_CORE/GEMM_dsp_unit.sv
+
+.. admonition:: Last verified against
+   :class: note
+
+   Commit ``773bd82`` @ ``hwkim-dev/pccx-FPGA-NPU-LLM-kv260`` (2026-04-21).

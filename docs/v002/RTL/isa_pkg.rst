@@ -23,6 +23,11 @@ The package is organized in compilation order:
    :language: systemverilog
    :caption: hw/rtl/NPU_Controller/NPU_Control_Unit/ISA_PACKAGE/isa_pkg.sv
 
+.. admonition:: Last verified against
+   :class: note
+
+   Commit ``773bd82`` @ ``hwkim-dev/pccx-FPGA-NPU-LLM-kv260`` (2026-04-21).
+
 .. seealso::
 
    :doc:`/docs/v002/ISA/encoding` — human-readable description of the same encoding.

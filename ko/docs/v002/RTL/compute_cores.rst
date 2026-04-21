@@ -57,3 +57,8 @@ CORDIC + LUT 하이브리드 함수 유닛을 조율합니다.
 .. literalinclude:: ../../../../codes/v002/hw/rtl/MAT_CORE/GEMM_dsp_unit.sv
    :language: systemverilog
    :caption: hw/rtl/MAT_CORE/GEMM_dsp_unit.sv
+
+.. admonition:: 마지막 검증 대상
+   :class: note
+
+   커밋 ``773bd82`` @ ``hwkim-dev/pccx-FPGA-NPU-LLM-kv260`` (2026-04-21).

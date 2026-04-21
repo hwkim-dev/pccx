@@ -18,6 +18,11 @@ here and connected through the shared L2 cache bus.
    :language: systemverilog
    :caption: hw/rtl/NPU_top.sv
 
+.. admonition:: Last verified against
+   :class: note
+
+   Commit ``773bd82`` @ ``hwkim-dev/pccx-FPGA-NPU-LLM-kv260`` (2026-04-21).
+
 .. seealso::
 
    :doc:`/docs/v002/Architecture/top_level` — block diagram and design rationale.
