@@ -2,13 +2,13 @@
 명령어 상세 인코딩
 ==========================
 
-각 명령어는 ``opcode[3:0]`` 이후 60-bit 본체(body) 로 구성됩니다.
-본 페이지는 오피코드별로 body 레이아웃과 각 필드의 의미를 기술합니다.
+각 명령어는 ``opcode[3:0]`` 이후 60-bit 본체(body)로 구성된다.
+본 문서에서는 오피코드별 body 레이아웃과 각 필드의 의미를 기술한다.
 
 1. GEMV / GEMM (opcode = 0x0 / 0x1)
 ====================================
 
-GEMV 와 GEMM 은 동일한 본체 레이아웃을 공유합니다.
+GEMV와 GEMM은 동일한 본체 레이아웃을 공유한다.
 
 .. list-table::
    :header-rows: 1
@@ -115,7 +115,7 @@ GEMV 와 GEMM 은 동일한 본체 레이아웃을 공유합니다.
 3. MEMSET (opcode = 0x3)
 ========================
 
-Constant Cache 의 shape / size / scale 레지스터 등을 초기화합니다.
+Constant Cache의 shape / size / scale 레지스터 등을 초기화한다.
 
 .. list-table::
    :header-rows: 1
@@ -158,7 +158,7 @@ Constant Cache 의 shape / size / scale 레지스터 등을 초기화합니다.
 4. CVO (opcode = 0x4)
 =====================
 
-Complex Vector Operation — SFU 에 전달되는 명령어입니다.
+Complex Vector Operation — SFU에 전달되는 명령어이다.
 
 .. list-table::
    :header-rows: 1
