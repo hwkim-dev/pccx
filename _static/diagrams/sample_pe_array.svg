@@ -5,35 +5,34 @@
   <desc id="desc-sample-pe">A 4 by 4 grid of processing elements.  Weights
     stay resident inside each PE.  Activations stream left-to-right along
     each row while partial sums accumulate top-to-bottom along each
-    column.  This file is the canonical template for new diagrams — see
-    `CLAUDE.md` §5.2 for the authoring rules.</desc>
+    column.  This file is the canonical template for new pccx diagrams —
+    see `CLAUDE.md §5.2` for the palette and authoring rules.</desc>
 
   <defs>
     <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5"
             markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-      <path d="M0,0 L10,5 L0,10 z" fill="currentColor"/>
+      <path d="M0,0 L10,5 L0,10 z" fill="#000000"/>
     </marker>
 
     <style><![CDATA[
-      /* Theme-aware palette.  See CLAUDE.md §5.2.  The SVG adapts to
-         the system prefers-color-scheme, so there is no full-viewBox
-         canvas — the page background shows through. */
-      svg     { color: #1a1a1a; }
-      text    { fill: currentColor; font: 400 12px ui-sans-serif, system-ui, sans-serif; }
-      .t-lbl  { font-size: 11px; }
-      .t-pe   { font-weight: 600; font-size: 13px; text-anchor: middle; }
-      .t-axis { font-size: 10.5px; letter-spacing: 0.02em; }
-      .box    { fill: #ffffff; stroke: currentColor; stroke-width: 0.75; }
-      .line   { stroke: currentColor; stroke-width: 0.75; fill: none;
-                marker-end: url(#arr); }
-      .bus    { stroke: currentColor; stroke-width: 0.75; fill: none; }
+      /* Shared pccx palette — NVIDIA CUDA / Intel-SDM minimalism.
+         Self-contained white canvas + fixed pastel block fills + black
+         borders and text.  See CLAUDE.md §5.2. */
+      text         { fill: #000000; font: 400 12px ui-sans-serif, system-ui, sans-serif; }
+      .t-pe        { font-weight: 600; font-size: 13px; text-anchor: middle; }
+      .t-axis      { font-size: 10.5px; letter-spacing: 0.02em; }
 
-      @media (prefers-color-scheme: dark) {
-        svg   { color: #e8e8e8; }
-        .box  { fill: #1f1f22; }
-      }
+      /* Compute cells — white.  Other canonical fills (see §5.2):
+         panel-host #dae7f4, panel-dram #f5edd5, panel-pl #fafafa,
+         block-ctrl #fce5c6, block-mem #e2efd8, block-bus #ebebeb. */
+      .block-comp  { fill: #ffffff; stroke: #000000; stroke-width: 0.8; }
+      .line        { stroke: #000000; stroke-width: 0.8; fill: none;
+                     marker-end: url(#arr); }
     ]]></style>
   </defs>
+
+  <!-- White canvas -->
+  <rect x="0" y="0" width="560" height="360" fill="#ffffff"/>
 
   <!-- Axis labels (outside the grid) -->
   <text class="t-axis" x="460" y="40"  text-anchor="end">Activations →</text>
@@ -42,25 +41,25 @@
   <!-- 4 × 4 PE grid -->
   <g id="grid">
     <!-- row 0 -->
-    <rect class="box" x="140" y="60"  width="70" height="48"/>
-    <rect class="box" x="225" y="60"  width="70" height="48"/>
-    <rect class="box" x="310" y="60"  width="70" height="48"/>
-    <rect class="box" x="395" y="60"  width="70" height="48"/>
+    <rect class="block-comp" x="140" y="60"  width="70" height="48"/>
+    <rect class="block-comp" x="225" y="60"  width="70" height="48"/>
+    <rect class="block-comp" x="310" y="60"  width="70" height="48"/>
+    <rect class="block-comp" x="395" y="60"  width="70" height="48"/>
     <!-- row 1 -->
-    <rect class="box" x="140" y="123" width="70" height="48"/>
-    <rect class="box" x="225" y="123" width="70" height="48"/>
-    <rect class="box" x="310" y="123" width="70" height="48"/>
-    <rect class="box" x="395" y="123" width="70" height="48"/>
+    <rect class="block-comp" x="140" y="123" width="70" height="48"/>
+    <rect class="block-comp" x="225" y="123" width="70" height="48"/>
+    <rect class="block-comp" x="310" y="123" width="70" height="48"/>
+    <rect class="block-comp" x="395" y="123" width="70" height="48"/>
     <!-- row 2 -->
-    <rect class="box" x="140" y="186" width="70" height="48"/>
-    <rect class="box" x="225" y="186" width="70" height="48"/>
-    <rect class="box" x="310" y="186" width="70" height="48"/>
-    <rect class="box" x="395" y="186" width="70" height="48"/>
+    <rect class="block-comp" x="140" y="186" width="70" height="48"/>
+    <rect class="block-comp" x="225" y="186" width="70" height="48"/>
+    <rect class="block-comp" x="310" y="186" width="70" height="48"/>
+    <rect class="block-comp" x="395" y="186" width="70" height="48"/>
     <!-- row 3 -->
-    <rect class="box" x="140" y="249" width="70" height="48"/>
-    <rect class="box" x="225" y="249" width="70" height="48"/>
-    <rect class="box" x="310" y="249" width="70" height="48"/>
-    <rect class="box" x="395" y="249" width="70" height="48"/>
+    <rect class="block-comp" x="140" y="249" width="70" height="48"/>
+    <rect class="block-comp" x="225" y="249" width="70" height="48"/>
+    <rect class="block-comp" x="310" y="249" width="70" height="48"/>
+    <rect class="block-comp" x="395" y="249" width="70" height="48"/>
 
     <!-- PE labels, centred inside each cell -->
     <text class="t-pe" x="175" y="89">PE</text>

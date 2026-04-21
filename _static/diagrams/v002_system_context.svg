@@ -14,125 +14,125 @@
   <defs>
     <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5"
             markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-      <path d="M0,0 L10,5 L0,10 z" fill="currentColor"/>
+      <path d="M0,0 L10,5 L0,10 z" fill="#000000"/>
     </marker>
 
     <style><![CDATA[
-      /* Theme palette — driven by the system preference.  Works even
-         when the SVG is loaded via <img>, because the browser still
-         evaluates @media (prefers-color-scheme) inside the SVG's own
-         document.  No full-viewBox canvas: the page background shows
-         through, so dark-mode readers do not get a white-block
-         eye-burn. */
-      svg        { color: #1a1a1a; }
-      text       { fill: currentColor; font: 400 12px ui-sans-serif, system-ui, sans-serif; }
-      .t-title   { font-weight: 600; font-size: 13px; }
-      .t-sub     { font-size: 11px; }
-      .t-axis    { font-size: 10.5px; letter-spacing: 0.02em; }
-      .box       { fill: #ffffff; stroke: currentColor; stroke-width: 0.75; }
-      .line      { stroke: currentColor; stroke-width: 0.75; fill: none;
-                   marker-end: url(#arr); }
-      .bus       { stroke: currentColor; stroke-width: 0.75; fill: none; }
+      /* NVIDIA CUDA / Intel-SDM style: self-contained printed figure.
+         White canvas, black strokes, black text, soft pastel block
+         fills.  Same appearance in Furo light and dark mode (the
+         diagram is a fixed card, not theme-adaptive).  Palette is
+         shared across all pccx diagrams — see CLAUDE.md §5.2. */
+      text          { fill: #000000; font: 400 12px ui-sans-serif, system-ui, sans-serif; }
+      .t-title      { font-weight: 600; font-size: 13px; }
+      .t-sub        { font-size: 11px; }
+      .t-axis       { font-size: 10.5px; letter-spacing: 0.02em; }
 
-      @media (prefers-color-scheme: dark) {
-        svg    { color: #e8e8e8; }
-        .box   { fill: #1f1f22; }
-      }
+      .panel-host   { fill: #dae7f4; stroke: #000000; stroke-width: 0.8; }
+      .panel-dram   { fill: #f5edd5; stroke: #000000; stroke-width: 0.8; }
+      .panel-pl     { fill: #fafafa; stroke: #000000; stroke-width: 0.8; }
+      .block-ctrl   { fill: #fce5c6; stroke: #000000; stroke-width: 0.8; }
+      .block-comp   { fill: #ffffff; stroke: #000000; stroke-width: 0.8; }
+      .block-mem    { fill: #e2efd8; stroke: #000000; stroke-width: 0.8; }
+      .block-bus    { fill: #ebebeb; stroke: #000000; stroke-width: 0.8; }
+
+      .line         { stroke: #000000; stroke-width: 0.8; fill: none;
+                      marker-end: url(#arr); }
+      .trunk        { stroke: #000000; stroke-width: 0.8; fill: none; }
     ]]></style>
   </defs>
 
-  <!-- ─── Processing System panel ─────────────────────────────── -->
-  <rect class="box" x="35" y="30" width="350" height="100"/>
+  <!-- White canvas (full viewBox) so the figure reads identically in
+       Furo light and dark mode.  Printed-page aesthetic. -->
+  <rect x="0" y="0" width="960" height="560" fill="#ffffff"/>
+
+  <!-- ─── Processing System panel (light blue, host domain) ───── -->
+  <rect class="panel-host" x="35" y="30" width="350" height="100"/>
   <text class="t-title" x="45" y="52">Processing System (PS)</text>
   <text class="t-sub"   x="45" y="72">ARM Cortex-A53 host</text>
   <text class="t-sub"   x="45" y="89">Driver (uCA) — libpccx.so</text>
   <text class="t-sub"   x="45" y="106">L0 DDR4 — 4 GB (KV260)</text>
 
-  <!-- ─── External DRAM panel ─────────────────────────────────── -->
-  <rect class="box" x="575" y="30" width="310" height="100"/>
+  <!-- ─── External DRAM panel (light tan, off-chip memory) ────── -->
+  <rect class="panel-dram" x="575" y="30" width="310" height="100"/>
   <text class="t-title" x="585" y="52">External DRAM</text>
   <text class="t-sub"   x="585" y="72">Weights — INT4 packed</text>
   <text class="t-sub"   x="585" y="89">Activations — INT8</text>
   <text class="t-sub"   x="585" y="106">KV cache — BF16</text>
 
-  <!-- ─── Programmable Logic panel ────────────────────────────── -->
-  <rect class="box" x="30" y="180" width="900" height="340"/>
+  <!-- ─── Programmable Logic container (very light gray) ──────── -->
+  <rect class="panel-pl" x="30" y="180" width="900" height="340"/>
   <text class="t-title" x="45" y="202">Programmable Logic (PL) — pccx v002 NPU</text>
   <text class="t-sub"   x="45" y="219">Xilinx Kria KV260 · ZU5EV · 400 MHz core</text>
 
-  <!-- Control Unit + Dispatcher (row A) -->
-  <rect class="box" x="45" y="235" width="640" height="55"/>
+  <!-- Control + Dispatcher (warm yellow — active control block) -->
+  <rect class="block-ctrl" x="45" y="235" width="640" height="55"/>
   <text class="t-title" x="55" y="256">Control Unit + Dispatcher</text>
   <text class="t-sub"   x="55" y="275">64-bit VLIW decode · μop fanout · hazard and fence tracker</text>
 
-  <!-- Compute cores (row B) -->
-  <rect class="box" x="45"  y="315" width="150" height="60"/>
+  <!-- Compute cores (white, clean) -->
+  <rect class="block-comp" x="45"  y="315" width="150" height="60"/>
   <text class="t-title" x="55"  y="335">GEMM Core</text>
   <text class="t-sub"   x="55"  y="354">32 × 32 systolic</text>
   <text class="t-sub"   x="55"  y="369">DSP48E2 W4A8</text>
 
-  <rect class="box" x="215" y="315" width="150" height="60"/>
+  <rect class="block-comp" x="215" y="315" width="150" height="60"/>
   <text class="t-title" x="225" y="335">GEMV Cores × 4</text>
   <text class="t-sub"   x="225" y="354">32-MAC streaming</text>
   <text class="t-sub"   x="225" y="369">row-partitioned</text>
 
-  <rect class="box" x="385" y="315" width="150" height="60"/>
+  <rect class="block-comp" x="385" y="315" width="150" height="60"/>
   <text class="t-title" x="395" y="335">SFU</text>
   <text class="t-sub"   x="395" y="354">BF16 CORDIC</text>
   <text class="t-sub"   x="395" y="369">+ LUT</text>
 
-  <rect class="box" x="555" y="315" width="150" height="60"/>
+  <rect class="block-comp" x="555" y="315" width="150" height="60"/>
   <text class="t-title" x="565" y="335">DMA Engines</text>
   <text class="t-sub"   x="565" y="354">HP movers</text>
   <text class="t-sub"   x="565" y="369">ACP mover</text>
 
-  <!-- Memory (row C) -->
-  <rect class="box" x="45"  y="395" width="320" height="55"/>
+  <!-- On-chip memory (soft green) -->
+  <rect class="block-mem" x="45"  y="395" width="320" height="55"/>
   <text class="t-title" x="55"  y="416">L1 Weight Buffer</text>
   <text class="t-sub"   x="55"  y="434">URAM FIFO · broadcasts to GEMM / GEMV</text>
 
-  <rect class="box" x="385" y="395" width="150" height="55"/>
+  <rect class="block-mem" x="385" y="395" width="150" height="55"/>
   <text class="t-title" x="395" y="416">L2 Cache</text>
   <text class="t-sub"   x="395" y="434">~2 MB URAM + BRAM</text>
 
-  <!-- AXI interconnect (row D) -->
-  <rect class="box" x="45" y="475" width="870" height="30"/>
+  <!-- AXI Interconnect (neutral gray bus) -->
+  <rect class="block-bus" x="45" y="475" width="870" height="30"/>
   <text class="t-title" x="55" y="495">AXI Interconnect — ACP · HP2 · HP3 · HP4 · HP5</text>
 
   <!-- ─── Arrows ──────────────────────────────────────────────── -->
-  <!-- 1. PS → Control + Dispatcher.  Labels sit in the 50 px gap
-       between the PS panel bottom (y=130) and the PL panel top
-       (y=180), never on a box boundary. -->
+  <!-- 1. PS → Control + Dispatcher -->
   <line class="line" x1="210" y1="130" x2="210" y2="235"/>
   <text class="t-axis" x="220" y="150">AXI-Lite</text>
   <text class="t-axis" x="220" y="164">CMD_IN / STAT_OUT (64 b)</text>
 
-  <!-- 2. DRAM → AXI interconnect.  Routed at x=820 so the line passes
-       to the right of the DMA column (which ends at x=705) without
-       crossing it.  Label placed in the same clear band. -->
+  <!-- 2. DRAM → AXI interconnect (routed right of DMA column) -->
   <line class="line" x1="820" y1="130" x2="820" y2="475"/>
   <text class="t-axis" x="830" y="150">AXI-HP × 4</text>
   <text class="t-axis" x="830" y="164">128 bit / port</text>
 
-  <!-- 3. Dispatch bus: Control+Dispatcher → 4 compute cores.
-       Single trunk + four vertical drops — no crossings. -->
-  <line class="bus"  x1="365" y1="290" x2="365" y2="303"/>
-  <line class="bus"  x1="120" y1="303" x2="630" y2="303"/>
+  <!-- 3. Dispatch bus: Control+Dispatcher → 4 compute cores -->
+  <line class="trunk" x1="365" y1="290" x2="365" y2="303"/>
+  <line class="trunk" x1="120" y1="303" x2="630" y2="303"/>
   <line class="line" x1="120" y1="303" x2="120" y2="315"/>
   <line class="line" x1="290" y1="303" x2="290" y2="315"/>
   <line class="line" x1="460" y1="303" x2="460" y2="315"/>
   <line class="line" x1="630" y1="303" x2="630" y2="315"/>
   <text class="t-axis" x="405" y="299" text-anchor="start">μop dispatch</text>
 
-  <!-- 4. Compute → Memory -->
+  <!-- 4. Compute → on-chip memory -->
   <line class="line" x1="120" y1="375" x2="120" y2="395"/>
   <line class="line" x1="290" y1="375" x2="290" y2="395"/>
   <line class="line" x1="460" y1="375" x2="460" y2="395"/>
 
-  <!-- 5. DMA → AXI (bypasses memory row on the right side) -->
+  <!-- 5. DMA → AXI (bypasses memory row on the right) -->
   <line class="line" x1="630" y1="375" x2="630" y2="475"/>
 
-  <!-- 6. Memory → AXI (DMA back-fill path) -->
+  <!-- 6. On-chip memory → AXI (DMA back-fill path) -->
   <line class="line" x1="205" y1="450" x2="205" y2="475"/>
   <line class="line" x1="460" y1="450" x2="460" y2="475"/>
 </svg>
