@@ -5,8 +5,8 @@
 1. 포맷 개요
 =============
 
-pccx v002 의 모든 명령어는 **64 bit 고정 길이** 이며, 다음과 같은 최상위
-구조를 갖습니다.
+pccx v002의 모든 명령어는 **64 bit 고정 길이**\ 이며, 다음과 같은 최상위
+구조를 갖는다.
 
 .. list-table::
    :header-rows: 1
@@ -61,8 +61,8 @@ pccx v002 의 모든 명령어는 **64 bit 고정 길이** 이며, 다음과 같
 3. 디코딩 플로우
 ================
 
-명령어는 AXI-Lite 의 CMD_IN FIFO 로 호스트가 write 하며, 다음 경로로
-디코딩됩니다.
+명령어는 AXI-Lite의 CMD_IN FIFO로 호스트가 기록하며, 다음 경로로
+디코딩된다.
 
 .. mermaid::
 
@@ -79,7 +79,7 @@ pccx v002 의 모든 명령어는 **64 bit 고정 길이** 이며, 다음과 같
 4. μop 분해
 ============
 
-각 오피코드는 디스패처 내부에서 다음 μop 들로 분해됩니다.
+각 오피코드는 디스패처 내부에서 다음 μop들로 분해된다.
 
 .. list-table::
    :header-rows: 1
@@ -101,8 +101,8 @@ pccx v002 의 모든 명령어는 **64 bit 고정 길이** 이며, 다음과 같
 5. 메모리 라우팅 인코딩
 ========================
 
-MEMCPY 의 ``from_device`` + ``to_device`` 조합은 Control Unit 내부에서 8-bit
-route enum (``data_route_e``) 으로 확장됩니다.
+MEMCPY의 ``from_device`` + ``to_device`` 조합은 Control Unit 내부에서 8-bit
+route enum(``data_route_e``)으로 확장된다.
 
 .. list-table::
    :header-rows: 1
@@ -139,7 +139,7 @@ route enum (``data_route_e``) 으로 확장됩니다.
 6. 포인터 / 파라미터 레지스터
 =============================
 
-ISA 는 6-bit pointer 를 통해 소형 Constant Cache 항목을 참조합니다.
+ISA는 6-bit pointer를 통해 소형 Constant Cache 항목을 참조한다.
 
 .. list-table::
    :header-rows: 1
@@ -158,8 +158,8 @@ ISA 는 6-bit pointer 를 통해 소형 Constant Cache 항목을 참조합니다
      - 6-bit
      - 64 엔트리 Constant Cache 인덱스
 
-포인터 항목은 **MEMSET** 명령어로 사전 초기화됩니다.
-(:doc:`dataflow` 의 MEMSET 섹션 참조)
+포인터 항목은 **MEMSET** 명령어로 사전 초기화된다.
+(:doc:`dataflow`\ 의 MEMSET 섹션 참조)
 
 7. 어드레스 공간
 =================
@@ -178,5 +178,5 @@ ISA 는 6-bit pointer 를 통해 소형 Constant Cache 항목을 참조합니다
      - 17-bit
      - MEMCPY 의 보조 주소 (예: host DDR 오프셋)
 
-엔트리 크기는 디바이스 레이어에서 정의되며 (KV260 기준 128-bit word),
-17-bit × 16 byte = **2 MB** 의 선형 L2 주소 공간을 표현합니다.
+엔트리 크기는 디바이스 레이어에서 정의되며(KV260 기준 128-bit word),
+17-bit × 16 byte = **2 MB**\ 의 선형 L2 주소 공간을 표현한다.
