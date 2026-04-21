@@ -17,12 +17,14 @@ Top-Level Architecture
    :alt: pccx v002 system context — PS, PL NPU, and external DRAM
 
    **Figure 2.** System context. The AXI-Lite command path (``CMD_IN``)
-   moves 64-bit instructions from the host driver into the Dispatcher;
-   the dual-direction AXI-Lite ``STAT_OUT`` reports async completion.
-   Four 128-bit AXI-HP ports plus one ACP port handle the bulk data
-   path (weights, activations, KV cache) between external DDR4 and the
-   L2 cache. Coloured panels mark the three structural regions: PS
-   (blue), PL NPU (orange), external DRAM (purple).
+   carries 64-bit instructions from the host driver into the Control
+   Unit + Dispatcher; the dual-direction AXI-Lite ``STAT_OUT`` reports
+   async completion. Four 128-bit AXI-HP ports plus one ACP port move
+   the bulk data (weights, activations, KV cache) between external
+   DDR4 and the AXI Interconnect. Inside the PL, the Dispatcher fans
+   μops out over a single trunk to the GEMM, GEMV, SFU, and DMA
+   back-ends, which read and write through the L1 Weight Buffer and
+   the L2 cache.
 
 1. Design Principles
 =====================

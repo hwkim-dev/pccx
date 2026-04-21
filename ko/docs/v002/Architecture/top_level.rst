@@ -16,13 +16,14 @@
    :width: 92%
    :alt: pccx v002 시스템 컨텍스트 — PS, PL NPU, 외부 DRAM
 
-   **Figure 2.** 시스템 컨텍스트. AXI-Lite 제어 경로(``CMD_IN``)는 호스트
-   드라이버에서 64-bit 명령어를 Dispatcher 로 전달하고, 반대 방향의
-   AXI-Lite ``STAT_OUT`` 이 비동기 완료를 리포트한다. 벌크 데이터 경로는
-   4 × 128-bit AXI-HP 포트와 1 × ACP 포트가 담당하며, 외부 DDR4 와
-   L2 캐시 사이의 가중치·액티베이션·KV 캐시 전송을 처리한다. 색상
-   패널은 세 구조 영역을 구분한다 — PS(파란색), PL NPU(주황색),
-   외부 DRAM(보라색).
+   **Figure 2.** 시스템 컨텍스트. AXI-Lite 제어 경로(``CMD_IN``)는
+   호스트 드라이버의 64-bit 명령어를 Control Unit + Dispatcher 로
+   전달하고, 반대 방향의 AXI-Lite ``STAT_OUT`` 이 비동기 완료를
+   리포트한다. 벌크 데이터 경로는 4 × 128-bit AXI-HP 포트와 1 × ACP
+   포트가 담당하며 외부 DDR4 와 AXI Interconnect 사이를 왕복한다.
+   PL 내부에서는 Dispatcher 가 단일 트렁크로 μop 을 GEMM·GEMV·SFU·DMA
+   백엔드에 fan-out 하며, 이들은 L1 Weight Buffer 와 L2 캐시를 통해
+   데이터를 주고받는다.
 
 1. 설계 원칙
 =============
