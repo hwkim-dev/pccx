@@ -37,14 +37,21 @@ jobs:
       - name: Install TeX Live (xelatex + needed packages)
         run: |
           sudo apt-get update -qq
-          # texlive-latex-base (xspace.sty) pulled in transitively via
-          # texlive-xetex; texlive-latex-extra provides pgfplots deps.
+          # Package rationale:
+          #   texlive-xetex           — xelatex binary + base
+          #   texlive-latex-extra     — tcolorbox, mdframed, titlesec,
+          #                              longtable, fancyhdr, xspace, …
+          #   texlive-pictures        — TikZ + pgfplots
+          #   texlive-fonts-*         — Latin Modern fallback family
+          #   texlive-science         — bytefield (used for every bit
+          #                              layout in the ISA reference)
           sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
             texlive-xetex \
             texlive-fonts-recommended \
             texlive-fonts-extra \
             texlive-latex-extra \
             texlive-pictures \
+            texlive-science \
             lmodern
 
       - name: Build ISA guidebook PDF
