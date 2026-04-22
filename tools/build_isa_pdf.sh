@@ -28,11 +28,20 @@ command -v xelatex >/dev/null || {
     exit 1
 }
 
-echo "[build] Pass 1/2 — xelatex main.tex"
-xelatex -interaction=nonstopmode -halt-on-error main.tex >/dev/null
+run_pass() {
+    local label="$1"
+    echo "[build] $label — xelatex main.tex"
+    if ! xelatex -interaction=nonstopmode -halt-on-error main.tex >/tmp/xelatex.out 2>&1; then
+        echo "[build] xelatex FAILED — dumping stdout + main.log" >&2
+        cat /tmp/xelatex.out >&2 || true
+        echo "--- main.log tail ---" >&2
+        tail -80 main.log >&2 || true
+        exit 1
+    fi
+}
 
-echo "[build] Pass 2/2 — xelatex main.tex (TOC resolution)"
-xelatex -interaction=nonstopmode -halt-on-error main.tex >/dev/null
+run_pass "Pass 1/2"
+run_pass "Pass 2/2 (TOC resolution)"
 
 # Sanity check: no unresolved references or overfull hboxes that count as
 # real errors. Warnings are tolerated.

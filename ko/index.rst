@@ -89,15 +89,10 @@ pccx는 엣지 디바이스에서 Transformer 기반 LLM을 가속하기 위한
       (``core/``, ``ui/``, ``uvm_bridge/``, ``ai_copilot/``).
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
    :caption: 소개
 
    docs/index
-
-.. toctree::
-   :maxdepth: 2
-   :caption: 로드맵
-
    docs/roadmap
 
 .. toctree::
@@ -111,6 +106,12 @@ pccx는 엣지 디바이스에서 Transformer 기반 LLM을 가속하기 위한
    :caption: 타겟 하드웨어
 
    docs/Devices/index
+
+.. toctree::
+   :maxdepth: 1
+   :caption: pccx-lab 핸드북
+
+   docs/Lab/index
 
 .. toctree::
    :maxdepth: 1

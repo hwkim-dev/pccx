@@ -79,15 +79,10 @@ Tooling & Lab
       (``core/``, ``ui/``, ``uvm_bridge/``, ``ai_copilot/``).
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
    :caption: Introduction
 
    docs/index
-
-.. toctree::
-   :maxdepth: 2
-   :caption: Roadmap
-
    docs/roadmap
 
 .. toctree::
@@ -101,6 +96,12 @@ Tooling & Lab
    :caption: Target Hardware
 
    docs/Devices/index
+
+.. toctree::
+   :maxdepth: 1
+   :caption: pccx-lab Handbook
+
+   docs/Lab/index
 
 .. toctree::
    :maxdepth: 1

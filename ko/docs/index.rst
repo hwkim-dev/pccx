@@ -111,7 +111,7 @@ v001 레퍼런스 아키텍처는 :doc:`archive/experimental_v001/index` 에 보
       연산 파이프라인 (GEMM / GEMV / CVO), 및 메모리 스토리지 계층 구성을 관장한다.
       운영 타겟 하드웨어는 Xilinx Kria **KV260** (Zynq UltraScale+ ZU5EV)이다.
 
-      본 문서 사이트의 모든 v002 RTL 참조 페이지는 
+      본 문서 사이트의 모든 v002 RTL 참조 페이지는
       GitHub 프로젝트의 최신 ``.sv`` 코드로 직접 라우팅된다.
 
    .. grid-item::
