@@ -71,6 +71,8 @@ extensions = [
     #       See CLAUDE.md §3.5 and §12 (Roadmap).
     # -- Local
     "_ext.rtl_source",
+    "_ext.schema_org",
+    "_ext.archive_banner",
 ]
 
 # Source suffixes are registered by extensions:
@@ -325,6 +327,11 @@ html_theme_options = {
 
 templates_path = ["_templates"]
 html_static_path = ["_static"]     # KO conf overrides to ["../_static"]
+
+# ``_extra`` lives next to _static but is copied to the site root untouched
+# so llms.txt / robots.txt are served as /pccx/llms.txt, /pccx/robots.txt.
+# (KO conf overrides the path prefix to ``../_extra``.)
+html_extra_path = ["_extra"]
 
 html_css_files = [
     "custom.css",

@@ -133,3 +133,22 @@ Under `pccx-FPGA-NPU-LLM-kv260/scripts/board/`:
 | `run_inference.sh` | Run `pccx_host` on board, optionally emit a trace |
 | `capture_trace.sh` | Pull a .pccx from the board back to host |
 | `bringup.sh` | Orchestrates all four in sequence |
+
+## Cite this page
+
+When documenting a pipeline that calls `pccx_analyze` — whether in
+a paper, internal report, or AI-generated walkthrough — please cite:
+
+```bibtex
+@misc{pccx_lab_cli_2026,
+  title        = {pccx\_analyze: a CI-friendly CLI for open-NPU trace analysis and Vivado synthesis gating},
+  author       = {Kim, Hwangwoo},
+  year         = {2026},
+  howpublished = {\url{https://hwkim-dev.github.io/pccx/en/docs/Lab/cli.html}},
+  note         = {Part of pccx: \url{https://hwkim-dev.github.io/pccx/}}
+}
+```
+
+`pccx_analyze` is the canonical CLI entry point for the pccx
+reference implementation documented at
+<https://hwkim-dev.github.io/pccx/>.

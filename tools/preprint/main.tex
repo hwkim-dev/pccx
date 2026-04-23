@@ -1,0 +1,216 @@
+% pccx — arXiv-ready preprint scaffold.
+%
+% Goal: a single self-contained LaTeX file that builds with `latexmk
+% -pdf main.tex` using any stock TeX Live distribution.  Drop in
+% content as sections close over time; the file is designed so a
+% weekend build can produce a v0.1 draft.
+%
+% Compile:   latexmk -pdf main.tex
+% Output:    main.pdf  (keep transient artefacts out of git via
+%                       ../../.gitignore's LaTeX block)
+%
+% Bibliography:
+%   refs.bib co-located with main.tex.  Sphinx's refs.bib is the
+%   canonical source — keep entries in sync manually until a
+%   generator lands.
+
+\documentclass[11pt,a4paper]{article}
+
+%-- Encoding & fonts -------------------------------------------------
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+
+%-- Layout ----------------------------------------------------------
+\usepackage[margin=1in]{geometry}
+\usepackage{parskip}
+\usepackage{titlesec}
+\titleformat{\section}{\large\bfseries}{\thesection}{0.6em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{0.6em}{}
+
+%-- Floats / listings / code ---------------------------------------
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{listings}
+\lstset{
+  basicstyle=\ttfamily\small,
+  breaklines=true,
+  columns=fullflexible,
+  xleftmargin=1em,
+  frame=none,
+  aboveskip=0.6em,
+  belowskip=0.6em,
+}
+
+%-- Math -----------------------------------------------------------
+\usepackage{amsmath, amssymb, amsthm}
+
+%-- References -----------------------------------------------------
+\usepackage[numbers,sort&compress]{natbib}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{hyperref}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue!50!black,
+  citecolor=blue!50!black,
+  urlcolor=blue!50!black,
+}
+\usepackage{url}
+
+%-- Authorship -----------------------------------------------------
+\title{%
+  pccx: An Open, Sail-Specified W4A8 NPU for\\
+  Edge LLM Inference on the Xilinx Kria KV260
+}
+\author{%
+  Hwangwoo Kim\\
+  \texttt{k1h6w4@gmail.com}\\
+  \small \url{https://hwkim-dev.github.io/pccx/}
+}
+\date{Draft v0.1 --- \today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We present \textbf{pccx}, an open, scalable Neural Processing Unit
+(NPU) architecture for autoregressive decoding of Transformer-based
+large language models on resource-constrained edge devices.  The v002
+reference implementation targets the Xilinx Kria KV260 (Zynq
+UltraScale+ ZU5EV), is formally specified in the
+Sail~\cite{armstrong2019isa} ISA semantics language (the same language
+used for RISC-V, Arm, CHERI and Morello), and implements recent W4A8KV4
+quantisation~\cite{qserve2024}, FlashAttention~\cite{dao2023flash2},
+and NPU-adapted speculative decoding~\cite{openpangu2026} in a single
+64-bit VLIW ISA with five base opcodes (GEMV / GEMM / MEMCPY /
+MEMSET / CVO).  An accompanying desktop profiler, \textbf{pccx-lab},
+supplies 16 built-in trace analyzers and an AI-driven UVM strategy
+copilot.  This preprint covers the architecture, the Sail model, the
+profiler design, and the current measurement status.
+\end{abstract}
+
+\section{Introduction}
+\label{sec:introduction}
+
+\textbf{TODO} — three paragraphs:
+\begin{itemize}
+  \item Edge LLM inference landscape (Gemma 3N, Llama, Phi).
+  \item Why W4A8KV4 on FPGA makes sense for a KV260-class device.
+  \item pccx contribution summary; pointer to the three repos at
+        \url{https://github.com/hwkim-dev/}.
+\end{itemize}
+
+\section{Architecture}
+\label{sec:architecture}
+
+\subsection{Compute cores}
+
+32$\times$32 systolic GEMM array with cascade break at row 16;
+4-lane $\times$ 32-MAC GEMV with 5-stage reduction; single BF16 SFU
+pipeline covering EXP / SQRT / GELU / SIN / COS / REDUCE\_SUM /
+SCALE / RECIP.  Weight stationary in GEMM, weight streaming in GEMV.
+
+\subsection{Memory hierarchy}
+
+1.75~MB L2 URAM at the geometric centre of the floorplan.  Dual-port
+access: ACP for latency-critical host path, NPU port-B for direct
+compute fills.  Constant cache with 64 entries, 6-bit pointer from
+the ISA.  HP0/1 carry GEMM weights, HP2/3 carry GEMV weights; both
+pairs independent at 128-bit $\times$ 250 MHz.
+
+\subsection{ISA}
+
+64-bit VLIW with a 4-bit opcode in bits \texttt{[63:60]} and a 60-bit
+body.  Five opcodes:
+
+\begin{center}
+\begin{tabular}{llp{0.5\textwidth}}
+\toprule
+Opcode   & Encoding & Body layout \\
+\midrule
+\texttt{GEMV}   & \texttt{0x0} & dst(17) $\|$ src(17) $\|$ flags(6) $\|$ size(6) $\|$ shape(6) $\|$ lanes(5) $\|$ rsv(3) \\
+\texttt{GEMM}   & \texttt{0x1} & identical to \texttt{GEMV}  \\
+\texttt{MEMCPY} & \texttt{0x2} & from(1) $\|$ to(1) $\|$ dst(17) $\|$ src(17) $\|$ aux(17) $\|$ shape(6) $\|$ async(1) \\
+\texttt{MEMSET} & \texttt{0x3} & cache(2) $\|$ dst(6) $\|$ a(16) $\|$ b(16) $\|$ c(16) $\|$ rsv(4) \\
+\texttt{CVO}    & \texttt{0x4} & func(4) $\|$ src(17) $\|$ dst(17) $\|$ len(16) $\|$ flags(5) $\|$ async(1) \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Sail Formal Specification}
+\label{sec:sail}
+
+The ISA is authored in \textbf{Sail}~\cite{armstrong2019isa}, with
+modules split incrementally per the language conventions:
+
+\begin{lstlisting}[language={}]
+formal/sail/
+  pccx.sail_project
+  src/prelude.sail       # base bitvectors
+  src/pccx_types.sail    # opcode table, body structs, flags
+  src/pccx_regs.sail     # cycle / pc / committed_any
+  src/pccx_decode.sail   # 64-bit word -> typed instr union
+  src/pccx_execute.sail  # step(); advance_cycle; record_event()
+  tests/smoke_decode.sail
+\end{lstlisting}
+
+Every SystemVerilog \texttt{typedef} in the RTL ISA package has a
+1:1 Sail counterpart, so width drift fails the Sail type checker
+before the synthesiser.
+
+\section{pccx-lab Profiler}
+\label{sec:lab}
+
+\textbf{TODO} — describe:
+\begin{itemize}
+  \item 16 built-in \texttt{TraceAnalyzer} implementations.
+  \item \texttt{Copilot::investigate} / \texttt{suggest\_fix} surface.
+  \item Research-citation registry (21 papers auto-cited).
+  \item Tauri desktop UI with WaveformViewer, FlameGraph, ISA replay.
+\end{itemize}
+
+\section{Methodology}
+\label{sec:method}
+
+Two sample traces are bundled with the repository
+(\texttt{samples/}, 16- and 128-token decode) so every number in this
+paper is reproducible.  See the Quickstart at
+\url{https://hwkim-dev.github.io/pccx/en/docs/quickstart.html}.
+
+\section{Evidence}
+\label{sec:evidence}
+
+\textbf{TODO} — fill as measurements land:
+\begin{itemize}
+  \item Gemma-3N E4B tokens per second on KV260.
+  \item KV260 resource usage (LUT / DSP / URAM / BRAM36).
+  \item Timing closure @ 400~MHz core / 250~MHz AXI.
+  \item CPU baseline (Ryzen 4500U, llama.cpp Q4\_K\_M).
+  \item GPU baseline (RTX 4060, HF Transformers BF16).
+\end{itemize}
+
+Current status is tracked live at
+\url{https://hwkim-dev.github.io/pccx/en/docs/Evidence/index.html}.
+
+\section{Related Work}
+\label{sec:related}
+
+Sail precedents for ISA formalisation: \cite{armstrong2019isa} for
+RISC-V; \cite{sailarm2020} for Armv8-A.  W4A8KV4 lineage:
+\cite{qserve2024} (QServe), \cite{qqq2024} (QQQ), \cite{sramfreq2025}
+(SRAM--frequency bottleneck model).  FlashAttention:
+\cite{dao2023flash2} (FA-2), \cite{dao2024flash3} (FA-3).
+Speculative decoding on static-graph NPUs: \cite{openpangu2026}.
+
+\section{Conclusion and Future Work}
+\label{sec:conclusion}
+
+\textbf{TODO} — one paragraph: the value of combining open RTL +
+formal Sail spec + profiler; near-term goal of board-captured
+tokens per second; longer-term goals (Gemma-4, Isabelle proofs).
+
+\bibliographystyle{plainnat}
+\bibliography{refs}
+
+\end{document}

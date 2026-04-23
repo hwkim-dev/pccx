@@ -44,10 +44,10 @@ exclude_patterns = [
 html_theme_options = {
     **html_theme_options,
     "source_directory": "docs/",
-    "announcement": (
-        'English version · '
-        '<a href="/pccx/ko/">한국어로 보기 →</a>'
-    ),
+    # Default announcement is empty — the sidebar's EN · 한국어 switch
+    # handles language.  `_ext.archive_banner` selectively fills this
+    # slot when the reader lands on an archived (non-active) page.
+    "announcement": "",
 }
 
 

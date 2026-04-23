@@ -26,6 +26,10 @@ pccx는 엣지 디바이스에서 Transformer 기반 LLM을 가속하기 위한
       컴퓨트 코어 (GEMM / GEMV / CVO), 메모리 계층. 타겟 디바이스는
       Xilinx Kria **KV260** (Zynq UltraScale+ ZU5EV).
 
+      **현재 지원 (집중):** Gemma-3N E4B @ W4A8KV4 — KV260 보드 실측
+      tok/s 는 :doc:`docs/Evidence/index` 에서 추적. 그 외 (v003 /
+      Gemma-4 / Llama) 는 :doc:`docs/roadmap` 에.
+
       이 사이트의 모든 v002 RTL 레퍼런스 페이지는 해당 ``.sv`` 파일로
       직접 연결됩니다.
 
@@ -88,11 +92,26 @@ pccx는 엣지 디바이스에서 Transformer 기반 LLM을 가속하기 위한
       왜 pccx-lab은 다섯 개가 아닌 한 레포인가. 모듈 경계 규칙
       (``core/``, ``ui/``, ``uvm_bridge/``, ``ai_copilot/``).
 
+   .. grid-item-card:: :octicon:`verified;1.2em;sd-mr-1` 형식 모델 — Sail
+      :link: docs/v002/Formal/index
+      :link-type: doc
+      :link-alt: pccx Sail ISA 모델 읽기
+
+      **pccx 는** `Sail <https://sail-lang.org/>`_ **로 형식적으로
+      정의된다** — **RISC-V**, **Arm**, **CHERI**, **Morello** 의
+      공식 사양을 기술하는 것과 동일한 ISA 시맨틱 언어. 64-bit /
+      4-bit-opcode v002 ISA 는 RTL 레포의 ``formal/sail/`` 하위에
+      거주하며, SystemVerilog 의 각 ``typedef`` 는 Sail 측에 1:1
+      대응이 있어 폭 오류가 실리콘 전에 Sail 타입 체커에서 먼저
+      잡힌다.
+
 .. toctree::
    :maxdepth: 2
    :caption: 소개
 
    docs/index
+   docs/quickstart
+   docs/Evidence/index
    docs/roadmap
 
 .. toctree::

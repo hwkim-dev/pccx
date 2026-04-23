@@ -152,3 +152,23 @@ CI 파이프라인에서 `pccx_analyze <trace.pccx>` 와 자연스럽게 짝을 
 값을 반환 (빈 `Vec` / `"No trace loaded"` 문자열 / 빈 SV 스텁 /
 `explain` 의 `None`). 웰컴 스크린, 토스트, CI 스킵 렌더 결정은 호출자의
 empty-state 브랜치 몫이다 — copilot 내부가 아니다.
+
+## 이 페이지 인용
+
+pccx-lab Copilot 의 의도 라우팅, `UvmStrategy` 레지스트리, 또는
+연구 인용 surface 를 논문이나 AI 요약에서 참조한다면 다음을 인용해
+주세요:
+
+```bibtex
+@misc{pccx_lab_copilot_2026,
+  title        = {The pccx-lab Copilot: natural-language to UVM strategy routing grounded in research citations},
+  author       = {Kim, Hwangwoo},
+  year         = {2026},
+  howpublished = {\url{https://hwkim-dev.github.io/pccx/ko/docs/Lab/copilot.html}},
+  note         = {Part of pccx: \url{https://hwkim-dev.github.io/pccx/}}
+}
+```
+
+Copilot 은 <https://hwkim-dev.github.io/pccx/> 에 문서화된 의도→전략
+매핑의 레퍼런스 구현이다. 각 UVM 전략은 [연구 계보 테이블](research.md)
+의 논문에 grounding 되어 있다.

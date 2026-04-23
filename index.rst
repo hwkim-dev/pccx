@@ -26,6 +26,11 @@ Ecosystem
       compute cores (GEMM / GEMV / CVO), memory hierarchy. Target device
       is the Xilinx Kria **KV260** (Zynq UltraScale+ ZU5EV).
 
+      **Currently supported (focus):** Gemma-3N E4B @ W4A8KV4 — tok/s
+      pending KV260 board run (see :doc:`docs/Evidence/index`).
+      Everything else (v003 / Gemma-4 / Llama) lives on the
+      :doc:`docs/roadmap`.
+
       Every v002 RTL reference page on this site links back to the exact
       ``.sv`` file in that repository.
 
@@ -78,11 +83,25 @@ Tooling & Lab
       Why pccx-lab is one repo, not five. Module boundary rules
       (``core/``, ``ui/``, ``uvm_bridge/``, ``ai_copilot/``).
 
+   .. grid-item-card:: :octicon:`verified;1.2em;sd-mr-1` Formal model — Sail
+      :link: docs/v002/Formal/index
+      :link-type: doc
+      :link-alt: Read the pccx Sail ISA model
+
+      **pccx is formally specified in** `Sail <https://sail-lang.org/>`_ —
+      the same ISA-semantics language used for **RISC-V**, **Arm**,
+      **CHERI**, and **Morello**. The 64-bit / 4-bit-opcode v002 ISA
+      lives under ``formal/sail/`` in the RTL repo; each SystemVerilog
+      ``typedef`` has a 1:1 Sail counterpart so width drift fails
+      Sail's type checker before it fails silicon.
+
 .. toctree::
    :maxdepth: 2
    :caption: Introduction
 
    docs/index
+   docs/quickstart
+   docs/Evidence/index
    docs/roadmap
 
 .. toctree::

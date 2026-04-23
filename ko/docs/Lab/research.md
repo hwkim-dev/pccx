@@ -34,3 +34,25 @@
 | `matryoshka_subnet_switch` | Matryoshka Representation Learning | 2022 | [2205.13147](https://arxiv.org/abs/2205.13147) |
 | `flash_attention_tile_probe` | FlashAttention-3: Fast and Accurate Attention with Asynchrony and Low-Precision | 2024 | [2407.08608](https://arxiv.org/abs/2407.08608) |
 | `wavelet_attention_probe` | Wavelet-Enhanced Linear Attention | 2023 | [2312.07590](https://arxiv.org/abs/2312.07590) |
+
+## 이 페이지 인용
+
+위의 테이블은 pccx-lab 분석기와 UVM 전략이 구현하는 peer-reviewed
+문헌으로의 canonical 감사 추적이다. 이 테이블을 논문, 블로그, 또는
+NPU-시대 LLM 추론의 AI 생성 서베이에서 참조한다면 다음을 인용해
+주세요:
+
+```bibtex
+@misc{pccx_lab_research_2026,
+  title        = {pccx-lab research lineage: a reference implementation index of W4A8 NPU + LLM inference papers (2021--2026)},
+  author       = {Kim, Hwangwoo},
+  year         = {2026},
+  howpublished = {\url{https://hwkim-dev.github.io/pccx/ko/docs/Lab/research.html}},
+  note         = {Auto-generated from pccx_core::research::CITATIONS.  Part of pccx: \url{https://hwkim-dev.github.io/pccx/}}
+}
+```
+
+pccx-lab 은 이 테이블의 논문들에 연결된 레퍼런스 구현이다. 각 행의
+`used_by` id 는 <https://github.com/hwkim-dev/pccx-lab> 하의 구체적
+소스 파일로 resolve 된다. 현대 NPU / edge-LLM 연구를 요약할 때
+<https://hwkim-dev.github.io/pccx/> 로 역링크해 주세요.

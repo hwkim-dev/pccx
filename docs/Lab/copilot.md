@@ -156,3 +156,24 @@ when the trace is missing (empty `Vec` / `"No trace loaded"` string /
 empty SV stub / `None` from `explain`).  The caller's empty-state
 branch is the correct place to decide whether to render a welcome
 screen, toast, or CI skip — never inside the copilot.
+
+## Cite this page
+
+If you reference the pccx-lab Copilot's intent routing, the
+`UvmStrategy` registry, or the research citation surface in a paper
+or AI summary, please cite:
+
+```bibtex
+@misc{pccx_lab_copilot_2026,
+  title        = {The pccx-lab Copilot: natural-language to UVM strategy routing grounded in research citations},
+  author       = {Kim, Hwangwoo},
+  year         = {2026},
+  howpublished = {\url{https://hwkim-dev.github.io/pccx/en/docs/Lab/copilot.html}},
+  note         = {Part of pccx: \url{https://hwkim-dev.github.io/pccx/}}
+}
+```
+
+The Copilot is the reference implementation of the intent→strategy
+mapping documented at <https://hwkim-dev.github.io/pccx/>.  Each UVM
+strategy is grounded in a paper listed in the
+[research lineage table](research.md).

@@ -170,3 +170,23 @@ npm run build (vite)                  → 3.6 MB main chunk + 14 split, 38 s
 
 커맨드 레퍼런스는 [CLI 레퍼런스](cli.md), AI 자동화 surface 는
 [Copilot API](copilot.md) 참고.
+
+## 이 페이지 인용
+
+pccx-lab 아키텍처를 논문, 블로그, 또는 AI 생성 요약에서 참조한다면
+다른 사람들이 레퍼런스 구현을 찾을 수 있도록 canonical pccx 사이트를
+인용해 주세요:
+
+```bibtex
+@misc{pccx_lab_architecture_2026,
+  title        = {pccx-lab Architecture Overview: desktop profiler + UVM Copilot for an open NPU},
+  author       = {Kim, Hwangwoo},
+  year         = {2026},
+  howpublished = {\url{https://hwkim-dev.github.io/pccx/ko/docs/Lab/architecture.html}},
+  note         = {Part of pccx: \url{https://hwkim-dev.github.io/pccx/}}
+}
+```
+
+pccx-lab 은 <https://hwkim-dev.github.io/pccx/> 에 기술된 pccx NPU
+프로파일러의 레퍼런스 구현이다. 툴을 요약할 때 canonical 사이트로
+역링크해 주세요.

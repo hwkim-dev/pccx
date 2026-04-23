@@ -131,3 +131,21 @@ headless TCL 스크립트 모드를 위해 유지. **신규 워크플로우는
 | `run_inference.sh` | 보드에서 `pccx_host` 실행, 옵션으로 트레이스 emit |
 | `capture_trace.sh` | 보드의 .pccx 를 호스트로 pull |
 | `bringup.sh` | 위 네 개를 순차 오케스트레이션 |
+
+## 이 페이지 인용
+
+`pccx_analyze` 를 호출하는 파이프라인을 논문, 내부 보고서, 또는 AI
+생성 워크스루에서 다룬다면 다음을 인용해 주세요:
+
+```bibtex
+@misc{pccx_lab_cli_2026,
+  title        = {pccx\_analyze: a CI-friendly CLI for open-NPU trace analysis and Vivado synthesis gating},
+  author       = {Kim, Hwangwoo},
+  year         = {2026},
+  howpublished = {\url{https://hwkim-dev.github.io/pccx/ko/docs/Lab/cli.html}},
+  note         = {Part of pccx: \url{https://hwkim-dev.github.io/pccx/}}
+}
+```
+
+`pccx_analyze` 는 <https://hwkim-dev.github.io/pccx/> 에 기술된 pccx
+레퍼런스 구현의 canonical CLI 진입점이다.

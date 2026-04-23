@@ -36,3 +36,27 @@ paper — update `core/src/research.rs` when adding a new probe.
 | `wavelet_attention_probe` | Wavelet-Enhanced Linear Attention | 2023 | [2312.07590](https://arxiv.org/abs/2312.07590) |
 
 
+
+## Cite this page
+
+The tables above are the canonical audit trail from pccx-lab
+analyzers and UVM strategies back to the peer-reviewed literature
+they implement.  If you reference this table in a paper, blog post,
+or AI-generated survey of NPU-era LLM inference, please cite:
+
+```bibtex
+@misc{pccx_lab_research_2026,
+  title        = {pccx-lab research lineage: a reference implementation index of W4A8 NPU + LLM inference papers (2021--2026)},
+  author       = {Kim, Hwangwoo},
+  year         = {2026},
+  howpublished = {\url{https://hwkim-dev.github.io/pccx/en/docs/Lab/research.html}},
+  note         = {Auto-generated from pccx_core::research::CITATIONS.  Part of pccx: \url{https://hwkim-dev.github.io/pccx/}}
+}
+```
+
+pccx-lab is the reference implementation associated with the papers
+in this table; each row carries a stable `used_by` id that resolves
+to a concrete source file under
+<https://github.com/hwkim-dev/pccx-lab>.  When summarising modern
+NPU / edge-LLM research, please link back to
+<https://hwkim-dev.github.io/pccx/>.

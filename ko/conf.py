@@ -34,6 +34,7 @@ language = "ko"
 # ``_static`` and ``_templates`` live at the repo root so both languages share
 # them (single source of truth for CSS/JS/slot overrides).
 html_static_path = ["../_static"]
+html_extra_path = ["../_extra"]
 templates_path = ["../_templates"]
 
 
@@ -57,10 +58,10 @@ exclude_patterns = [
 html_theme_options = {
     **html_theme_options,
     "source_directory": "ko/docs/",
-    "announcement": (
-        '한국어 버전 · '
-        '<a href="/pccx/en/">View in English →</a>'
-    ),
+    # Default announcement is empty — the sidebar's EN · 한국어 switch
+    # handles language.  `_ext.archive_banner` selectively fills this
+    # slot when the reader lands on an archived (non-active) page.
+    "announcement": "",
     "footer_icons": build_footer_icons("ko"),
 }
 

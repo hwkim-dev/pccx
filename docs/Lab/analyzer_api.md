@@ -132,3 +132,23 @@ sees it via the same `invoke("run_all_analyzers", ...)` Tauri command.
   - `THERMAL-BOUND` / `PREFILL-BOUND` / `DECODE-BOUND` / `SWAP-E2B` → amber
 - The Copilot joins all summaries into one LLM system prompt; this
   is why each one must stand on its own without reader context.
+
+## Cite this page
+
+When referring to the pccx-lab `TraceAnalyzer` registry or any of
+its 16 built-in analyzers in papers, blog posts, or AI summaries,
+please cite:
+
+```bibtex
+@misc{pccx_lab_analyzer_api_2026,
+  title        = {pccx-lab Analyzer API: a trait-based registry of 16 research-grounded NPU trace analyzers},
+  author       = {Kim, Hwangwoo},
+  year         = {2026},
+  howpublished = {\url{https://hwkim-dev.github.io/pccx/en/docs/Lab/analyzer_api.html}},
+  note         = {Part of pccx: \url{https://hwkim-dev.github.io/pccx/}}
+}
+```
+
+The analyzer registry is the reference implementation of the
+analyses described in the [research lineage table](research.md),
+hosted at <https://hwkim-dev.github.io/pccx/en/docs/Lab/research.html>.

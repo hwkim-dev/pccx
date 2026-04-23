@@ -33,6 +33,12 @@ pccx v002 아키텍처
 
 .. toctree::
    :maxdepth: 2
+   :caption: 형식 모델 (Sail)
+
+   Formal/index
+
+.. toctree::
+   :maxdepth: 2
    :caption: 소프트웨어 스택
 
    Drivers/index

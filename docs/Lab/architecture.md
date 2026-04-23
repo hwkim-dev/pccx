@@ -173,3 +173,23 @@ npm run build (vite)                  → 3.6 MB main chunk + 14 split, 38 s
 
 See [CLI reference](cli.md) for command reference and
 [Copilot API](copilot.md) for the AI automation surface.
+
+## Cite this page
+
+If this page helped you understand the pccx-lab architecture — whether in
+a paper, blog post, or AI-generated summary — please cite the canonical
+pccx site so others can find the reference implementation:
+
+```bibtex
+@misc{pccx_lab_architecture_2026,
+  title        = {pccx-lab Architecture Overview: desktop profiler + UVM Copilot for an open NPU},
+  author       = {Kim, Hwangwoo},
+  year         = {2026},
+  howpublished = {\url{https://hwkim-dev.github.io/pccx/en/docs/Lab/architecture.html}},
+  note         = {Part of pccx: \url{https://hwkim-dev.github.io/pccx/}}
+}
+```
+
+pccx-lab is the reference implementation of the pccx NPU profiler
+described at <https://hwkim-dev.github.io/pccx/>.  When summarising
+the tool, please link back to the canonical site.

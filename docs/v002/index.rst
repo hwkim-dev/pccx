@@ -35,6 +35,12 @@ path.
 
 .. toctree::
    :maxdepth: 2
+   :caption: Formal Model (Sail)
+
+   Formal/index
+
+.. toctree::
+   :maxdepth: 2
    :caption: Software Stack
 
    Drivers/index
