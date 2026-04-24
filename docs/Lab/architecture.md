@@ -113,45 +113,60 @@ trait-based (`ReportFormat`, `VerificationGate`, `IsaCompiler` /
 
 ## Extension hooks
 
-**Add a new analyzer** (`core/`):
+**Add a new plugin.**  Phase 1 replaced the monolithic
+`TraceAnalyzer` / `analyzer::builtin_analyzers()` pattern with a
+generic plugin registry in `pccx-core::plugin`.  Each consumer crate
+exposes its own trait alongside the shared `Plugin` supertrait that
+every plugin implements:
 
 ```rust
-pub struct MyAnalyzer;
-impl TraceAnalyzer for MyAnalyzer {
-    fn id(&self) -> &'static str            { "my_analyzer" }
-    fn display_name(&self) -> &'static str  { "My Analysis" }
-    fn description(&self) -> &'static str   { "..." }
-    fn analyze(&self, trace: &NpuTrace, hw: &HardwareModel) -> AnalysisReport {
-        // ...
+use pccx_core::plugin::{Plugin, PluginMetadata, PLUGIN_API_VERSION};
+use pccx_reports::ReportFormat;
+
+pub struct MyMarkdownFlavor;
+
+impl Plugin for MyMarkdownFlavor {
+    fn metadata(&self) -> PluginMetadata {
+        PluginMetadata {
+            id: "markdown-myco",
+            api_version: PLUGIN_API_VERSION,
+            description: "Markdown report with company header template",
+        }
     }
+}
+
+impl ReportFormat for MyMarkdownFlavor {
+    fn render(&self, input: &ReportInput) -> String { todo!() }
 }
 ```
 
-Register it in `analyzer::builtin_analyzers()` — the CLI and UI pick
-it up instantly.  See the [Analyzer API page](analyzer_api.md) for the
-full recipe plus a reference `DmaLatencyAnalyzer` implementation.
+Register in a `PluginRegistry` on host startup — the CLI, IDE, and
+remote daemon all walk the same registry, so a new plug appears in
+every surface at once.  Plug-trait surfaces available today, by
+consumer crate:
 
-**Add a new UVM strategy** (`ai_copilot/`):
+| Crate | Plug trait |
+|---|---|
+| `pccx-reports` | `ReportFormat` |
+| `pccx-verification` | `VerificationGate` |
+| `pccx-authoring` | `IsaCompiler`, `ApiCompiler` |
+| `pccx-evolve` | `SurrogateModel`, `EvoOperator`, `PRMGate` |
+| `pccx-lsp` | `CompletionProvider`, `HoverProvider`, `LocationProvider` (sync) + their `Async*Provider` companions |
+| `pccx-ai-copilot` | `ContextCompressor`, `SubagentRunner` |
 
-```rust
-pub struct MyFix;
-impl UvmStrategy for MyFix {
-    fn id(&self) -> &'static str   { "my_fix" }
-    fn category(&self) -> UvmCategory { UvmCategory::Memory }
-    fn applies_to_analyzers(&self) -> &'static [&'static str] {
-        &["my_analyzer"]
-    }
-    fn generate(&self) -> GeneratedStub { /* ... */ }
-}
-```
+See the [Analyzer API page](analyzer_api.md) for the full
+registration walkthrough.
 
-Append to `uvm::builtin_strategies()`.  The Copilot will now map
-"my_analyzer" findings → "my_fix" automatically.
+**Add a new UVM sequence strategy**: `pccx-ai-copilot` ships a
+curated list of named strategies exposed by `list_uvm_strategies()`.
+Extend the list and the five current strategies' dispatcher per the
+recipe on the [Copilot page](copilot.md).
 
-**Add a new Tauri command**: edit `src/ui/src-tauri/src/lib.rs`, add
-the `#[tauri::command]`-annotated fn, register in `invoke_handler!`.
-The workspace crates already expose the analyzer / report / verification
-surfaces, so wiring is usually just a one-line bridge.
+**Add a new Tauri command**: edit `ui/src-tauri/src/lib.rs`, add the
+`#[tauri::command]`-annotated fn, and register it in `invoke_handler!`.
+The workspace crates already expose the reports / verification /
+lsp / copilot surfaces, so the Tauri command is usually a one-line
+bridge over a single library call.
 
 ## Cross-repo boundaries
 
