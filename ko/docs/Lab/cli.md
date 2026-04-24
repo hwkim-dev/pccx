@@ -1,145 +1,170 @@
 # CLI 레퍼런스
 
-모든 Rust 바이너리는 `src/core/src/bin/` 하위에 위치하며
-`cargo build -p pccx-core` 로 빌드된다. 릴리스 바이너리는
-`target/release/` 에 떨어진다.
+_페이지 과도기 상태. pccx-lab HEAD 기준 2026-04-24 재정비._
 
-## `pccx_analyze`
+이 페이지의 Phase 1 이전 리비전이 기술한 단일 `pccx_analyze` 우산
+바이너리는 워크스페이스 분할이 코드를 `crates/` 로 이동시킬 때
+**재착륙되지 않았다**. 오늘 pccx-lab 은 더 작은 Rust 바이너리 네
+개를 출하하며, 각 표면을 소유한 크레이트 별로 분산되어 있다.
+각각이 과거 `pccx_analyze` 가 다중화하던 조각 하나를 커버한다. 나머지
+(research-list 내보내기, analyzer id explain, `--compare` 회귀 게이트,
+synth runner) 는 적절한 크레이트 안에서 재착륙을 대기 중이다.
 
-원샷 분석 엔진 — CI 파이프라인과 스크립티드 회귀 실행의 canonical 진입점.
+## 크레이트에 분산된 바이너리
+
+| 바이너리            | 소스 크레이트       | 빌드 커맨드                           |
+|--------------------|---------------------|---------------------------------------|
+| `pccx_cli`         | `pccx-reports`      | `cargo build -p pccx-reports`         |
+| `generator`        | `pccx-core`         | `cargo build -p pccx-core`            |
+| `from_xsim_log`    | `pccx-core`         | `cargo build -p pccx-core`            |
+| `pccx_golden_diff` | `pccx-verification` | `cargo build -p pccx-verification`    |
+
+릴리스 아티팩트는 여전히 워크스페이스 공통 `target/release/` 디렉토리에
+떨어진다.
+
+## `pccx_cli`
+
+헤드리스 트레이스 인스펙션 CLI — 코어별 utilisation, bottleneck
+윈도, roofline 판단, Markdown 요약만 필요한 CI 파이프라인이 오늘
+타겟팅해야 할 표면.
 
 ### 개요
 
 ```text
-pccx_analyze <trace.pccx> [--json | --markdown] [--synth UTIL TIMING]
-pccx_analyze --run-synth <RTL_REPO> [--target synth|impl] [--dry-run] [--parse-only]
-pccx_analyze --compare BASE.pccx CAND.pccx [--threshold-pct N] [--json]
-pccx_analyze --research-list [--json]
-pccx_analyze --explain <analyzer_id> [trace.pccx]
+pccx_cli <path/to/trace.pccx>
+         [--util]
+         [--roofline]
+         [--bottleneck <ratio>]
+         [--windows <cycles>]
+         [--threshold <ratio>]
+         [--report-md]
+         [--source <script>]
 ```
 
-### 모드
+### 플래그 레퍼런스
 
-| 플래그 | 동작 |
-|---|---|
-| *(기본)* | Pretty 콘솔 요약 — 분석기당 1 라인 + bottleneck / roofline 밴드 짧은 부연. |
-| `--json` | `AnalysisReport` 의 adjacently-tagged JSON 배열. 안정 shape — CI 에서 `jq` 파이프 안전. |
-| `--markdown` | canonical `report::render_markdown` 문서 emit. `--synth` 와 결합 가능. |
-| `--synth UTIL TIMING` | Vivado 텍스트 리포트 쌍을 로드해 Markdown 출력에 인라인. |
-| `--run-synth DIR` | `DIR/hw` 하위 RTL 레포에 대해 Vivado 를 spawn. 오류 시 non-zero exit. |
-| `--target synth\|impl` | 호출할 `vivado/build.sh` 타겟 (기본: `synth`). |
-| `--dry-run` | 실행될 커맨드만 프린트하고 종료. Vivado 불필요. |
-| `--parse-only` | Vivado 스킵; 직전 실행의 `hw/build/reports/` 파싱. |
-| `--compare B C` | 두 `.pccx` 캡처 diff; 회귀 시 exit 1. |
-| `--threshold-pct N` | `--compare` 회귀 임계치 (기본: 15). |
-| `--research-list` | 연구 계보 테이블 (기본 Markdown, `--json` 으로 JSON) 프린트. |
-| `--explain ID` | 단일 analyzer id 에 대해 long-form 문서 (description + 최신 발견 + arxiv 인용) 렌더. |
+| 플래그                  | 동작                                                            |
+|-------------------------|-----------------------------------------------------------------|
+| `--util`                | 코어별 MAC utilisation 바 차트 프린트.                           |
+| `--roofline`            | Arithmetic intensity + compute/memory-bound 판정 프린트.         |
+| `--bottleneck <ratio>`  | 레거시 per-event DMA 핫스팟 필터 (기본 `0.5`).                   |
+| `--windows <cycles>`    | 신규 bottleneck 탐지기의 슬라이딩 윈도 크기 (기본 256).           |
+| `--threshold <ratio>`   | Share-of-window 임계치 (기본 `0.5`).                             |
+| `--report-md`           | `pccx-reports::render_markdown` 요약을 stdout 으로 emit.         |
+| `--source <script>`     | `pccx_tcl` 스타일 배치 스크립트 실행 (헤드리스 모드).             |
 
-### 예시 — Pretty 트레이스 분석
+오늘은 `--json`, `--compare`, `--research-list`, `--explain`,
+`--run-synth` 모드가 존재하지 않는다. 이전 문서가 이 플래그들을 통합
+`pccx_analyze` 바이너리의 일부로 기술했는데 그 바이너리는 연기되었다 —
+재착륙 대상으로 추적 중이지만 현재 트리에서 호출 불가.
 
-```console
-$ pccx_analyze ./dummy_trace.pccx
-═══════════════════════════════════════════════════════════════════════
-  pccx_analyze · 16008 events over 5423940 cycles
-═══════════════════════════════════════════════════════════════════════
-   [roofline] AI 0.69 ops/byte · 321.4 GOPS (0% of peak) · memory-bound
-   [roofline_hier] dwell 4 tier: Register=851200cy, URAM L1=52M cy, …
-   [bottleneck] 19179 windows · DmaRead×12787, DmaWrite×6392
-    · DmaRead @ [474624..474880] share=100%
-   [dma_util] DMA SATURATED: read 46% + write 46% pinned — compute only 4%
-   [stall_histogram] 4 stalls · mean 1472 cy · max 5000 cy · 50% long-tail
-   [per_core_throughput] 4 cores active · mean 6.2% · σ=3.5pp
-   [kv_cache_pressure] HBM-SPILL: decode 512 tokens → 60000 KB KV …
-   [phase_classifier] mixed · prefill 22% · decode 61% (512 tok) · idle 17%
-```
-
-### 예시 — CI 용 JSON
+### 예시 — Pretty 트레이스 인스펙션
 
 ```bash
-pccx_analyze trace.pccx --json \
-  | jq -r '.[] | select(.analyzer_id == "bottleneck") | .summary'
+pccx_cli ./dummy_trace.pccx --util --roofline --report-md
 ```
 
-### 예시 — Vivado 합성 파이프라인
+`--report-md` 출력은 `pccx-reports::render_markdown` 이 생성하는 것과
+동일한 Markdown 문서다. Rust API 만 원하는 소비자는 바이너리를
+건너뛰고 함수를 직접 호출하면 된다.
 
-```bash
-# Vivado 를 실제로 띄우지 않고 플로우 smoke-test.
-pccx_analyze --run-synth ~/rtl/pccx-FPGA-NPU-LLM-kv260 --dry-run
+## `generator`
 
-# 직전 실행의 리포트만 파싱 (수동으로 Vivado 를 띄운 경우 유용).
-pccx_analyze --run-synth ~/rtl/pccx-FPGA-NPU-LLM-kv260 --parse-only
-# ───────────────────────────────────────────────────────────
-# pccx_analyze · synth (parse-only mode)
-# ───────────────────────────────────────────────────────────
-# utilisation: LUT=  5611 DSP=   4 URAM= 56 BRAM36= 80
-# timing     : WNS=-9.792 ns · worst clk core_clk · (NOT met)
+개발과 테스트용 데모 `.pccx` 트레이스 생성. UI 의 첫 실행 플로우와
+CI smoke 테스트에 사용.
 
-# 실제 실행 — vivado spawn, stdout 스트림, 리포트 파싱.
-pccx_analyze --run-synth ~/rtl/pccx-FPGA-NPU-LLM-kv260 --target impl
+### 개요
+
+```text
+generator [output_path] [tiles] [cores]
 ```
 
-### 예시 — 회귀 게이트
-
-```bash
-# 후보 캡처가 임의 메트릭에서 15 % 초과 회귀 시 CI 실패.
-pccx_analyze --compare baseline.pccx candidate.pccx --threshold-pct 15
-```
-
-### 예시 — 연구 계보
-
-```bash
-# canonical 레지스트리로부터 research.md 페이지 재생성.
-pccx_analyze --research-list > docs/Lab/research.md
-
-# kv_cache_pressure 분석기를 구동하는 근거 설명.
-pccx_analyze --explain kv_cache_pressure
-```
-
-### Exit 코드
-
-| 코드 | 의미 |
-|---|---|
-| 0 | 성공. 트레이스 non-empty, 분석기 실행 완료, Vivado (호출 시) 정상 종료. |
-| 1 | 런타임 실패 — 트레이스 파싱 오류, Vivado ERROR 라인, JSON 인코딩 실패, 회귀 탐지. |
-| 2 | 잘못된 호출 — 누락 인자, 미지원 플래그. |
-
-### 환경 변수
-
-없음. `--run-synth` 는 `VIVADO_HOME` 이 설정되어 있으면 사용하지만,
-`hw/vivado/build.sh` 래퍼가 실제 PATH 를 처리한다.
-
-## `pccx_cli`
-
-기존의 대화형 / Vivado-shaped CLI. 일부 Vivado 배치 파이프라인이 쓰는
-headless TCL 스크립트 모드를 위해 유지. **신규 워크플로우는
-`pccx_analyze` 사용을 권장** — 구조화 JSON 출력과 기계 판독 exit 코드가
-있다.
+기본값: `dummy_trace.pccx`, `tiles=100`, `cores=32`.
+`pccx_core::simulator::generate_realistic_trace` 를 거쳐 `NpuTrace` 를
+구성하고, 현재 `HardwareModel::pccx_reference()` 메타데이터를 가진
+`PccxFile` 로 래핑해 디스크에 기록.
 
 ## `from_xsim_log`
 
-`xsim` 테스트벤치 stdout 스트림을 `.pccx` 트레이스로 변환.
-`hw/sim/run_verification.sh` 가 자동 호출; 일반적으로 수동 실행 대상은 아니다.
+Xilinx `xsim` 시뮬레이션 로그를 UI 가 로드 가능한 `.pccx` 트레이스로
+변환. RTL 레포의 `hw/sim/run_verification.sh` 가 자동 호출하며,
+보통 수동 실행 대상은 아니다.
 
-## 보드 bringup 스크립트
+### 개요
 
-`pccx-FPGA-NPU-LLM-kv260/scripts/board/` 하위:
+```text
+from_xsim_log --log <xsim.log> --output <out.pccx>
+              [--core-id <u32>] [--testbench <name>]
+```
 
-| 스크립트 | 목적 |
-|---|---|
-| `health_check.sh` | SSH 도달성 + 커널 + fpga_manager + 메모리 free |
-| `load_bitstream.sh` | scp .bit → `/lib/firmware/` → PL 프로그램 |
-| `run_inference.sh` | 보드에서 `pccx_host` 실행, 옵션으로 트레이스 emit |
-| `capture_trace.sh` | 보드의 .pccx 를 호스트로 pull |
-| `bringup.sh` | 위 네 개를 순차 오케스트레이션 |
+인식 패턴 (pccx-FPGA 테스트벤치가 방출):
+
+| 로그 패턴                                      | 방출 이벤트                                      |
+|------------------------------------------------|--------------------------------------------------|
+| `PASS: <N> cycles, ...`                        | `--core-id` 에 `N × MAC_COMPUTE`.                |
+| `FAIL: <E> mismatches over <N> cycles.`        | `N × MAC_COMPUTE` + `E × SYSTOLIC_STALL`.        |
+
+## `pccx_golden_diff`
+
+후보 `.pccx` 트레이스를 JSONL 레퍼런스 프로파일과 비교하는 end-to-end
+정확성 게이트 (NVIDIA 리포트 §6.2 shape).
+
+### 개요
+
+```text
+pccx_golden_diff --emit-profile <trace.pccx> [--tolerance-pct N] > ref.jsonl
+pccx_golden_diff --check        ref.jsonl <trace.pccx> [--json]
+```
+
+두 모드:
+
+- `--emit-profile` — 자가 교정. 알려진 good 트레이스를 로드해
+  `API_CALL` 경계로 버킷팅하고, 관측 카운트 + 구성 가능 tolerance 를
+  가진 JSONL 레퍼런스를 기록.
+- `--check` — 회귀 게이트. 레퍼런스 JSONL + 후보 트레이스를 로드해
+  `golden_diff::diff` 를 실행, 한 줄 판정 + 스텝별 메트릭 테이블 프린트,
+  어느 스텝이든 tolerance 를 벗어나면 exit 1.
+
+Tolerance 는 레퍼런스 행에 존재하므로 (미구현) PyTorch 측 레퍼런스
+파이프라인이 pccx-lab 측 플래그 폭발 없이 엄격도를 제어한다.
+
+## 보드 bringup 스크립트 (RTL 레포)
+
+`pccx-FPGA-NPU-LLM-kv260/scripts/board/` 하위 — pccx-lab 과 독립이며,
+편의상 여기 열거:
+
+| 스크립트              | 목적                                                  |
+|----------------------|-------------------------------------------------------|
+| `health_check.sh`    | SSH 도달성 + 커널 + fpga_manager + free RAM.          |
+| `load_bitstream.sh`  | `.bit` 를 `/lib/firmware/` 로 scp 후 PL 프로그램.     |
+| `run_inference.sh`   | 보드에서 `pccx_host` 실행, 옵션으로 트레이스 emit.    |
+| `capture_trace.sh`   | 보드의 `.pccx` 를 호스트로 pull.                      |
+| `bringup.sh`         | 위 네 개를 순차 오케스트레이션.                       |
+
+## 아직 재착륙되지 않은 표면
+
+가장 적합한 크레이트 (아마 `pccx-reports` 와 신설 분석 크레이트의
+조합) 에서의 재착륙 대상으로 추적 중:
+
+- `--json` adjacently-tagged 구조화 출력.
+- `--compare BASE CAND` `--threshold-pct` 회귀 게이트.
+- `--run-synth`, `--dry-run`, `--parse-only` Vivado 래퍼
+  (RTL 레포의 `hw/vivado/build.sh` 는 여전히 단독 동작).
+- `--research-list` 인용 레지스트리 내보내기 (이것이 보류된 이유는
+  [연구 계보](research.md) 참고).
+- `--explain <id>` long-form 분석기 / 전략 문서.
+
+## Exit 코드
+
+네 바이너리는 관용적 Rust 관례를 따른다: 성공 시 `0`, 런타임 실패 시
+non-zero. `pccx_golden_diff --check` 는 임의 행이 tolerance 를 벗어나면
+`1` 종료 — 현재로서는 canonical CI 회귀 게이트.
 
 ## 이 페이지 인용
 
-`pccx_analyze` 를 호출하는 파이프라인을 논문, 내부 보고서, 또는 AI
-생성 워크스루에서 다룬다면 다음을 인용해 주세요:
-
 ```bibtex
 @misc{pccx_lab_cli_2026,
-  title        = {pccx\_analyze: a CI-friendly CLI for open-NPU trace analysis and Vivado synthesis gating},
+  title        = {pccx-lab command-line binaries after the Phase 1 workspace split: pccx\_cli, generator, from\_xsim\_log, pccx\_golden\_diff},
   author       = {Kim, Hwangwoo},
   year         = {2026},
   howpublished = {\url{https://hwkim-dev.github.io/pccx/ko/docs/Lab/cli.html}},
@@ -147,5 +172,5 @@ headless TCL 스크립트 모드를 위해 유지. **신규 워크플로우는
 }
 ```
 
-`pccx_analyze` 는 <https://hwkim-dev.github.io/pccx/> 에 기술된 pccx
-레퍼런스 구현의 canonical CLI 진입점이다.
+각 바이너리의 소스는 소유 크레이트 아래 — <https://github.com/hwkim-dev/pccx-lab> —
+에 위치한다.

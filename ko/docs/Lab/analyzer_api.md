@@ -1,145 +1,177 @@
 # 분석기 API
 
-`TraceAnalyzer` 트레이트는 pccx-lab 의 모든 분석이 구현하는 단일
-추상화이다. 소비자 (UI / CLI / Copilot / 확장) 는 더 이상 개별
-`roofline::analyze()` / `bottleneck::detect()` free 함수를 호출하지
-않는다 — 레지스트리를 iterate 하며 `AnalysisPayload` 변형에
-pattern-match 한다.
+_페이지 과도기 상태. pccx-lab HEAD 기준 2026-04-24 재정비._
 
-## 트레이트
+Phase 1 은 분할 이전의 `TraceAnalyzer` 트레이트와 모놀리식
+`analyzer::builtin_analyzers()` 목록을 폐기했다. 대신 pccx-core 는
+모든 워크스페이스 크레이트 (reports, verification, authoring, evolve,
+lsp, ai_copilot, …) 가 자기 자신의 trait-object 플러그인을 걸기 위해
+재사용하는 작은 제네릭 **플러그인 레지스트리 프리미티브** 를 출하한다.
+호출자는 더 이상 고정 빌트인 목록을 호출하지 않고 크레이트별
+`PluginRegistry<P>` 에 플러그인을 등록한다.
+
+이 페이지는 프리미티브 자체와 소비 크레이트가 자신의 플러그인 트레이트를
+거기 어떻게 거는지를 문서화한다. Phase 1 이전의 16 개 큐레이션 분석기
+카탈로그는 아직 재착륙되지 않았다 — 돌아올 때는 분석 크레이트 중 하나
+(reports 또는 신설 `pccx-analytics`) 안에 자리 잡고 이 프리미티브로
+등록될 것이다. 그때까지 pccx-core 는 날(raw) free 함수
+(`roofline::analyze`, `bottleneck::detect`, …) 와 얇은
+`pccx-reports::render_markdown` 래퍼를 그대로 노출한다.
+
+## 프리미티브
 
 ```rust
-pub trait TraceAnalyzer: Send + Sync {
-    fn id(&self)           -> &'static str;        // 안정 id
-    fn display_name(&self) -> &'static str;        // 메뉴 라벨
-    fn description(&self)  -> &'static str;        // 한 줄 설명
-    fn analyze(&self, trace: &NpuTrace, hw: &HardwareModel) -> AnalysisReport;
+// pccx_core::plugin
+pub const PLUGIN_API_VERSION: u32 = 1;
+
+#[derive(Debug, Clone, Copy)]
+pub struct PluginMetadata {
+    pub id:           &'static str,  // 안정 식별자
+    pub api_version:  u32,           // PLUGIN_API_VERSION 과 일치 필수
+    pub description:  &'static str,  // 한 줄 설명
+}
+
+pub trait Plugin {
+    fn metadata(&self) -> PluginMetadata;
+}
+
+pub struct PluginRegistry<P: Plugin> {
+    /* private Vec<P> */
+}
+
+impl<P: Plugin> PluginRegistry<P> {
+    pub fn new() -> Self;
+    pub fn register(&mut self, plugin: P) -> Result<(), PluginError>;
+    pub fn all(&self)  -> &[P];
+    pub fn find(&self, id: &str) -> Option<&P>;
+    pub fn len(&self)  -> usize;
+    pub fn is_empty(&self) -> bool;
 }
 ```
 
-**Purity 요구사항**: `analyze()` 는 외부 상태를 변경하거나 IPC 를 수행
-해선 안 된다. 레지스트리는 미래에 호출을 병렬화할 권리를 보존한다.
+`register` 만 실패 가능하며 — `api_version` 이 `PLUGIN_API_VERSION` 과
+다른 플러그인은 거부된다. 오래된 헤더로 빌드된 외부 dylib 가 로드 전에
+걸러진다. 중복 id 는 허용되며 `find` 는 먼저 등록된 쪽이 이긴다. 스레드
+안전성은 호출자 책임이다 — 스레드 간 공유 시 `Mutex` / `RwLock` 으로
+감쌀 것.
 
-## 반환 shape
+## 왜 `P` 에 제네릭인가?
 
-```rust
-pub struct AnalysisReport {
-    pub analyzer_id: String,       // == analyzer 의 id()
-    pub summary:     String,       // ≤ 500 chars — LLM 용
-    pub payload:     AnalysisPayload,
-}
+단일 레지스트리 타입이 각 크레이트가 정의하는 모든 플러그인 종류를
+수용한다 — `ReportFormat` (reports), `VerificationGate`
+(verification), `IsaCompiler` / `ApiCompiler` (authoring),
+`SurrogateModel` / `EvoOperator` / `PRMGate` (evolve),
+`CompletionProvider` / `HoverProvider` / `LocationProvider` (lsp),
+`ContextCompressor` / `SubagentRunner` (ai_copilot). 각 크레이트의
+unstable 트레이트는 `Plugin` 의 서브트레이트이며, 자체 인스턴스의
+`PluginRegistry<CrateTrait>` 를 가지고, 호출 지점에서 독립적으로
+iterate 된다.
 
-pub enum AnalysisPayload {
-    Roofline(RooflinePointPayload),
-    RooflineHierarchical(Vec<RooflineBand>),
-    Bottleneck(Vec<BottleneckInterval>),
-    Custom(serde_json::Value),   // 타입드 변형이 없는 신규 분석기용
-    Text,                        // summary 가 전체 결과
-}
-```
+## 플러그인 등록
 
-`Custom` 은 탈출구다 — 실험적 분석기는 core enum 수정 없이 임의의
-JSON-serialisable 페이로드를 실어 나를 수 있다.
-
-## 빌트인 레지스트리
-
-| id | 표시명 | 페이로드 | 보고 내용 |
-|---|---|---|---|
-| `roofline` | Roofline | `Roofline` | Williams/Waterman AI vs. achieved GOPS |
-| `roofline_hier` | Hierarchical Roofline | `RooflineHierarchical` | 메모리 티어별 dwell (Ilic 2014, Yang 2020) |
-| `bottleneck` | Bottleneck Windows | `Bottleneck` | Sliding-window contention detector |
-| `dma_util` | DMA Utilisation | `Custom` (`DmaUtilisationPayload`) | Read/write/MAC 사이클 share, starved vs. saturated |
-| `stall_histogram` | Stall Histogram | `Custom` (`StallHistogramPayload`) | `SYSTOLIC_STALL` 지속의 log-bucket 분포 |
-| `per_core_throughput` | Per-Core Throughput | `Custom` (`PerCoreThroughputPayload`) | `core_id` 별 MAC share + balance σ |
-| `latency_distribution` | Latency Distribution | `Custom` (`LatencyDistributionPayload`) | `API_CALL` 지속의 P50/P95/P99 + 최악 callers |
-| `power_estimate` | Power Estimate | `Custom` (`PowerEstimatePayload`) | 동적 W + KV260 7 W TDP 비율; thermal-bound 플래그 |
-| `kv_cache_pressure` | KV-Cache Pressure | `Custom` (`KvCachePressurePayload`) | 디코드당 KV footprint vs L2 URAM; HBM spill 플래그 |
-| `phase_classifier` | Prefill/Decode Phase | `Custom` (`PhaseClassifierPayload`) | prefill/decode/idle span 태깅; wall-clock split |
-| `ai_trend` | Arithmetic Intensity Trend | `Custom` (`AiTrendPayload`) | 롤링 윈도우 AI (ops/byte); prefill→decode collapse 플래그 |
-| `dma_burst_efficiency` | DMA Burst Efficiency | `Custom` (`DmaBurstEfficiencyPayload`) | AXI overhead 상쇄 후 effective BW |
-| `matryoshka_footprint` | Matryoshka Subnet | `Custom` (`MatryoshkaFootprintPayload`) | Gemma-3N E2B/E4B 스왑 절감 projection |
-| `moe_sparsity` | MoE Expert Sparsity | `Custom` (`MoESparsityPayload`) | 전문가당 활성화율; over-sparse 라우팅 플래그 |
-| `flash_attention_tile` | FlashAttention Tile Efficiency | `Custom` (`FlashAttentionTilePayload`) | 타일 임계치 충족 MAC burst 비율 |
-| `dual_hp_port_balance` | Dual-HP-Port Balance | `Custom` (`DualHpPortBalancePayload`) | HP0/1 vs HP2/3 traffic share; 단일 포트 starvation |
-
-### 연구 계보
-
-2025 이후 분석기는 최신 논문에 grounding 되어 있어, UVM Copilot 이
-발견을 설명할 때 근거를 인용할 수 있다. 전체 자동 생성 인용 테이블은
-[연구 계보 페이지](research.md) 참고.
-
-## 전부 실행
+소비 크레이트는 자체 트레이트를 정의해 `Plugin` 의 서브트레이트로 삼고,
+호스트에 레지스트리 인스턴스를 제공한다:
 
 ```rust
-use pccx_core::{analyze_all, HardwareModel, NpuTrace};
+use pccx_core::plugin::{Plugin, PluginMetadata, PluginRegistry,
+                        PLUGIN_API_VERSION};
 
-let hw = HardwareModel::pccx_reference();
-for report in analyze_all(&trace, &hw) {
-    println!("[{}] {}", report.analyzer_id, report.summary);
+// 1.  크레이트 트레이트 — `Plugin` 을 확장.
+pub trait ReportFormat: Plugin {
+    fn render(&self, trace: &NpuTrace) -> String;
 }
-```
 
-## 신규 분석기 작성
+// 2.  구체 구현.
+pub struct MarkdownReport;
 
-```rust
-use pccx_core::analyzer::{TraceAnalyzer, AnalysisReport, AnalysisPayload};
-use pccx_core::{NpuTrace, HardwareModel};
-
-pub struct DmaLatencyAnalyzer;
-
-impl TraceAnalyzer for DmaLatencyAnalyzer {
-    fn id(&self) -> &'static str           { "dma_latency" }
-    fn display_name(&self) -> &'static str { "DMA Latency Distribution" }
-    fn description(&self) -> &'static str  {
-        "Distribution of DMA_READ durations; flags long-tail outliers."
-    }
-    fn analyze(&self, trace: &NpuTrace, _hw: &HardwareModel) -> AnalysisReport {
-        let durs: Vec<u64> = trace.events.iter()
-            .filter(|e| e.event_type == "DMA_READ")
-            .map(|e| e.duration)
-            .collect();
-        let max  = durs.iter().copied().max().unwrap_or(0);
-        let mean = if durs.is_empty() { 0.0 }
-                   else { durs.iter().sum::<u64>() as f64 / durs.len() as f64 };
-        AnalysisReport {
-            analyzer_id: self.id().to_string(),
-            summary: format!("{} DMA reads · mean {:.0} cy · max {} cy",
-                             durs.len(), mean, max),
-            payload: AnalysisPayload::Text,
+impl Plugin for MarkdownReport {
+    fn metadata(&self) -> PluginMetadata {
+        PluginMetadata {
+            id:          "markdown",
+            api_version: PLUGIN_API_VERSION,
+            description: "GitHub-flavoured Markdown 리포트 렌더러",
         }
     }
 }
+
+impl ReportFormat for MarkdownReport {
+    fn render(&self, trace: &NpuTrace) -> String { /* … */ }
+}
+
+// 3.  호스트가 구체 플러그인 타입으로 키잉된 레지스트리를 만들고
+//     인스턴스를 등록한다.
+let mut reports: PluginRegistry<MarkdownReport> = PluginRegistry::new();
+reports.register(MarkdownReport)?;
 ```
 
-**출하하려면**:
+한 trait object 뒤에 이질적 플러그인을 두고 싶은 크레이트는 (a) 각
+구체 타입을 감싸는 얇은 enum 에 `Plugin` 을 구현하거나, (b) Phase 2/4
+를 기다리면 된다 — 다가오는 dylib 로더가 C-ABI 계약 안정화 시점에
+`Box<dyn CrateTrait>` 형태의 등록을 지원한다.
 
-1. `builtin_analyzers()` 에 `Box::new(DmaLatencyAnalyzer)` 추가.
-2. 소비자가 직접 타입을 생성하려면 `lib.rs` 에서 re-export.
-3. `analyzer::tests` 에 단위 테스트 추가.
-4. (선택) `core/src/research.rs` 에 `Citation` 엔트리 추가.
-5. `cargo test -p pccx-core` 통과 확인.
+호출자는 `registry.all()` 로 순회하거나 `registry.find("markdown")`
+으로 id 조회한다.
 
-Copilot 은 레지스트리를 통해 신규 분석기를 집어들고; UI 는 동일한
-`invoke("run_all_analyzers", ...)` Tauri 커맨드로 본다.
+## 오류 표면
 
-## Summary 포맷 관행
+```rust
+#[derive(Debug, Clone, thiserror::Error)]
+pub enum PluginError {
+    #[error("plugin '{id}' declares API version {got}; \
+             host expects {expected}")]
+    ApiMismatch { expected: u32, got: u32, id: &'static str },
+}
+```
 
-- `summary` 는 ≤ 500 chars.
-- 메트릭으로 시작: `"AI 0.69 ops/byte · 321.4 GOPS (0% of peak) · memory-bound"`.
-- 예약된 대문자 접두사는 UI 심각도 색상을 결정한다:
-  - `error:` / `HBM-SPILL` / `OVER-SPARSE` / `PORT-STARVED` / `TILE-BOUND` / `AI-COLLAPSE` / `OVERHEAD-BOUND` → 빨강
-  - `THERMAL-BOUND` / `PREFILL-BOUND` / `DECODE-BOUND` / `SWAP-E2B` → 주황
-- Copilot 은 모든 summary 를 하나의 LLM 시스템 프롬프트로 합치므로,
-  각 summary 는 독자 문맥 없이도 스스로 성립해야 한다.
+오늘 런타임 오류는 `ApiMismatch` 하나뿐이다. dylib 로드 실패 (심벌
+누락, C-ABI 불일치, unload 패닉) 는 Phase 2/4 동적 로더가 도착하면
+같은 enum 에 들어온다 — 그때 레지스트리에 in-process `register` 위에
+`load_dylib(path)` 가 추가된다.
+
+## 안정성
+
+`pccx_core::plugin` 의 모든 것은 **pccx-lab v0.3 까지 unstable** 이다.
+enum 은 정신상 `#[non_exhaustive]` 이며 — Phase 1/2 창 동안 SemVer
+major 범프 없이 신규 variant 가 추가된다.
+
+Dylib 로딩 기계 (libloading + C-ABI `register()` 심볼 + unload 시
+안전한 drop) 는 **아직 미구현** 이다. 아웃오브트리 플러그인이 실제로
+출하될 때 Phase 2/4 중에 착륙한다. 그때까지 모든 레지스트리는
+in-process `Vec<Box<dyn T>>` 이다.
+
+## Phase 1 시점 크로스 크레이트 플러그인 트레이트
+
+| 크레이트              | `Plugin` 으로 게이트된 트레이트                              |
+|----------------------|--------------------------------------------------------------|
+| `pccx-reports`       | `ReportFormat`                                               |
+| `pccx-verification`  | `VerificationGate`                                           |
+| `pccx-authoring`     | `IsaCompiler`, `ApiCompiler`                                 |
+| `pccx-evolve`        | `SurrogateModel`, `EvoOperator`, `PRMGate`                   |
+| `pccx-lsp`           | `CompletionProvider`, `HoverProvider`, `LocationProvider`    |
+| `pccx-ai-copilot`    | `ContextCompressor`, `SubagentRunner`                        |
+
+이 테이블의 모든 트레이트는 크레이트 자체 `plugin-api` 피처 뒤에
+스캐폴딩 되어 있다. 구체 구현은 Phase 2–5 워크스트림 진행에 따라
+점진적으로 착륙한다. 트레이트별 착륙 타임라인은 각 크레이트의
+`CHANGELOG.md` 참고.
+
+## 관련 문서
+
+- [CLI 레퍼런스](cli.md) — 워크스페이스 분할 이후 오늘 존재하는
+  바이너리와 각각이 실제로 담당하는 표면.
+- [Copilot API](copilot.md) — 현재 `pccx-ai-copilot` 의 정적 헬퍼와
+  Phase 2 pccx-lsp provider 트레이트.
+- [연구 계보](research.md) — 현재 플레이스홀더. 인용 레지스트리는
+  `core/src/research.rs` 에 있었으며 Phase 1 에서 제거되었다.
 
 ## 이 페이지 인용
 
-pccx-lab `TraceAnalyzer` 레지스트리 또는 16 개 빌트인 분석기를
-논문, 블로그 게시물, AI 요약에서 참조한다면 다음을 인용해 주세요:
+pccx-core 플러그인 레지스트리 프리미티브를 논문, 블로그, AI 요약에서
+참조한다면 다음을 인용해 주세요:
 
 ```bibtex
 @misc{pccx_lab_analyzer_api_2026,
-  title        = {pccx-lab Analyzer API: a trait-based registry of 16 research-grounded NPU trace analyzers},
+  title        = {pccx-core plugin registry: the generic primitive every pccx-lab crate hangs its trait-object plugins off},
   author       = {Kim, Hwangwoo},
   year         = {2026},
   howpublished = {\url{https://hwkim-dev.github.io/pccx/ko/docs/Lab/analyzer_api.html}},
@@ -147,6 +179,6 @@ pccx-lab `TraceAnalyzer` 레지스트리 또는 16 개 빌트인 분석기를
 }
 ```
 
-분석기 레지스트리는 [연구 계보 테이블](research.md) 에 기술된 분석의
-레퍼런스 구현이다 —
-<https://hwkim-dev.github.io/pccx/ko/docs/Lab/research.html>.
+프리미티브 소스는
+<https://github.com/hwkim-dev/pccx-lab/blob/main/crates/core/src/plugin.rs>
+에 있다.

@@ -1,167 +1,203 @@
 # Copilot API
 
-`Copilot` 구조체는 pccx-lab 의 모든 AI 구동 워크플로우의 canonical
-진입점이다. 다음을 래핑한다:
+_페이지 과도기 상태. pccx-lab HEAD 기준 2026-04-24 재정비._
 
-- 현재 로딩된 `NpuTrace` 에 대한 선택적 참조
-- pccx KV260 레퍼런스 `HardwareModel`
-- `pccx-core` 의 전체 `TraceAnalyzer` 레지스트리
-- `pccx-ai-copilot::uvm` 의 `UvmStrategy` 레지스트리
+Phase 1 이전의 `Copilot` 구조체 (`investigate()`,
+`investigate_summary()`, `explain()`, `rank_by_severity()`,
+`suggest_fix()`, `generate_report()`) 는 폐기되었다. 오늘
+`pccx-ai-copilot` 은 Tauri UI 용 얇은 정적 헬퍼 세트와 Phase 2 / Phase 5
+오케스트레이션이 착륙할 unstable 트레이트 스캐폴드 두 개를 출하한다.
+AI 구동 자연어 → UVM 워크플로우는 Phase 2 **pccx-lsp 파사드** 위에
+재구축 중이다 — A-슬라이스 (`LspMultiplexer` + `NoopBackend`) 와
+B-슬라이스 (async 컴패니언, `BlockingBridge`, `SpawnConfig` /
+`LspSubprocess`) 가 Phase 2 M2.1 에서 착륙했다.
 
-소비자는 트레이스 로드당 한 인스턴스를 생성해 아래 메서드로 구동한다.
+이 페이지는 오늘 출하 가능한 표면을 문서화한다. 구체 verible /
+rust-analyzer / Claude 백엔드가 lsp provider 트레이트에 꽂히면 더 풍부한
+파사드로 갱신된다.
 
-## 생성
+## 정적 헬퍼 (`pccx-ai-copilot`)
+
+네 개 함수 + 레지스트리 상수 하나. 모두 구조체 생성 없이 호출 가능.
+과거 Copilot 표면 중 Tauri UI 가 여전히 필요한 서브셋을 커버한다.
+
+### `compress_context(cycles: u64, bottlenecks: usize) -> String`
+
+트레이스 통계를 간결한 LLM 프롬프트 프리픽스로 압축. 출력은 약
+300 자 — 임의 사용자 질의 앞에 prepend 해도 안전.
 
 ```rust
-use pccx_ai_copilot::Copilot;
+use pccx_ai_copilot::compress_context;
 
-let c = Copilot::new(Some(&trace));
-// 또는
-let c = Copilot::new(None);   // 트레이스 미로드; investigate() 는 [] 반환
+let ctx = compress_context(5_423_940, 19_179);
+// "NPU trace: 5423940 total simulation cycles across a 32×32 systolic
+//  MAC array with 32 cores at 1 GHz (est. 5423.9 µs wall-time). 19179
+//  high-occupancy DMA bottleneck intervals detected. AXI bus contention
+//  visible during simultaneous multi-core DMA. Peak theoretical: 2.05
+//  TOPS."
 ```
 
-분석기 레지스트리를 확장하려면 첫 `investigate()` 호출 전에
-`c.analyzers.push(...)` 한다.
+### `generate_uvm_sequence(strategy: &str) -> String`
 
-## 메서드
-
-### `investigate() -> Vec<AnalysisReport>`
-
-등록된 모든 분석기를 트레이스에 대해 실행. 레지스트리 순서대로 리포트
-반환. 트레이스 미로드 시 빈 Vec.
-
-### `investigate_summary() -> String`
-
-모든 리포트를 단일 LLM 용 시스템 프롬프트로 압축. 각 라인은
-`"- [<analyzer_id>] <summary>"`; 총 길이는 분석기 수 × summary 당
-500 chars 로 바운드.
+명명된 완화 전략에 대해 SystemVerilog UVM 시퀀스 스텁 반환. 미지원
+slug 은 `generic_opt_seq` TODO 스텁으로 fallback.
 
 ```rust
-let prompt = c.investigate_summary();
-// Trace analysis summary (automated):
-// - [roofline] AI 0.69 ops/byte · 321.4 GOPS (0% of peak) · memory-bound
-// - [dma_util] DMA SATURATED: read 46% + write 46% pinned — compute only 4%
-// - [bottleneck] 19179 windows · DmaRead×12787, DmaWrite×6392
-// ...
-```
+use pccx_ai_copilot::generate_uvm_sequence;
 
-LLM 의 `system` 채널에 그대로 투입.
-
-### `rank_by_severity() -> Vec<AnalysisReport>`
-
-대시보드 severity 정렬의 서버사이드 등가물. error 급 발견이 먼저, 그
-다음 warning, 마지막에 정보성 엔트리 순으로 정렬된 리포트 반환.
-동점은 레지스트리 선언 순서로 깨 안정적 출력 보장.
-
-```rust
-let top = c.rank_by_severity();
-println!("가장 시급: {}", top[0].summary);
-```
-
-### `explain(analyzer_id: &str) -> Option<String>`
-
-단일 분석기에 대한 long-form Markdown 설명. 매칭되는 모든
-`research::Citation` 을 당겨와 description + 최신 발견과 함께 포맷.
-
-```rust
-let md = c.explain("kv_cache_pressure").unwrap();
-// # KV-Cache Pressure (kv_cache_pressure)
-// Projects per-decode KV-cache footprint against L2 URAM; cites …
+let sv = generate_uvm_sequence("l2_prefetch");
+// class l2_prefetch_seq extends uvm_sequence;
+//   `uvm_object_utils(l2_prefetch_seq)
 //
-// ## Latest finding
-// HBM-SPILL: decode 512 tokens → 60000 KB KV …
-//
-// ## Research lineage
-// - **QServe …** (2024) — [2405.04532](…). _Why_: …
+//   task body();
+//     // Stagger DMA requests by AXI transaction overhead (15 cycles)
+//     foreach (cores[i]) begin ...
+//   endtask
+// endclass : l2_prefetch_seq
 ```
 
-id 가 레지스트리에 없으면 `None` 반환 → UI 가 "미지원 id" 와 "트레이스
-미로드" 를 구분.
+### `list_uvm_strategies() -> Vec<&'static str>`
 
-### `suggest_fix(intent: &str) -> (String, String)`
+`generate_uvm_sequence` 가 인식하는 모든 전략 slug 을 열거. UI 피커와
+향후 LSP / 에이전트 오케스트레이터가 match arm 을 하드코딩하지
+않기 위해 사용.
 
-자연어 의도 → (strategy_slug, SystemVerilog 스텁). slug 가 의도에
-포함되지 않으면 키워드 규칙 사용.
+현재 목록 (Phase 1 HEAD):
 
-```rust
-let (slug, sv) = c.suggest_fix("please reduce DMA barrier contention");
-// slug == "barrier_reduction"
-// sv   == "class barrier_reduction_seq extends uvm_sequence; …"
-```
+| slug                         | 바디 동작                                             |
+|------------------------------|------------------------------------------------------|
+| `l2_prefetch`                | DMA 읽기를 AXI 트랜잭션 오버헤드로 staggering.       |
+| `barrier_reduction`          | 글로벌 sync 대신 wavefront barrier.                  |
+| `dma_double_buffer`          | 인접 타일에 대해 compute / DMA ping-pong.            |
+| `systolic_pipeline_warmup`   | 첫 실제 타일 전에 MAC 어레이 pre-roll.               |
+| `weight_fifo_preload`        | 셋업 윈도 동안 HP weight FIFO front-load.            |
 
-**키워드 라우팅** — Copilot 이 (우선순위 순) 확인하는 서브스트링과 해당
-canonical 전략:
+다섯 개로, Phase 1 이전 문서의 13 행 의도 라우팅 테이블보다 축소되었다.
+더 풍부한 전략 세트 (`back_pressure_gate`, `kv_cache_thrash_probe`,
+`speculative_draft_probe`, …) 는 재착륙되지 않았다 — pccx-lab
+`docs/design/phase5_alphaevolve.md` 에서 진행 상황을 추적.
 
-| 의도 키워드 | 전략 | 연구 계보 |
-|---|---|---|
-| `barrier`, `sync` | `barrier_reduction` | — |
-| `prefetch`, `dma` | `l2_prefetch` | Packing-Prefetch (arxiv 2508.08457) |
-| `thermal`, `tdp`, `power`, `heat` | `back_pressure_gate` | KV260 7 W PL TDP; Hybrid-Systolic ISLPED 2025 |
-| `latency`, `tail`, `p95`, `p99`, `jitter` | `kv_cache_thrash_probe` | HERMES 2025 tail-latency model |
-| `early exit`, `edge-cloud` | `early_exit_decoder` | arxiv 2505.21594 |
-| `speculative`, `draft`, `spec decode` | `speculative_draft_probe` | OpenPangu NPU (arxiv 2603.03383 — 1.35×) |
-| `evict`, `sparsif`, `kv drop` | `sparsified_kv_eviction` | LoopServe + EVICPRESS |
-| `w4a8`, `kv4`, `quantize`, `qserve`, `qoq` | `qoq_kv4_quantize` | QServe (arxiv 2405.04532) + QQQ |
-| `matryoshka`, `subnet`, `e2b`, `e4b` | `matryoshka_subnet_switch` | arxiv 2205.13147 |
-| `wavelet`, `low-rank`, `long context` | `wavelet_attention_probe` | arxiv 2312.07590 |
-| `flash`, `tile`, `softmax` | `flash_attention_tile_probe` | FlashAttention-2/3 |
-| `moe`, `expert`, `mixture` | `kv_cache_thrash_probe` | Switch Transformer (arxiv 2101.03961) |
-| `throughput`, `core` | `back_pressure_gate` | — |
+### `get_available_extensions() -> Vec<Extension>`
 
-### `generate_report(synth: Option<&SynthReport>) -> String`
+Tauri UI 의 Extensions 탭이 렌더하는 확장 카탈로그 반환. 로컬 LLM,
+하드웨어 가속 플러그인, 클라우드 브리지, 분석 플러그인, 내보내기
+플러그인을 커버. enum 표면은 크레이트 소스의 `ExtensionCategory` 참고.
 
-`pccx-core::report::render_markdown` 에 위임.
-`synth_report::load_from_files` 또는 `synth_runner::run` 이 파싱한
-`SynthReport` 를 넘기면 utilisation + timing 테이블 포함.
+## Unstable 트레이트 (Phase 1 M1.2)
 
-## 레지스트리 확장
+Phase 2 IntelliSense 와 Phase 5 에이전트 오케스트레이션이 구현할 두
+개 스캐폴드. 둘 다 public 이지만 크레이트의 "v0.3 까지 unstable"
+마커를 달고 `plugin-api` 피처 뒤에 게이트되어 있다.
 
 ```rust
-// investigate() 전에 임의의 분석기 런타임 등록.
-let mut c = Copilot::new(Some(&trace));
-c.analyzers.push(Box::new(MyCustomAnalyzer));
-let reports = c.investigate();
-```
+/// 채팅 기록, 트레이스 요약, 문서 발췌용 토큰 버짓 컴프레서.
+/// 결정론적 head/tail 트리머와 학습된 LLMLingua 계열 컴프레서
+/// 모두 이 트레이트를 구현.
+pub trait ContextCompressor {
+    fn compress(&self, input: &str, target_tokens: usize) -> String;
+    fn name(&self) -> &'static str;
+}
 
-전략 레지스트리는 `uvm::strategies_for_analyzer(id)` 로 질의 가능 —
-Copilot 이 임의 분석기의 발견을 하드코딩 키워드 매칭 없이 후보 완화
-집합으로 매핑할 때 사용.
-
-## 자동화에서 사용
-
-```rust
-use pccx_ai_copilot::Copilot;
-use pccx_core::{PccxFile, NpuTrace};
-use std::fs::File;
-
-fn summarise(path: &str) -> anyhow::Result<String> {
-    let mut f = File::open(path)?;
-    let pccx = PccxFile::read(&mut f)?;
-    let trace = NpuTrace::from_payload(&pccx.payload)?;
-    let c = Copilot::new(Some(&trace));
-    Ok(c.investigate_summary())
+/// 단일 서브에이전트 태스크 (log-grinder, research-scout,
+/// doc-drafter) 를 실행해 응답 반환. pccx-ide 와 pccx-remote 가
+/// 공유하는 parallel-subagent 패턴을 구동.
+pub trait SubagentRunner {
+    fn run(&self, task: &str, context: &str) -> anyhow::Result<String>;
+    fn name(&self) -> &'static str;
 }
 ```
 
-CI 파이프라인에서 `pccx_analyze <trace.pccx>` 와 자연스럽게 짝을 이룬다
-— CLI 는 기본적으로 `investigate_summary()` 와 동등한 출력을 프린트.
+pccx-lab v0.2.x 에는 구체 구현이 동봉되지 않는다 — Phase 2 / Phase 5
+진행에 따라 착륙한다. 다운스트림 소비자는 pccx-lab v0.3 까지 이
+시그니처가 변경 대상임을 전제해야 한다.
 
-## 오류 처리
+## pccx-lsp (Phase 2 M2.1)
 
-`Copilot` 은 설계상 infallible 이다. 트레이스가 없어도 모든 메서드는
-값을 반환 (빈 `Vec` / `"No trace loaded"` 문자열 / 빈 SV 스텁 /
-`explain` 의 `None`). 웰컴 스크린, 토스트, CI 스킵 렌더 결정은 호출자의
-empty-state 브랜치 몫이다 — copilot 내부가 아니다.
+IntelliSense 파사드는 앞으로 AI / LSP / 캐시 팬아웃이 사는 곳이다.
+sync provider 트레이트 세 개 + async 컴패니언:
+
+```rust
+pub trait CompletionProvider {
+    fn complete(&self, language: Language, file: &str,
+                pos: SourcePos, source: &str)
+        -> Result<Vec<Completion>, LspError>;
+    fn name(&self) -> &'static str;
+}
+
+pub trait HoverProvider {
+    fn hover(&self, language: Language, file: &str,
+             pos: SourcePos, source: &str)
+        -> Result<Option<Hover>, LspError>;
+    fn name(&self) -> &'static str;
+}
+
+pub trait LocationProvider {
+    fn definitions(&self, language: Language, file: &str,
+                   pos: SourcePos, source: &str)
+        -> Result<Vec<SourceRange>, LspError>;
+    fn references(&self, language: Language, file: &str,
+                  pos: SourcePos, source: &str)
+        -> Result<Vec<SourceRange>, LspError>;
+    fn name(&self) -> &'static str;
+}
+```
+
+라우팅은 `LspMultiplexer` 를 거친다:
+
+```rust
+use pccx_lsp::{Language, LspMultiplexer, NoopBackend};
+
+let mut m = LspMultiplexer::new();
+m.register(
+    Language::SystemVerilog,
+    Box::new(NoopBackend),   // 이후: verible 래퍼
+    Box::new(NoopBackend),
+    Box::new(NoopBackend),
+);
+let completions = m.complete(
+    Language::SystemVerilog, "foo.sv",
+    SourcePos { line: 0, character: 0 },
+    "module foo;",
+)?;
+```
+
+`NoopBackend` 는 빈 결과를 반환 — 실제 백엔드가 wire-up 되는 동안
+쓰는 의도적인 "여기 아무것도 없다" 응답이다. async 워크플로우에서는
+`BlockingBridge<P>` 가 `tokio::task::spawn_blocking` 을 거쳐 임의 sync
+provider 를 `AsyncCompletionProvider` / `AsyncHoverProvider` /
+`AsyncLocationProvider` 로 끌어올린다. 외부 LSP 서버 (verible,
+rust-analyzer, clangd) 는 `SpawnConfig` + `LspSubprocess` 로 spawn;
+그 파이프 위의 JSON-RPC 코덱은 후속 슬라이스에 착륙한다.
+
+`CompletionSource` enum 은 결과의 출처 — 상류 LSP, Claude-Haiku 빠른
+예측기, Claude-Sonnet 깊은 예측기, AST-해시 캐시 — 를 구분한다. 향후
+AI 파이프라인이 이 enum 으로 feedback 되므로 UI 는 모든 제안 옆에
+provenance 배지를 렌더할 수 있다.
+
+엔드 스테이트 디자인 (AI 팬아웃, tower-lsp 어댑터, Monaco 와이어링) 은
+pccx-lab `docs/design/phase2_intellisense.md` 참고.
+
+## UI 지향 정적 커맨드
+
+전면 파사드 도입 전까지 Tauri UI 는 `invoke("compress_context", …)`,
+`invoke("generate_uvm_sequence", …)`, `invoke("list_uvm_strategies")`
+로 정적 헬퍼를 직접 호출한다. 브리지는 `ui/src-tauri/src/lib.rs` 에서
+함수당 한 줄짜리다. 단일 `invoke("copilot_investigate", …)` 우산 호출은
+더 이상 존재하지 않는다.
+
+## 관련 문서
+
+- [분석기 API](analyzer_api.md) — 모든 크레이트별 플러그인 트레이트
+  (`ContextCompressor` / `SubagentRunner` 포함) 가 걸리는 플러그인
+  레지스트리 프리미티브.
+- [CLI 레퍼런스](cli.md) — 현재 출하 중인 바이너리. 과거
+  `pccx_analyze` 우산은 오늘 존재하지 않는다.
 
 ## 이 페이지 인용
 
-pccx-lab Copilot 의 의도 라우팅, `UvmStrategy` 레지스트리, 또는
-연구 인용 surface 를 논문이나 AI 요약에서 참조한다면 다음을 인용해
-주세요:
-
 ```bibtex
 @misc{pccx_lab_copilot_2026,
-  title        = {The pccx-lab Copilot: natural-language to UVM strategy routing grounded in research citations},
+  title        = {pccx-ai-copilot and pccx-lsp: current AI / IntelliSense surface of pccx-lab after Phase 1},
   author       = {Kim, Hwangwoo},
   year         = {2026},
   howpublished = {\url{https://hwkim-dev.github.io/pccx/ko/docs/Lab/copilot.html}},
@@ -169,6 +205,8 @@ pccx-lab Copilot 의 의도 라우팅, `UvmStrategy` 레지스트리, 또는
 }
 ```
 
-Copilot 은 <https://hwkim-dev.github.io/pccx/> 에 문서화된 의도→전략
-매핑의 레퍼런스 구현이다. 각 UVM 전략은 [연구 계보 테이블](research.md)
-의 논문에 grounding 되어 있다.
+이 페이지가 문서화하는 헬퍼는
+<https://github.com/hwkim-dev/pccx-lab/blob/main/crates/ai_copilot/src/lib.rs>
+에 위치하고, LSP 파사드는
+<https://github.com/hwkim-dev/pccx-lab/blob/main/crates/lsp/src/lib.rs>
+에 있다.

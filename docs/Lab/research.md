@@ -1,62 +1,82 @@
 # pccx-lab research lineage
 
-Auto-generated from `pccx_core::research::CITATIONS`. Every
-entry grounds a specific analyzer or UVM strategy in a published
-paper — update `core/src/research.rs` when adding a new probe.
+_Page in flux.  Refreshed 2026-04-24 to match pccx-lab HEAD._
 
-## Analyzers
+## Status: between architectures
 
-| used by | title | year | arxiv |
-|---|---|---|---|
-| `kv_cache_pressure` | QServe: W4A8KV4 Quantization and System Co-design for Efficient LLM Serving | 2024 | [2405.04532](https://arxiv.org/abs/2405.04532) |
-| `kv_cache_pressure` | Prefill vs Decode Bottlenecks: SRAM-Frequency Tradeoffs | 2025 | [2512.22066](https://arxiv.org/abs/2512.22066) |
-| `phase_classifier` | Prefill vs Decode Bottlenecks: SRAM-Frequency Tradeoffs | 2025 | [2512.22066](https://arxiv.org/abs/2512.22066) |
-| `ai_trend` | LLM Inference Unveiled: Survey and Roofline Model Insights | 2024 | [2402.16363](https://arxiv.org/abs/2402.16363) |
-| `power_estimate` | Hybrid Systolic Array Accelerator with Optimized Dataflow for Edge LLM Inference | 2025 | [2507.09010](https://arxiv.org/abs/2507.09010) |
-| `latency_distribution` | HERMES: Understanding and Optimizing Multi-Stage AI Inference Pipelines | 2025 | [hermes-2025](https://arxiv.org/abs/hermes-2025) |
-| `matryoshka_footprint` | Matryoshka Representation Learning | 2022 | [2205.13147](https://arxiv.org/abs/2205.13147) |
-| `dma_burst_efficiency` | LLMCompass: Enabling Efficient Hardware Design for LLMs | 2024 | [2410-llmcompass-isca-2024](https://arxiv.org/abs/2410-llmcompass-isca-2024) |
-| `moe_sparsity` | Switch Transformer: Scaling to Trillion Parameter Models with Simple and Efficient Sparsity | 2021 | [2101.03961](https://arxiv.org/abs/2101.03961) |
-| `flash_attention_tile` | FlashAttention-2: Faster Attention with Better Parallelism and Work Partitioning | 2023 | [2307.08691](https://arxiv.org/abs/2307.08691) |
-| `flash_attention_tile` | FlashAttention-3: Fast and Accurate Attention with Asynchrony and Low-Precision | 2024 | [2407.08608](https://arxiv.org/abs/2407.08608) |
+This page is a **placeholder** while the research-lineage lane is
+rebuilt.  The previous revision auto-generated its two citation
+tables (analyzers + UVM strategies) from `pccx_core::research::CITATIONS`
+— a compile-time registry living in `core/src/research.rs`.  Phase 1's
+module exodus removed that file.  The citations have not yet re-landed
+in another crate, so there is no authoritative on-disk source this page
+can regenerate from today.
 
-## UVM Strategies
+The `used_by` ids that keyed the old tables (`kv_cache_pressure`,
+`phase_classifier`, `speculative_draft_probe`, `qoq_kv4_quantize`, …)
+referenced analyzer and UVM-strategy slugs that were likewise retired
+during the Phase 1 split.  Publishing a stale table against ids that
+no longer exist in code would be actively misleading, so the tables
+have been removed until a new home lands.
 
-| used by | title | year | arxiv |
-|---|---|---|---|
-| `speculative_draft_probe` | Accelerating OpenPangu Inference on NPU via Speculative Decoding | 2026 | [2603.03383](https://arxiv.org/abs/2603.03383) |
-| `early_exit_decoder` | Fast and Cost-effective Speculative Edge-Cloud Decoding with Early Exits | 2025 | [2505.21594](https://arxiv.org/abs/2505.21594) |
-| `sparsified_kv_eviction` | A Survey on LLM Acceleration based on KV Cache Management | 2024 | [2412.19442](https://arxiv.org/abs/2412.19442) |
-| `sparsified_kv_eviction` | EVICPRESS: Joint KV-Cache Compression and Eviction for Efficient LLM Serving | 2025 | [2512.14946](https://arxiv.org/abs/2512.14946) |
-| `qoq_kv4_quantize` | QServe: W4A8KV4 Quantization and System Co-design | 2024 | [2405.04532](https://arxiv.org/abs/2405.04532) |
-| `qoq_kv4_quantize` | QQQ: Quality Quattuor-Bit Quantization for LLMs | 2024 | [2406.09904](https://arxiv.org/abs/2406.09904) |
-| `l2_prefetch` | Architecting Long-Context LLM Acceleration with Packing-Prefetch Scheduler | 2025 | [2508.08457](https://arxiv.org/abs/2508.08457) |
-| `matryoshka_subnet_switch` | Matryoshka Representation Learning | 2022 | [2205.13147](https://arxiv.org/abs/2205.13147) |
-| `flash_attention_tile_probe` | FlashAttention-3: Fast and Accurate Attention with Asynchrony and Low-Precision | 2024 | [2407.08608](https://arxiv.org/abs/2407.08608) |
-| `wavelet_attention_probe` | Wavelet-Enhanced Linear Attention | 2023 | [2312.07590](https://arxiv.org/abs/2312.07590) |
+## Where the work moved
 
+None of the research-grounded analytics code has been deleted — the
+free functions it drove (`pccx_core::roofline::analyze`,
+`pccx_core::bottleneck::detect`, `pccx_core::synth_report::*`, …) all
+still ship from `pccx-core`, they just no longer carry inline
+citations.  The `pccx-ai-copilot` crate retains five
+literature-grounded UVM strategy stubs exposed via
+`list_uvm_strategies()` (see [Copilot API](copilot.md)).
 
+Active design surfaces that will feed the rebuilt lineage:
+
+- `pccx-evolve` (Phase 5 seed) — `SurrogateModel`, `EvoOperator`,
+  `PRMGate` trait scaffolds plus speculative-decoding primitives.
+  The EAGLE-family references belong here.
+- `pccx-authoring` (`IsaCompiler`, `ApiCompiler`) — upstream of the
+  ISA / API spec lineage that the old table's `authoring`-adjacent
+  rows tracked.
+- `pccx-lsp` — the `CompletionSource` enum tags every completion as
+  `Lsp` / `AiFast` / `AiDeep` / `Cache`; when the AI-fast / AI-deep
+  backends land they will need their own provenance lineage.
+
+All three design documents (`docs/design/phase2_intellisense.md`,
+`phase3_remote_backend.md`, `phase4_insane_reports.md`,
+`phase5_alphaevolve.md`) in the pccx-lab repo call out the papers
+their work inherits from.  Those docs are the closest thing to a live
+lineage until the on-disk registry returns.
+
+## When this page refreshes
+
+The page will be regenerated from scratch when:
+
+1. A crate re-publishes a stable `CITATIONS` registry (likely
+   `pccx-reports` or a new `pccx-analytics`), and
+2. The curated set of analyzers / UVM strategies is re-landed with
+   stable `used_by` ids we can key the tables off.
+
+At that point the two tables reappear here, generated by whichever
+binary replaces the old `pccx_analyze --research-list` surface
+(see [CLI reference](cli.md) for the current binary catalogue).
+
+## Roadmap pointers
+
+- pccx-lab repo: <https://github.com/hwkim-dev/pccx-lab>
+- Phase 1 change log: `crates/*/CHANGELOG.md`
+- Per-phase design docs: `docs/design/phase{1,2,3,4,5}_*.md`
 
 ## Cite this page
 
-The tables above are the canonical audit trail from pccx-lab
-analyzers and UVM strategies back to the peer-reviewed literature
-they implement.  If you reference this table in a paper, blog post,
-or AI-generated survey of NPU-era LLM inference, please cite:
-
 ```bibtex
 @misc{pccx_lab_research_2026,
-  title        = {pccx-lab research lineage: a reference implementation index of W4A8 NPU + LLM inference papers (2021--2026)},
+  title        = {pccx-lab research lineage (placeholder): registry rebuild underway after Phase 1 module exodus},
   author       = {Kim, Hwangwoo},
   year         = {2026},
   howpublished = {\url{https://hwkim-dev.github.io/pccx/en/docs/Lab/research.html}},
-  note         = {Auto-generated from pccx_core::research::CITATIONS.  Part of pccx: \url{https://hwkim-dev.github.io/pccx/}}
+  note         = {Part of pccx: \url{https://hwkim-dev.github.io/pccx/}}
 }
 ```
 
-pccx-lab is the reference implementation associated with the papers
-in this table; each row carries a stable `used_by` id that resolves
-to a concrete source file under
-<https://github.com/hwkim-dev/pccx-lab>.  When summarising modern
-NPU / edge-LLM research, please link back to
-<https://hwkim-dev.github.io/pccx/>.
+When this page carries real tables again, the citation key stays the
+same so previously-cited references keep resolving.

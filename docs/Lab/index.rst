@@ -7,9 +7,12 @@ suite on the companion ``pccx-FPGA-NPU-LLM-kv260`` RTL repo and surfaces
 the timeline, roofline, bottleneck windows, waveform, Vivado synth
 reports, and AI-driven UVM strategies in a single Tauri v2 window.
 
-This section documents the tool's internal surface — the ``TraceAnalyzer``
-registry, the ``Copilot`` automation facade, the command-line binaries,
-and the research lineage that grounds each analyzer in a published paper.
+This section documents the tool's internal surface — the Phase 1
+plugin-registry primitive every crate hangs trait objects off, the
+current ``pccx-ai-copilot`` + ``pccx-lsp`` IntelliSense façade, the
+command-line binaries distributed across crates after the workspace
+split, and the research-lineage placeholder that will refresh once the
+citation registry lands in its new home.
 
 For the user-facing desktop app itself, see the separate
 `pccx-lab site <https://hwkim-dev.github.io/pccx/en/lab/>`_.
@@ -27,32 +30,34 @@ For the user-facing desktop app itself, see the separate
       :link: cli
       :link-type: doc
 
-      ``pccx_analyze`` modes (pretty / JSON / Markdown / synth /
-      ``--compare`` / ``--research-list`` / ``--explain``), plus
-      ``pccx_cli`` and ``from_xsim_log``.
+      ``pccx_cli``, ``generator``, ``from_xsim_log``,
+      ``pccx_golden_diff`` — the four binaries pccx-lab ships today
+      and the surfaces still awaiting re-landing.
 
    .. grid-item-card:: :octicon:`graph;1em;sd-mr-1` Analyzer API
       :link: analyzer_api
       :link-type: doc
 
-      The ``TraceAnalyzer`` trait, the 16-entry built-in registry, and
-      how to land a new analysis in one file.
+      The ``PluginRegistry<P>`` primitive, its ``Plugin`` /
+      ``PluginMetadata`` supertraits, and how each crate hangs its own
+      plugin trait off it.
 
    .. grid-item-card:: :octicon:`beaker;1em;sd-mr-1` Copilot API
       :link: copilot
       :link-type: doc
 
-      The ``Copilot`` struct — ``investigate()``, ``explain(id)``,
-      ``rank_by_severity()``, ``suggest_fix(intent)`` — and the intent
-      keyword routing table.
+      The ``pccx-ai-copilot`` static helpers (``compress_context``,
+      ``generate_uvm_sequence``, ``list_uvm_strategies``) and the
+      Phase 2 ``pccx-lsp`` provider traits + ``LspMultiplexer``.
 
    .. grid-item-card:: :octicon:`milestone;1em;sd-mr-1` Research lineage
       :link: research
       :link-type: doc
       :columns: 12
 
-      Auto-generated table of every arxiv paper each analyzer / UVM
-      strategy implements. Updated via ``pccx_analyze --research-list``.
+      Placeholder while the citation registry is rebuilt — the
+      pre-Phase-1 ``pccx_core::research::CITATIONS`` module was
+      removed in the module exodus and has not yet re-landed.
 
 .. toctree::
    :hidden:

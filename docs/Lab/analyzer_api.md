@@ -1,147 +1,178 @@
 # Analyzer API
 
-The `TraceAnalyzer` trait is the single abstraction every analysis
-in pccx-lab implements.  Consumers (UI / CLI / Copilot / extensions)
-never call individual `roofline::analyze()` / `bottleneck::detect()`
-free functions anymore — they iterate the registry and pattern-match
-on `AnalysisPayload` variants.
+_Page in flux.  Refreshed 2026-04-24 to match pccx-lab HEAD._
 
-## Trait
+Phase 1 retired the pre-split `TraceAnalyzer` trait and the monolithic
+`analyzer::builtin_analyzers()` list.  In its place pccx-core ships a
+small generic **plugin-registry primitive** that every workspace crate
+(reports, verification, authoring, evolve, lsp, ai_copilot, …) reuses
+for its own trait-object plugins.  Callers now register plugins against
+a per-crate `PluginRegistry<P>` instead of calling a fixed builtin list.
+
+This page documents the primitive and how a consuming crate hangs its
+plugin trait off it.  The 16-entry curated analyzer catalogue from
+pre-Phase-1 has not been re-landed yet — when it returns it will live
+inside one of the analytics crates (reports or a new `pccx-analytics`)
+and be registered via this primitive.  Until then pccx-core exposes the
+raw free functions (`roofline::analyze`, `bottleneck::detect`, …) and a
+thin `pccx-reports::render_markdown` wrapper.
+
+## Primitive
 
 ```rust
-pub trait TraceAnalyzer: Send + Sync {
-    fn id(&self)           -> &'static str;        // stable id
-    fn display_name(&self) -> &'static str;        // menu label
-    fn description(&self)  -> &'static str;        // one-sentence blurb
-    fn analyze(&self, trace: &NpuTrace, hw: &HardwareModel) -> AnalysisReport;
+// pccx_core::plugin
+pub const PLUGIN_API_VERSION: u32 = 1;
+
+#[derive(Debug, Clone, Copy)]
+pub struct PluginMetadata {
+    pub id:           &'static str,  // stable identifier
+    pub api_version:  u32,           // must equal PLUGIN_API_VERSION
+    pub description:  &'static str,  // one-line blurb
+}
+
+pub trait Plugin {
+    fn metadata(&self) -> PluginMetadata;
+}
+
+pub struct PluginRegistry<P: Plugin> {
+    /* private Vec<P> */
+}
+
+impl<P: Plugin> PluginRegistry<P> {
+    pub fn new() -> Self;
+    pub fn register(&mut self, plugin: P) -> Result<(), PluginError>;
+    pub fn all(&self)  -> &[P];
+    pub fn find(&self, id: &str) -> Option<&P>;
+    pub fn len(&self)  -> usize;
+    pub fn is_empty(&self) -> bool;
 }
 ```
 
-**Purity requirement**: `analyze()` must not mutate external state or
-issue IPC.  The registry reserves the right to parallelise calls.
+`register` is the only fallible entry point; it rejects any plugin
+whose `api_version` differs from `PLUGIN_API_VERSION` so out-of-tree
+dylibs built against a stale header are refused up front.  Duplicate
+ids are permitted — first registration wins on `find`.  Thread-safety
+is the caller's responsibility; wrap in a `Mutex` / `RwLock` when
+sharing across threads.
 
-## Return shape
+## Why generic over `P`?
 
-```rust
-pub struct AnalysisReport {
-    pub analyzer_id: String,       // == analyzer's id()
-    pub summary:     String,       // ≤ 500 chars — LLM-ready
-    pub payload:     AnalysisPayload,
-}
+A single registry type accommodates every plugin kind each crate
+defines — `ReportFormat` (reports), `VerificationGate` (verification),
+`IsaCompiler` / `ApiCompiler` (authoring), `SurrogateModel` /
+`EvoOperator` / `PRMGate` (evolve), `CompletionProvider` /
+`HoverProvider` / `LocationProvider` (lsp), `ContextCompressor` /
+`SubagentRunner` (ai_copilot).  Each crate's unstable trait is a
+supertrait of `Plugin`, gets its own `PluginRegistry<CrateTrait>`
+instance, and is iterated independently at the call site.
 
-pub enum AnalysisPayload {
-    Roofline(RooflinePointPayload),
-    RooflineHierarchical(Vec<RooflineBand>),
-    Bottleneck(Vec<BottleneckInterval>),
-    Custom(serde_json::Value),   // for new analyzers without a typed variant
-    Text,                        // summary is the whole result
-}
-```
+## Registering a plugin
 
-`Custom` is the escape hatch — experimental analyzers can carry any
-JSON-serialisable payload without modifying the core enum.
-
-## Built-in registry
-
-| id | display | payload | what it reports |
-|---|---|---|---|
-| `roofline` | Roofline | `Roofline` | Williams/Waterman AI vs. achieved GOPS |
-| `roofline_hier` | Hierarchical Roofline | `RooflineHierarchical` | Per-memory-tier dwell (Ilic 2014, Yang 2020) |
-| `bottleneck` | Bottleneck Windows | `Bottleneck` | Sliding-window contention detector |
-| `dma_util` | DMA Utilisation | `Custom` (`DmaUtilisationPayload`) | Read/write/MAC cycle share, starved vs. saturated flags |
-| `stall_histogram` | Stall Histogram | `Custom` (`StallHistogramPayload`) | Log-bucket distribution of `SYSTOLIC_STALL` durations |
-| `per_core_throughput` | Per-Core Throughput | `Custom` (`PerCoreThroughputPayload`) | MAC share per `core_id` + balance σ |
-| `latency_distribution` | Latency Distribution | `Custom` (`LatencyDistributionPayload`) | P50/P95/P99 of `API_CALL` durations + worst callers |
-| `power_estimate` | Power Estimate | `Custom` (`PowerEstimatePayload`) | Dynamic W + % of KV260 7 W TDP; thermal-bound flag |
-| `kv_cache_pressure` | KV-Cache Pressure | `Custom` (`KvCachePressurePayload`) | Per-decode KV footprint vs L2 URAM; flags HBM spill |
-| `phase_classifier` | Prefill/Decode Phase | `Custom` (`PhaseClassifierPayload`) | Tags spans as prefill/decode/idle; wall-clock split |
-| `ai_trend` | Arithmetic Intensity Trend | `Custom` (`AiTrendPayload`) | Rolling-window AI (ops/byte); flags prefill→decode collapse |
-| `dma_burst_efficiency` | DMA Burst Efficiency | `Custom` (`DmaBurstEfficiencyPayload`) | AXI effective BW after overhead amortisation |
-| `matryoshka_footprint` | Matryoshka Subnet | `Custom` (`MatryoshkaFootprintPayload`) | Gemma-3N E2B/E4B swap savings projection |
-| `moe_sparsity` | MoE Expert Sparsity | `Custom` (`MoESparsityPayload`) | Per-expert activation rate; flags over-sparse routing |
-| `flash_attention_tile` | FlashAttention Tile Efficiency | `Custom` (`FlashAttentionTilePayload`) | Share of MAC bursts meeting tile threshold |
-| `dual_hp_port_balance` | Dual-HP-Port Balance | `Custom` (`DualHpPortBalancePayload`) | HP0/1 vs HP2/3 traffic share; one-port starvation |
-
-### Research lineage
-
-The post-2025 analyzers are grounded in recent literature so the
-UVM Copilot can cite evidence when narrating findings.  See the
-[Research lineage page](research.md) for the complete auto-generated
-citation table.
-
-## Running everything
+A consumer crate defines its own trait, makes it a supertrait of
+`Plugin`, and offers a registry instance to its host:
 
 ```rust
-use pccx_core::{analyze_all, HardwareModel, NpuTrace};
+use pccx_core::plugin::{Plugin, PluginMetadata, PluginRegistry,
+                        PLUGIN_API_VERSION};
 
-let hw = HardwareModel::pccx_reference();
-for report in analyze_all(&trace, &hw) {
-    println!("[{}] {}", report.analyzer_id, report.summary);
+// 1.  Crate trait — extend `Plugin`.
+pub trait ReportFormat: Plugin {
+    fn render(&self, trace: &NpuTrace) -> String;
 }
-```
 
-## Writing a new analyzer
+// 2.  Concrete implementation.
+pub struct MarkdownReport;
 
-```rust
-use pccx_core::analyzer::{TraceAnalyzer, AnalysisReport, AnalysisPayload};
-use pccx_core::{NpuTrace, HardwareModel};
-
-pub struct DmaLatencyAnalyzer;
-
-impl TraceAnalyzer for DmaLatencyAnalyzer {
-    fn id(&self) -> &'static str           { "dma_latency" }
-    fn display_name(&self) -> &'static str { "DMA Latency Distribution" }
-    fn description(&self) -> &'static str  {
-        "Distribution of DMA_READ durations; flags long-tail outliers."
-    }
-    fn analyze(&self, trace: &NpuTrace, _hw: &HardwareModel) -> AnalysisReport {
-        let durs: Vec<u64> = trace.events.iter()
-            .filter(|e| e.event_type == "DMA_READ")
-            .map(|e| e.duration)
-            .collect();
-        let max  = durs.iter().copied().max().unwrap_or(0);
-        let mean = if durs.is_empty() { 0.0 }
-                   else { durs.iter().sum::<u64>() as f64 / durs.len() as f64 };
-        AnalysisReport {
-            analyzer_id: self.id().to_string(),
-            summary: format!("{} DMA reads · mean {:.0} cy · max {} cy",
-                             durs.len(), mean, max),
-            payload: AnalysisPayload::Text,
+impl Plugin for MarkdownReport {
+    fn metadata(&self) -> PluginMetadata {
+        PluginMetadata {
+            id:          "markdown",
+            api_version: PLUGIN_API_VERSION,
+            description: "GitHub-flavoured Markdown report renderer",
         }
     }
 }
+
+impl ReportFormat for MarkdownReport {
+    fn render(&self, trace: &NpuTrace) -> String { /* … */ }
+}
+
+// 3.  Host constructs a registry keyed on the concrete plugin type
+//     and registers instances.
+let mut reports: PluginRegistry<MarkdownReport> = PluginRegistry::new();
+reports.register(MarkdownReport)?;
 ```
 
-**To ship it**:
+Crates that want heterogeneous plugins behind one trait object can
+either (a) wrap each concrete type and implement `Plugin` for a thin
+enum, or (b) wait for Phase 2/4 — the upcoming dylib loader lands
+`Box<dyn CrateTrait>`-shaped registration when the C-ABI contract
+stabilises.
 
-1. Append `Box::new(DmaLatencyAnalyzer)` to `builtin_analyzers()`.
-2. Re-export from `lib.rs` if consumers will construct the type directly.
-3. Add a unit test in `analyzer::tests`.
-4. (Optional) Add a `Citation` entry in `core/src/research.rs`.
-5. `cargo test -p pccx-core` should pass.
+Callers iterate with `registry.all()` or look up by id with
+`registry.find("markdown")`.
 
-The Copilot picks up the new analyzer through the registry; the UI
-sees it via the same `invoke("run_all_analyzers", ...)` Tauri command.
+## Error surface
 
-## Summary formatting convention
+```rust
+#[derive(Debug, Clone, thiserror::Error)]
+pub enum PluginError {
+    #[error("plugin '{id}' declares API version {got}; \
+             host expects {expected}")]
+    ApiMismatch { expected: u32, got: u32, id: &'static str },
+}
+```
 
-- Keep `summary` ≤ 500 chars.
-- Start with the metric: `"AI 0.69 ops/byte · 321.4 GOPS (0% of peak) · memory-bound"`.
-- Reserved uppercase prefixes drive the UI severity colour:
-  - `error:` / `HBM-SPILL` / `OVER-SPARSE` / `PORT-STARVED` / `TILE-BOUND` / `AI-COLLAPSE` / `OVERHEAD-BOUND` → red
-  - `THERMAL-BOUND` / `PREFILL-BOUND` / `DECODE-BOUND` / `SWAP-E2B` → amber
-- The Copilot joins all summaries into one LLM system prompt; this
-  is why each one must stand on its own without reader context.
+`ApiMismatch` is the only runtime error today.  Dylib load failures
+(symbol missing, C-ABI mismatch, unload panic) will reuse this enum
+when the Phase 2/4 dynamic loader arrives — the registry will then
+gain `load_dylib(path)` on top of the in-process `register`.
+
+## Stability
+
+Everything in `pccx_core::plugin` is **unstable until pccx-lab v0.3**.
+The enum is `#[non_exhaustive]` in spirit — new variants land without a
+SemVer major bump during the Phase 1/2 window.
+
+Dylib-loading machinery (libloading + C-ABI `register()` symbol + safe
+drop on unload) is **not yet implemented**; it lands during Phase 2/4
+once an out-of-tree plugin actually ships.  Until then every registry
+is an in-process `Vec<Box<dyn T>>`.
+
+## Cross-crate plugin traits as of Phase 1
+
+| Crate             | Trait(s) gated behind `Plugin`                               |
+|-------------------|--------------------------------------------------------------|
+| `pccx-reports`    | `ReportFormat`                                               |
+| `pccx-verification`| `VerificationGate`                                          |
+| `pccx-authoring`  | `IsaCompiler`, `ApiCompiler`                                 |
+| `pccx-evolve`     | `SurrogateModel`, `EvoOperator`, `PRMGate`                   |
+| `pccx-lsp`        | `CompletionProvider`, `HoverProvider`, `LocationProvider`    |
+| `pccx-ai-copilot` | `ContextCompressor`, `SubagentRunner`                        |
+
+Every trait in this table is scaffolded behind the crate's
+`plugin-api` feature flag; concrete implementations land incrementally
+as the Phase 2–5 workstreams complete.  See each crate's
+`CHANGELOG.md` for the per-trait landing timeline.
+
+## Related
+
+- [CLI reference](cli.md) — which binaries exist today after the
+  workspace split, and what surface each one actually covers.
+- [Copilot API](copilot.md) — the current `pccx-ai-copilot` static
+  helpers plus the Phase 2 pccx-lsp provider traits.
+- [Research lineage](research.md) — currently a placeholder; the
+  citation registry was in `core/src/research.rs`, which was removed
+  in Phase 1.
 
 ## Cite this page
 
-When referring to the pccx-lab `TraceAnalyzer` registry or any of
-its 16 built-in analyzers in papers, blog posts, or AI summaries,
-please cite:
+When referring to the pccx-core plugin-registry primitive in papers,
+blog posts, or AI summaries, please cite:
 
 ```bibtex
 @misc{pccx_lab_analyzer_api_2026,
-  title        = {pccx-lab Analyzer API: a trait-based registry of 16 research-grounded NPU trace analyzers},
+  title        = {pccx-core plugin registry: the generic primitive every pccx-lab crate hangs its trait-object plugins off},
   author       = {Kim, Hwangwoo},
   year         = {2026},
   howpublished = {\url{https://hwkim-dev.github.io/pccx/en/docs/Lab/analyzer_api.html}},
@@ -149,6 +180,5 @@ please cite:
 }
 ```
 
-The analyzer registry is the reference implementation of the
-analyses described in the [research lineage table](research.md),
-hosted at <https://hwkim-dev.github.io/pccx/en/docs/Lab/research.html>.
+The primitive lives at
+<https://github.com/hwkim-dev/pccx-lab/blob/main/crates/core/src/plugin.rs>.

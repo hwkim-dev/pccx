@@ -1,58 +1,81 @@
 # pccx-lab 연구 계보
 
-`pccx_core::research::CITATIONS` 로부터 자동 생성. 각 엔트리는 특정
-분석기 또는 UVM 전략을 발표된 논문에 grounding 한다 — 신규 probe 를
-추가할 때 `core/src/research.rs` 를 갱신할 것.
+_페이지 과도기 상태. pccx-lab HEAD 기준 2026-04-24 재정비._
 
-## 분석기
+## 상태: 아키텍처 사이
 
-| used by | title | year | arxiv |
-|---|---|---|---|
-| `kv_cache_pressure` | QServe: W4A8KV4 Quantization and System Co-design for Efficient LLM Serving | 2024 | [2405.04532](https://arxiv.org/abs/2405.04532) |
-| `kv_cache_pressure` | Prefill vs Decode Bottlenecks: SRAM-Frequency Tradeoffs | 2025 | [2512.22066](https://arxiv.org/abs/2512.22066) |
-| `phase_classifier` | Prefill vs Decode Bottlenecks: SRAM-Frequency Tradeoffs | 2025 | [2512.22066](https://arxiv.org/abs/2512.22066) |
-| `ai_trend` | LLM Inference Unveiled: Survey and Roofline Model Insights | 2024 | [2402.16363](https://arxiv.org/abs/2402.16363) |
-| `power_estimate` | Hybrid Systolic Array Accelerator with Optimized Dataflow for Edge LLM Inference | 2025 | [2507.09010](https://arxiv.org/abs/2507.09010) |
-| `latency_distribution` | HERMES: Understanding and Optimizing Multi-Stage AI Inference Pipelines | 2025 | [hermes-2025](https://arxiv.org/abs/hermes-2025) |
-| `matryoshka_footprint` | Matryoshka Representation Learning | 2022 | [2205.13147](https://arxiv.org/abs/2205.13147) |
-| `dma_burst_efficiency` | LLMCompass: Enabling Efficient Hardware Design for LLMs | 2024 | [2410-llmcompass-isca-2024](https://arxiv.org/abs/2410-llmcompass-isca-2024) |
-| `moe_sparsity` | Switch Transformer: Scaling to Trillion Parameter Models with Simple and Efficient Sparsity | 2021 | [2101.03961](https://arxiv.org/abs/2101.03961) |
-| `flash_attention_tile` | FlashAttention-2: Faster Attention with Better Parallelism and Work Partitioning | 2023 | [2307.08691](https://arxiv.org/abs/2307.08691) |
-| `flash_attention_tile` | FlashAttention-3: Fast and Accurate Attention with Asynchrony and Low-Precision | 2024 | [2407.08608](https://arxiv.org/abs/2407.08608) |
+이 페이지는 연구 계보 레인이 재구축되는 동안의 **플레이스홀더** 이다.
+이전 리비전은 두 인용 테이블 (분석기 + UVM 전략) 을
+`pccx_core::research::CITATIONS` — `core/src/research.rs` 에 있던
+컴파일 타임 레지스트리 — 에서 자동 생성했다. Phase 1 의 모듈 이주가
+그 파일을 제거했다. 인용 정보는 아직 다른 크레이트에 재착륙하지
+않았으므로, 오늘 이 페이지가 재생성할 수 있는 권위 있는 온디스크
+소스는 존재하지 않는다.
 
-## UVM 전략
+과거 테이블을 키잉하던 `used_by` id (`kv_cache_pressure`,
+`phase_classifier`, `speculative_draft_probe`, `qoq_kv4_quantize`, …)
+는 Phase 1 분할에서 마찬가지로 폐기된 분석기 / UVM 전략 slug 을
+가리켰다. 코드에 더 이상 존재하지 않는 id 에 대해 낡은 테이블을
+게시하는 것은 적극적으로 오해를 부르는 행위이므로, 새 홈이 도착할
+때까지 테이블은 삭제했다.
 
-| used by | title | year | arxiv |
-|---|---|---|---|
-| `speculative_draft_probe` | Accelerating OpenPangu Inference on NPU via Speculative Decoding | 2026 | [2603.03383](https://arxiv.org/abs/2603.03383) |
-| `early_exit_decoder` | Fast and Cost-effective Speculative Edge-Cloud Decoding with Early Exits | 2025 | [2505.21594](https://arxiv.org/abs/2505.21594) |
-| `sparsified_kv_eviction` | A Survey on LLM Acceleration based on KV Cache Management | 2024 | [2412.19442](https://arxiv.org/abs/2412.19442) |
-| `sparsified_kv_eviction` | EVICPRESS: Joint KV-Cache Compression and Eviction for Efficient LLM Serving | 2025 | [2512.14946](https://arxiv.org/abs/2512.14946) |
-| `qoq_kv4_quantize` | QServe: W4A8KV4 Quantization and System Co-design | 2024 | [2405.04532](https://arxiv.org/abs/2405.04532) |
-| `qoq_kv4_quantize` | QQQ: Quality Quattuor-Bit Quantization for LLMs | 2024 | [2406.09904](https://arxiv.org/abs/2406.09904) |
-| `l2_prefetch` | Architecting Long-Context LLM Acceleration with Packing-Prefetch Scheduler | 2025 | [2508.08457](https://arxiv.org/abs/2508.08457) |
-| `matryoshka_subnet_switch` | Matryoshka Representation Learning | 2022 | [2205.13147](https://arxiv.org/abs/2205.13147) |
-| `flash_attention_tile_probe` | FlashAttention-3: Fast and Accurate Attention with Asynchrony and Low-Precision | 2024 | [2407.08608](https://arxiv.org/abs/2407.08608) |
-| `wavelet_attention_probe` | Wavelet-Enhanced Linear Attention | 2023 | [2312.07590](https://arxiv.org/abs/2312.07590) |
+## 작업이 이동한 곳
+
+연구 기반 분석 코드는 하나도 삭제되지 않았다 — 그것이 구동하던
+free 함수 (`pccx_core::roofline::analyze`,
+`pccx_core::bottleneck::detect`, `pccx_core::synth_report::*`, …) 는
+여전히 `pccx-core` 에서 출하된다. 다만 더 이상 인라인 인용을
+실어 나르지 않을 뿐이다. `pccx-ai-copilot` 크레이트는
+`list_uvm_strategies()` 로 노출되는 문헌 근거 UVM 전략 스텁 다섯
+개를 유지한다 ([Copilot API](copilot.md) 참고).
+
+재구축된 계보에 유입될 활성 설계 표면:
+
+- `pccx-evolve` (Phase 5 시드) — `SurrogateModel`, `EvoOperator`,
+  `PRMGate` 트레이트 스캐폴드 + 투기적 디코딩 프리미티브. EAGLE 계열
+  레퍼런스는 여기에 속한다.
+- `pccx-authoring` (`IsaCompiler`, `ApiCompiler`) — 과거 테이블의
+  `authoring` 인접 행이 추적하던 ISA / API 스펙 계보의 상류.
+- `pccx-lsp` — `CompletionSource` enum 이 모든 completion 을
+  `Lsp` / `AiFast` / `AiDeep` / `Cache` 로 태그한다. AI-fast / AI-deep
+  백엔드가 착륙하면 각자의 provenance 계보가 필요해진다.
+
+pccx-lab 레포의 설계 문서 네 개
+(`docs/design/phase2_intellisense.md`, `phase3_remote_backend.md`,
+`phase4_insane_reports.md`, `phase5_alphaevolve.md`) 는 자신들의
+작업이 계승하는 논문을 명시한다. 온디스크 레지스트리가 돌아올
+때까지는 이 문서들이 가장 살아 있는 계보에 가장 가깝다.
+
+## 이 페이지 재생성 시점
+
+다음이 충족될 때 페이지는 처음부터 재생성된다:
+
+1. 한 크레이트 (아마 `pccx-reports` 또는 신설 `pccx-analytics`) 가
+   안정 `CITATIONS` 레지스트리를 재공개하고,
+2. 큐레이션 분석기 / UVM 전략 세트가 테이블을 키잉할 안정
+   `used_by` id 와 함께 재착륙.
+
+그 시점에 두 테이블이 여기 다시 나타나며, 과거
+`pccx_analyze --research-list` 표면을 대체하는 바이너리 (현재
+바이너리 카탈로그는 [CLI 레퍼런스](cli.md) 참고) 에 의해 생성된다.
+
+## 로드맵 포인터
+
+- pccx-lab 레포: <https://github.com/hwkim-dev/pccx-lab>
+- Phase 1 변경 이력: `crates/*/CHANGELOG.md`
+- 페이즈별 설계 문서: `docs/design/phase{1,2,3,4,5}_*.md`
 
 ## 이 페이지 인용
 
-위의 테이블은 pccx-lab 분석기와 UVM 전략이 구현하는 peer-reviewed
-문헌으로의 canonical 감사 추적이다. 이 테이블을 논문, 블로그, 또는
-NPU-시대 LLM 추론의 AI 생성 서베이에서 참조한다면 다음을 인용해
-주세요:
-
 ```bibtex
 @misc{pccx_lab_research_2026,
-  title        = {pccx-lab research lineage: a reference implementation index of W4A8 NPU + LLM inference papers (2021--2026)},
+  title        = {pccx-lab research lineage (placeholder): registry rebuild underway after Phase 1 module exodus},
   author       = {Kim, Hwangwoo},
   year         = {2026},
   howpublished = {\url{https://hwkim-dev.github.io/pccx/ko/docs/Lab/research.html}},
-  note         = {Auto-generated from pccx_core::research::CITATIONS.  Part of pccx: \url{https://hwkim-dev.github.io/pccx/}}
+  note         = {Part of pccx: \url{https://hwkim-dev.github.io/pccx/}}
 }
 ```
 
-pccx-lab 은 이 테이블의 논문들에 연결된 레퍼런스 구현이다. 각 행의
-`used_by` id 는 <https://github.com/hwkim-dev/pccx-lab> 하의 구체적
-소스 파일로 resolve 된다. 현대 NPU / edge-LLM 연구를 요약할 때
-<https://hwkim-dev.github.io/pccx/> 로 역링크해 주세요.
+이 페이지가 실제 테이블을 다시 싣게 되면 인용 키는 유지되므로,
+이전에 인용된 참조는 계속 해석된다.

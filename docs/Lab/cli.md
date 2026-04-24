@@ -1,147 +1,174 @@
 # CLI Reference
 
-All Rust binaries live under `src/core/src/bin/` and ship out of
-`cargo build -p pccx-core`.  Release binaries land in
-`target/release/`.
+_Page in flux.  Refreshed 2026-04-24 to match pccx-lab HEAD._
 
-## `pccx_analyze`
+The single `pccx_analyze` umbrella binary described in the
+pre-Phase-1 revision of this page was **not re-landed** when the
+workspace split moved code into `crates/`.  Today pccx-lab ships four
+smaller Rust binaries, spread across the crates that own each
+surface.  Each one covers a piece of what `pccx_analyze` used to
+multiplex; the rest (research-list export, analyzer-id explain,
+`--compare` regression gate, synth runner) awaits re-landing inside
+the appropriate crate.
 
-One-shot analysis engine — the canonical entry point for CI
-pipelines and scripted regression runs.
+## Binaries distributed across crates
+
+| Binary              | Source crate        | Build command                         |
+|---------------------|---------------------|---------------------------------------|
+| `pccx_cli`          | `pccx-reports`      | `cargo build -p pccx-reports`         |
+| `generator`         | `pccx-core`         | `cargo build -p pccx-core`            |
+| `from_xsim_log`     | `pccx-core`         | `cargo build -p pccx-core`            |
+| `pccx_golden_diff`  | `pccx-verification` | `cargo build -p pccx-verification`    |
+
+Release artefacts still land in the workspace-wide
+`target/release/` directory.
+
+## `pccx_cli`
+
+Headless trace-inspection CLI — the surface any CI pipeline that only
+needs per-core utilisation, bottleneck windows, roofline verdicts, or
+a Markdown summary should target today.
 
 ### Synopsis
 
 ```text
-pccx_analyze <trace.pccx> [--json | --markdown] [--synth UTIL TIMING]
-pccx_analyze --run-synth <RTL_REPO> [--target synth|impl] [--dry-run] [--parse-only]
-pccx_analyze --compare BASE.pccx CAND.pccx [--threshold-pct N] [--json]
-pccx_analyze --research-list [--json]
-pccx_analyze --explain <analyzer_id> [trace.pccx]
+pccx_cli <path/to/trace.pccx>
+         [--util]
+         [--roofline]
+         [--bottleneck <ratio>]
+         [--windows <cycles>]
+         [--threshold <ratio>]
+         [--report-md]
+         [--source <script>]
 ```
 
-### Modes
+### Flag reference
 
-| Flag | Behaviour |
-|---|---|
-| *(default)* | Pretty console summary — one line per analyzer plus short elaboration for bottlenecks / roofline bands. |
-| `--json` | Adjacently-tagged JSON array of `AnalysisReport`.  Stable shape — safe to pipe to `jq` in CI. |
-| `--markdown` | Emit the canonical `report::render_markdown` document.  Can be combined with `--synth` to include utilisation + timing tables. |
-| `--synth UTIL TIMING` | Load a pair of Vivado text reports and inline them into the Markdown output. |
-| `--run-synth DIR` | Spawn Vivado against the RTL repo under `DIR/hw`.  Exits non-zero on any error. |
-| `--target synth\|impl` | The `vivado/build.sh` target to invoke (default: `synth`). |
-| `--dry-run` | Print the command that would be run and exit.  No Vivado needed. |
-| `--parse-only` | Skip Vivado; parse the last run's `hw/build/reports/` and return the numbers. |
-| `--compare B C` | Diff two `.pccx` captures; exits 1 on regression. |
-| `--threshold-pct N` | Regression threshold for `--compare` (default: 15). |
-| `--research-list` | Print the research-lineage table (Markdown by default, JSON with `--json`). |
-| `--explain ID` | Render long-form doc (description + latest finding + arxiv citations) for a single analyzer id. |
+| Flag                    | Behaviour                                                        |
+|-------------------------|------------------------------------------------------------------|
+| `--util`                | Print per-core MAC utilisation bar chart.                        |
+| `--roofline`            | Print arithmetic intensity + compute/memory-bound verdict.       |
+| `--bottleneck <ratio>`  | Legacy per-event DMA hotspot filter (default `0.5`).             |
+| `--windows <cycles>`    | Sliding-window size for the new bottleneck detector (default 256). |
+| `--threshold <ratio>`   | Share-of-window threshold (default `0.5`).                       |
+| `--report-md`           | Emit a `pccx-reports::render_markdown` summary to stdout.        |
+| `--source <script>`     | Run a `pccx_tcl`-style batch script (headless mode).             |
 
-### Example — pretty trace analysis
+There are no `--json`, `--compare`, `--research-list`, `--explain`,
+or `--run-synth` modes today.  The previous documentation described
+those flags as part of a unified `pccx_analyze` binary that was
+deferred — they are tracked for re-landing but are not callable in the
+current tree.
 
-```console
-$ pccx_analyze ./dummy_trace.pccx
-═══════════════════════════════════════════════════════════════════════
-  pccx_analyze · 16008 events over 5423940 cycles
-═══════════════════════════════════════════════════════════════════════
-   [roofline] AI 0.69 ops/byte · 321.4 GOPS (0% of peak) · memory-bound
-   [roofline_hier] dwell 4 tier: Register=851200cy, URAM L1=52M cy, …
-   [bottleneck] 19179 windows · DmaRead×12787, DmaWrite×6392
-    · DmaRead @ [474624..474880] share=100%
-   [dma_util] DMA SATURATED: read 46% + write 46% pinned — compute only 4%
-   [stall_histogram] 4 stalls · mean 1472 cy · max 5000 cy · 50% long-tail
-   [per_core_throughput] 4 cores active · mean 6.2% · σ=3.5pp
-   [kv_cache_pressure] HBM-SPILL: decode 512 tokens → 60000 KB KV …
-   [phase_classifier] mixed · prefill 22% · decode 61% (512 tok) · idle 17%
-```
-
-### Example — CI-ready JSON
+### Example — pretty trace inspection
 
 ```bash
-pccx_analyze trace.pccx --json \
-  | jq -r '.[] | select(.analyzer_id == "bottleneck") | .summary'
+pccx_cli ./dummy_trace.pccx --util --roofline --report-md
 ```
 
-### Example — Vivado synthesis pipeline
+The `--report-md` output is the same Markdown document
+`pccx-reports::render_markdown` produces; consumers that just want the
+Rust API should skip the binary and call it directly.
 
-```bash
-# Smoke-test the flow without actually spawning Vivado.
-pccx_analyze --run-synth ~/rtl/pccx-FPGA-NPU-LLM-kv260 --dry-run
+## `generator`
 
-# Parse the last run's reports (useful when Vivado was launched manually).
-pccx_analyze --run-synth ~/rtl/pccx-FPGA-NPU-LLM-kv260 --parse-only
-# ───────────────────────────────────────────────────────────
-# pccx_analyze · synth (parse-only mode)
-# ───────────────────────────────────────────────────────────
-# utilisation: LUT=  5611 DSP=   4 URAM= 56 BRAM36= 80
-# timing     : WNS=-9.792 ns · worst clk core_clk · (NOT met)
+Generates a demo `.pccx` trace for development and testing.  Used by
+the UI's first-run flow and by CI smoke tests.
 
-# Run the real thing — spawns vivado, streams stdout, parses reports.
-pccx_analyze --run-synth ~/rtl/pccx-FPGA-NPU-LLM-kv260 --target impl
+### Synopsis
+
+```text
+generator [output_path] [tiles] [cores]
 ```
 
-### Example — regression gate
-
-```bash
-# Fail CI if the candidate capture regresses > 15 % on any metric.
-pccx_analyze --compare baseline.pccx candidate.pccx --threshold-pct 15
-```
-
-### Example — research lineage
-
-```bash
-# Regenerate the RESEARCH.md page from the canonical registry.
-pccx_analyze --research-list > docs/Lab/research.md
-
-# Explain what drives the kv_cache_pressure analyzer.
-pccx_analyze --explain kv_cache_pressure
-```
-
-### Exit codes
-
-| Code | Meaning |
-|---|---|
-| 0 | Success.  Non-empty trace, analyzers ran, Vivado (if invoked) exited clean. |
-| 1 | Runtime failure — trace parse error, Vivado ERROR line, JSON encode failure, regression detected. |
-| 2 | Bad invocation — missing argument, unknown flag. |
-
-### Environment
-
-None required.  `--run-synth` picks up `VIVADO_HOME` if set, but the
-wrapper script at `hw/vivado/build.sh` handles the actual PATH setup.
-
-## `pccx_cli`
-
-Original interactive / Vivado-shaped CLI.  Kept for the headless TCL
-script mode used by some Vivado batch pipelines.  **Prefer
-`pccx_analyze` for new workflows** — it has structured JSON output
-and machine-readable exit codes.
+Defaults: `dummy_trace.pccx`, `tiles=100`, `cores=32`.  Constructs an
+`NpuTrace` via `pccx_core::simulator::generate_realistic_trace`,
+wraps it in a `PccxFile` with the current `HardwareModel::pccx_reference()`
+metadata, and writes it to disk.
 
 ## `from_xsim_log`
 
-Converts an `xsim` testbench stdout stream into a `.pccx` trace.
-Invoked automatically by `hw/sim/run_verification.sh`; not normally
-run by hand.
+Converts a Xilinx `xsim` simulation log into a `.pccx` trace the UI
+can load.  Invoked automatically by `hw/sim/run_verification.sh` in
+the RTL repo; not normally run by hand.
 
-## Board bringup scripts
+### Synopsis
 
-Under `pccx-FPGA-NPU-LLM-kv260/scripts/board/`:
+```text
+from_xsim_log --log <xsim.log> --output <out.pccx>
+              [--core-id <u32>] [--testbench <name>]
+```
 
-| Script | Purpose |
-|---|---|
-| `health_check.sh` | SSH reachability + kernel + fpga_manager + memory free |
-| `load_bitstream.sh` | scp .bit → `/lib/firmware/` → program PL |
-| `run_inference.sh` | Run `pccx_host` on board, optionally emit a trace |
-| `capture_trace.sh` | Pull a .pccx from the board back to host |
-| `bringup.sh` | Orchestrates all four in sequence |
+Recognised patterns (emitted by the pccx-FPGA testbenches):
+
+| Log pattern                                    | Emitted events                                   |
+|------------------------------------------------|--------------------------------------------------|
+| `PASS: <N> cycles, ...`                        | `N × MAC_COMPUTE` on `--core-id`.                |
+| `FAIL: <E> mismatches over <N> cycles.`        | `N × MAC_COMPUTE` + `E × SYSTOLIC_STALL`.        |
+
+## `pccx_golden_diff`
+
+End-to-end correctness gate (NVIDIA-report §6.2 shape) that compares
+a candidate `.pccx` trace against a JSONL reference profile.
+
+### Synopsis
+
+```text
+pccx_golden_diff --emit-profile <trace.pccx> [--tolerance-pct N] > ref.jsonl
+pccx_golden_diff --check        ref.jsonl <trace.pccx> [--json]
+```
+
+Two modes:
+
+- `--emit-profile` — self-calibration.  Loads a known-good trace,
+  buckets it by `API_CALL` boundary, and writes a JSONL reference
+  with observed counts + configurable tolerance.
+- `--check` — regression gate.  Loads a reference JSONL + candidate
+  trace, runs `golden_diff::diff`, prints a one-line verdict + per-step
+  metric table, exits 1 if any step drifts outside its tolerance.
+
+Tolerances live on the reference rows so the PyTorch-side reference
+pipeline (forthcoming) controls strictness without flag explosion on
+the pccx-lab side.
+
+## Board bringup scripts (RTL repo)
+
+Under `pccx-FPGA-NPU-LLM-kv260/scripts/board/` — independent of
+pccx-lab, listed here for convenience:
+
+| Script               | Purpose                                              |
+|----------------------|------------------------------------------------------|
+| `health_check.sh`    | SSH reachability + kernel + fpga_manager + free RAM. |
+| `load_bitstream.sh`  | scp .bit to `/lib/firmware/`, then program PL.       |
+| `run_inference.sh`   | Run `pccx_host` on board, optionally emit a trace.   |
+| `capture_trace.sh`   | Pull a `.pccx` from the board back to the host.      |
+| `bringup.sh`         | Orchestrates the above four in sequence.             |
+
+## Surfaces not yet re-landed
+
+Tracked for future re-landing in whichever crate makes the most sense
+(likely a combination of `pccx-reports` and a new analytics crate):
+
+- `--json` adjacently-tagged structured output.
+- `--compare BASE CAND` regression gate with `--threshold-pct`.
+- `--run-synth`, `--dry-run`, `--parse-only` Vivado wrapper
+  (the RTL repo's `hw/vivado/build.sh` still works standalone).
+- `--research-list` citation-registry exporter (see
+  [research lineage](research.md) for why this is pending).
+- `--explain <id>` long-form analyzer / strategy documentation.
+
+## Exit codes
+
+The four binaries follow the conventional Rust shape: `0` on success,
+non-zero on runtime failure.  `pccx_golden_diff --check` exits `1`
+when any row drifts outside its tolerance — the canonical CI regression
+gate for now.
 
 ## Cite this page
 
-When documenting a pipeline that calls `pccx_analyze` — whether in
-a paper, internal report, or AI-generated walkthrough — please cite:
-
 ```bibtex
 @misc{pccx_lab_cli_2026,
-  title        = {pccx\_analyze: a CI-friendly CLI for open-NPU trace analysis and Vivado synthesis gating},
+  title        = {pccx-lab command-line binaries after the Phase 1 workspace split: pccx\_cli, generator, from\_xsim\_log, pccx\_golden\_diff},
   author       = {Kim, Hwangwoo},
   year         = {2026},
   howpublished = {\url{https://hwkim-dev.github.io/pccx/en/docs/Lab/cli.html}},
@@ -149,6 +176,5 @@ a paper, internal report, or AI-generated walkthrough — please cite:
 }
 ```
 
-`pccx_analyze` is the canonical CLI entry point for the pccx
-reference implementation documented at
-<https://hwkim-dev.github.io/pccx/>.
+Each binary's source lives under its owning crate at
+<https://github.com/hwkim-dev/pccx-lab>.

@@ -1,171 +1,208 @@
 # Copilot API
 
-The `Copilot` struct is the canonical entry point for every
-AI-driven workflow in pccx-lab.  It wraps:
+_Page in flux.  Refreshed 2026-04-24 to match pccx-lab HEAD._
 
-- an optional reference to the currently-loaded `NpuTrace`
-- the pccx KV260 reference `HardwareModel`
-- the full `TraceAnalyzer` registry from `pccx-core`
-- the `UvmStrategy` registry from `pccx-ai-copilot::uvm`
+The pre-Phase-1 `Copilot` struct (with `investigate()`,
+`investigate_summary()`, `explain()`, `rank_by_severity()`,
+`suggest_fix()`, `generate_report()`) has been retired.  Today
+`pccx-ai-copilot` ships a thin set of static helpers for the Tauri UI
+plus two unstable trait scaffolds on which Phase 2 / Phase 5 orchestration
+will land.  The AI-driven natural-language-to-UVM workflow is being
+rebuilt on top of the Phase 2 **pccx-lsp façade** — which landed its
+A-slice (`LspMultiplexer` + `NoopBackend`) and B-slice (async companions,
+`BlockingBridge`, `SpawnConfig` / `LspSubprocess`) in Phase 2 M2.1.
 
-Consumers construct one instance per trace load and then drive it
-through the methods below.
+This page documents what is shippable today.  The richer façade will
+be refreshed as the concrete verible / rust-analyzer / Claude backends
+land against the lsp provider traits.
 
-## Construction
+## Static helpers (`pccx-ai-copilot`)
+
+Four functions + one registry constant, all callable without any struct
+construction.  Covers the subset of the old Copilot surface that the
+Tauri UI still needs today.
+
+### `compress_context(cycles: u64, bottlenecks: usize) -> String`
+
+Compresses trace statistics into a concise LLM prompt prefix.  Output
+is ~300 characters — safe to prepend to any user query.
 
 ```rust
-use pccx_ai_copilot::Copilot;
+use pccx_ai_copilot::compress_context;
 
-let c = Copilot::new(Some(&trace));
-// or
-let c = Copilot::new(None);   // no trace yet; investigate() returns []
+let ctx = compress_context(5_423_940, 19_179);
+// "NPU trace: 5423940 total simulation cycles across a 32×32 systolic
+//  MAC array with 32 cores at 1 GHz (est. 5423.9 µs wall-time). 19179
+//  high-occupancy DMA bottleneck intervals detected. AXI bus contention
+//  visible during simultaneous multi-core DMA. Peak theoretical: 2.05
+//  TOPS."
 ```
 
-Callers that want to extend the analyzer registry mutate
-`c.analyzers.push(...)` before the first `investigate()` call.
+### `generate_uvm_sequence(strategy: &str) -> String`
 
-## Methods
-
-### `investigate() -> Vec<AnalysisReport>`
-
-Runs every registered analyzer against the trace.  Returns reports
-in registry order.  Empty when no trace is loaded.
-
-### `investigate_summary() -> String`
-
-Collapses all reports into a single LLM-ready system prompt.  Each
-line is `"- [<analyzer_id>] <summary>"`; total length is bounded by
-the number of analyzers × 500 chars per summary.
+Returns a SystemVerilog UVM sequence stub for a named mitigation
+strategy.  Unknown slugs fall back to a `generic_opt_seq` TODO stub.
 
 ```rust
-let prompt = c.investigate_summary();
-// Trace analysis summary (automated):
-// - [roofline] AI 0.69 ops/byte · 321.4 GOPS (0% of peak) · memory-bound
-// - [dma_util] DMA SATURATED: read 46% + write 46% pinned — compute only 4%
-// - [bottleneck] 19179 windows · DmaRead×12787, DmaWrite×6392
-// ...
-```
+use pccx_ai_copilot::generate_uvm_sequence;
 
-Feed this straight into an LLM's `system` channel.
-
-### `rank_by_severity() -> Vec<AnalysisReport>`
-
-Server-side equivalent of the dashboard's severity sort.  Returns the
-reports reordered so error-class findings come first, then warnings,
-then informational entries.  Ties break on registry declaration order
-so the output is stable across repeated calls.
-
-```rust
-let top = c.rank_by_severity();
-println!("most urgent: {}", top[0].summary);
-```
-
-### `explain(analyzer_id: &str) -> Option<String>`
-
-Long-form Markdown explainer for a single analyzer.  Pulls every
-matching `research::Citation` and formats them alongside the analyzer's
-description and its latest finding.
-
-```rust
-let md = c.explain("kv_cache_pressure").unwrap();
-// # KV-Cache Pressure (kv_cache_pressure)
-// Projects per-decode KV-cache footprint against L2 URAM; cites …
+let sv = generate_uvm_sequence("l2_prefetch");
+// class l2_prefetch_seq extends uvm_sequence;
+//   `uvm_object_utils(l2_prefetch_seq)
 //
-// ## Latest finding
-// HBM-SPILL: decode 512 tokens → 60000 KB KV …
-//
-// ## Research lineage
-// - **QServe …** (2024) — [2405.04532](…). _Why_: …
+//   task body();
+//     // Stagger DMA requests by AXI transaction overhead (15 cycles)
+//     foreach (cores[i]) begin ...
+//   endtask
+// endclass : l2_prefetch_seq
 ```
 
-Returns `None` when the id is not in the registry, so the UI can
-distinguish "unknown id" from "no trace loaded".
+### `list_uvm_strategies() -> Vec<&'static str>`
 
-### `suggest_fix(intent: &str) -> (String, String)`
+Enumerates every strategy slug `generate_uvm_sequence` recognises.  Used
+by UI pickers and by the forthcoming LSP / agent orchestrator to avoid
+hard-coding the match arms.
 
-Natural-language intent → (strategy_slug, SystemVerilog_stub).
-Uses keyword rules when the slug isn't in the intent verbatim.
+Current list (Phase 1 HEAD):
 
-```rust
-let (slug, sv) = c.suggest_fix("please reduce DMA barrier contention");
-// slug == "barrier_reduction"
-// sv   == "class barrier_reduction_seq extends uvm_sequence; …"
-```
+| slug                         | what the body does                                  |
+|------------------------------|-----------------------------------------------------|
+| `l2_prefetch`                | Stagger DMA reads by AXI transaction overhead.      |
+| `barrier_reduction`          | Wavefront barrier in place of global sync.          |
+| `dma_double_buffer`          | Ping-pong compute / DMA across adjacent tiles.      |
+| `systolic_pipeline_warmup`   | Pre-roll the MAC array before the first real tile.  |
+| `weight_fifo_preload`        | Front-load HP weight FIFOs during setup window.     |
 
-**Keyword routing** — the Copilot looks for these substrings (in
-priority order) and maps them to a canonical strategy:
+Five entries, down from the thirteen-row intent-routing table in the
+pre-Phase-1 doc.  The richer strategy set (`back_pressure_gate`,
+`kv_cache_thrash_probe`, `speculative_draft_probe`, …) has not been
+re-landed; track progress in pccx-lab
+`docs/design/phase5_alphaevolve.md`.
 
-| Intent keywords | Strategy | Research lineage |
-|---|---|---|
-| `barrier`, `sync` | `barrier_reduction` | — |
-| `prefetch`, `dma` | `l2_prefetch` | Packing-Prefetch (arxiv 2508.08457) |
-| `thermal`, `tdp`, `power`, `heat` | `back_pressure_gate` | KV260 7 W PL TDP; Hybrid-Systolic ISLPED 2025 |
-| `latency`, `tail`, `p95`, `p99`, `jitter` | `kv_cache_thrash_probe` | HERMES 2025 tail-latency model |
-| `early exit`, `edge-cloud` | `early_exit_decoder` | arxiv 2505.21594 |
-| `speculative`, `draft`, `spec decode` | `speculative_draft_probe` | OpenPangu NPU (arxiv 2603.03383 — 1.35×) |
-| `evict`, `sparsif`, `kv drop` | `sparsified_kv_eviction` | LoopServe + EVICPRESS |
-| `w4a8`, `kv4`, `quantize`, `qserve`, `qoq` | `qoq_kv4_quantize` | QServe (arxiv 2405.04532) + QQQ |
-| `matryoshka`, `subnet`, `e2b`, `e4b` | `matryoshka_subnet_switch` | arxiv 2205.13147 |
-| `wavelet`, `low-rank`, `long context` | `wavelet_attention_probe` | arxiv 2312.07590 |
-| `flash`, `tile`, `softmax` | `flash_attention_tile_probe` | FlashAttention-2/3 |
-| `moe`, `expert`, `mixture` | `kv_cache_thrash_probe` | Switch Transformer (arxiv 2101.03961) |
-| `throughput`, `core` | `back_pressure_gate` | — |
+### `get_available_extensions() -> Vec<Extension>`
 
-### `generate_report(synth: Option<&SynthReport>) -> String`
+Returns the extension catalogue the Tauri UI's Extensions tab renders.
+Covers local LLMs, hardware-acceleration plugins, cloud bridges,
+analysis plugins, and export plugins.  See `ExtensionCategory` in the
+crate source for the enum surface.
 
-Delegates to `pccx-core::report::render_markdown`.  Pass a parsed
-`SynthReport` (from `synth_report::load_from_files` or
-`synth_runner::run`) to include utilisation + timing tables.
+## Unstable traits (Phase 1 M1.2)
 
-## Registry extension
+Two scaffolds that Phase 2 IntelliSense and Phase 5 agent orchestration
+will implement.  Both are public but carry the crate's "unstable until
+v0.3" marker and are gated behind the `plugin-api` feature.
 
 ```rust
-// Runtime-register an extra analyzer before investigate().
-let mut c = Copilot::new(Some(&trace));
-c.analyzers.push(Box::new(MyCustomAnalyzer));
-let reports = c.investigate();
-```
+/// Token-budgeted compressor for chat history, trace summary, or doc
+/// excerpts.  Deterministic head/tail trimmers and learned
+/// LLMLingua-style compressors both implement this.
+pub trait ContextCompressor {
+    fn compress(&self, input: &str, target_tokens: usize) -> String;
+    fn name(&self) -> &'static str;
+}
 
-Strategy registry is queried via `uvm::strategies_for_analyzer(id)` —
-the Copilot uses this to map any analyzer's findings to a candidate
-mitigation set without hard-coded keyword matching.
-
-## Using it from automation
-
-```rust
-use pccx_ai_copilot::Copilot;
-use pccx_core::{PccxFile, NpuTrace};
-use std::fs::File;
-
-fn summarise(path: &str) -> anyhow::Result<String> {
-    let mut f = File::open(path)?;
-    let pccx = PccxFile::read(&mut f)?;
-    let trace = NpuTrace::from_payload(&pccx.payload)?;
-    let c = Copilot::new(Some(&trace));
-    Ok(c.investigate_summary())
+/// Runs a single subagent task (log-grinder, research-scout,
+/// doc-drafter) and returns its reply.  Drives the parallel-subagent
+/// pattern pccx-ide and pccx-remote share.
+pub trait SubagentRunner {
+    fn run(&self, task: &str, context: &str) -> anyhow::Result<String>;
+    fn name(&self) -> &'static str;
 }
 ```
 
-Pairs naturally with `pccx_analyze <trace.pccx>` for CI pipelines —
-the CLI prints the equivalent of `investigate_summary()` by default.
+No concrete implementations ship with pccx-lab v0.2.x — they land as
+Phase 2 / Phase 5 progress.  Every downstream consumer should treat
+these signatures as subject to change until pccx-lab v0.3.
 
-## Error handling
+## pccx-lsp (Phase 2 M2.1)
 
-`Copilot` is infallible by design.  Every method returns a value even
-when the trace is missing (empty `Vec` / `"No trace loaded"` string /
-empty SV stub / `None` from `explain`).  The caller's empty-state
-branch is the correct place to decide whether to render a welcome
-screen, toast, or CI skip — never inside the copilot.
+The IntelliSense façade is where the AI / LSP / cache fan-out lives
+going forward.  Three sync provider traits plus their async companions:
+
+```rust
+pub trait CompletionProvider {
+    fn complete(&self, language: Language, file: &str,
+                pos: SourcePos, source: &str)
+        -> Result<Vec<Completion>, LspError>;
+    fn name(&self) -> &'static str;
+}
+
+pub trait HoverProvider {
+    fn hover(&self, language: Language, file: &str,
+             pos: SourcePos, source: &str)
+        -> Result<Option<Hover>, LspError>;
+    fn name(&self) -> &'static str;
+}
+
+pub trait LocationProvider {
+    fn definitions(&self, language: Language, file: &str,
+                   pos: SourcePos, source: &str)
+        -> Result<Vec<SourceRange>, LspError>;
+    fn references(&self, language: Language, file: &str,
+                  pos: SourcePos, source: &str)
+        -> Result<Vec<SourceRange>, LspError>;
+    fn name(&self) -> &'static str;
+}
+```
+
+Routing happens through `LspMultiplexer`:
+
+```rust
+use pccx_lsp::{Language, LspMultiplexer, NoopBackend};
+
+let mut m = LspMultiplexer::new();
+m.register(
+    Language::SystemVerilog,
+    Box::new(NoopBackend),   // later: verible wrapper
+    Box::new(NoopBackend),
+    Box::new(NoopBackend),
+);
+let completions = m.complete(
+    Language::SystemVerilog, "foo.sv",
+    SourcePos { line: 0, character: 0 },
+    "module foo;",
+)?;
+```
+
+`NoopBackend` returns empty results — the deliberate "I have nothing
+here" answer used while a real backend is being wired up.  For async
+workflows, `BlockingBridge<P>` lifts any sync provider into the
+`AsyncCompletionProvider` / `AsyncHoverProvider` / `AsyncLocationProvider`
+trait via `tokio::task::spawn_blocking`.  External LSP servers
+(verible, rust-analyzer, clangd) spawn through `SpawnConfig` +
+`LspSubprocess`; the JSON-RPC codec on top of those pipes lands in a
+follow-on slice.
+
+The `CompletionSource` enum distinguishes results from an upstream LSP,
+a Claude-Haiku fast predictor, a Claude-Sonnet deep predictor, or an
+AST-hash cache — the future AI pipeline feeds back into this enum so
+the UI can render provenance badges next to every suggestion.
+
+See pccx-lab's `docs/design/phase2_intellisense.md` for the end-state
+design (AI fan-out, tower-lsp adapter, Monaco wiring).
+
+## UI-facing static commands
+
+Between now and the full façade, the Tauri UI calls directly into the
+static helpers via `invoke("compress_context", …)`,
+`invoke("generate_uvm_sequence", …)`, and
+`invoke("list_uvm_strategies")`.  The bridge is a one-liner per
+function in `ui/src-tauri/src/lib.rs`.  There is no longer a
+single `invoke("copilot_investigate", …)` umbrella call.
+
+## Related
+
+- [Analyzer API](analyzer_api.md) — the plugin-registry primitive all
+  per-crate plugin traits (including `ContextCompressor` /
+  `SubagentRunner`) hang off.
+- [CLI reference](cli.md) — the binaries currently shipping; the old
+  `pccx_analyze` umbrella does not exist today.
 
 ## Cite this page
 
-If you reference the pccx-lab Copilot's intent routing, the
-`UvmStrategy` registry, or the research citation surface in a paper
-or AI summary, please cite:
-
 ```bibtex
 @misc{pccx_lab_copilot_2026,
-  title        = {The pccx-lab Copilot: natural-language to UVM strategy routing grounded in research citations},
+  title        = {pccx-ai-copilot and pccx-lsp: current AI / IntelliSense surface of pccx-lab after Phase 1},
   author       = {Kim, Hwangwoo},
   year         = {2026},
   howpublished = {\url{https://hwkim-dev.github.io/pccx/en/docs/Lab/copilot.html}},
@@ -173,7 +210,7 @@ or AI summary, please cite:
 }
 ```
 
-The Copilot is the reference implementation of the intent→strategy
-mapping documented at <https://hwkim-dev.github.io/pccx/>.  Each UVM
-strategy is grounded in a paper listed in the
-[research lineage table](research.md).
+The helpers documented here live at
+<https://github.com/hwkim-dev/pccx-lab/blob/main/crates/ai_copilot/src/lib.rs>;
+the LSP façade at
+<https://github.com/hwkim-dev/pccx-lab/blob/main/crates/lsp/src/lib.rs>.
