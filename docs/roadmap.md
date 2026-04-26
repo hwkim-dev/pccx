@@ -1,9 +1,14 @@
 # Roadmap (Two-Track)
 
+:::{dropdown} Quick Navigation
+:open:
+
 ```{contents}
 :local:
 :depth: 2
+:backlinks: none
 ```
+:::
 
 As of 2026-04-20, pccx is developed along **two parallel tracks**. v002 is
 the currently active architecture; v003 targets the next-generation model
@@ -57,6 +62,22 @@ is insufficient.
 
 ### Decision points & fallbacks
 
+```{mermaid}
+flowchart TD
+    W26{Week 26:<br>baseline < 5 tok/s?}
+    W26 -- Yes --> RCA[Root-cause analysis, hold G–K]
+    W26 -- No --> W36{Week 36:<br>EAGLE acc. < 2.0x?}
+    
+    W36 -- Yes --> PI[Run Phase I only, drop J]
+    W36 -- No --> W40{Week 40:<br>< 15 tok/s?}
+    
+    W40 -- Yes --> PJ[Phase J becomes mandatory]
+    W40 -- No --> W47{Week 47:<br>< 20 tok/s?}
+    
+    W47 -- Yes --> Settle[Settle for 15–18 tok/s, push 20 to v003]
+    W47 -- No --> Success([Goal 20 tok/s Met!])
+```
+
 | Week | Condition | Action |
 |---|---|---|
 | 26 | baseline < 5 tok/s | Root-cause analysis, hold G–K |
@@ -107,6 +128,31 @@ flowchart LR
 
 ## 4. Integrated timeline (52 weeks)
 
+```{mermaid}
+gantt
+    title Integrated Timeline (52 Weeks)
+    dateFormat  YYYY-MM-DD
+    
+    section v002 (Track 1)
+    Phase A–C               :v2_1, 2026-01-01, 105d
+    Phase D                 :v2_2, after v2_1, 21d
+    Phase E–F (5-6 tok/s)   :v2_3, after v2_2, 56d
+    Phase G (Sparsity)      :v2_4, after v2_3, 28d
+    Phase H / H+ (EAGLE)    :v2_5, after v2_4, 56d
+    Phase I (SSD)           :v2_6, after v2_5, 28d
+    Phase J (Tree)          :v2_7, after v2_6, 28d
+    Phase K (Tuning)        :v2_8, after v2_7, 21d
+    20 tok/s benchmark      :milestone, m1, after v2_8, 0d
+    
+    section v003 (Track 2)
+    Phase 1 (Foundation)    :v3_1, after v2_1, 77d
+    Phase 2 (EAGLE linear)  :v3_2, after v3_1, 56d
+    Phase 3 (Tree EAGLE)    :v3_3, after v3_2, 35d
+    Phase 4 (SSD overlap)   :v3_4, after v3_3, 28d
+    Phase 5 (P-EAGLE)       :v3_5, after v3_4, 63d
+    12-15 tok/s benchmark   :milestone, m2, after v3_5, 0d
+```
+
 | Week | v002 | v003 |
 |---|---|---|
 | 1–15 | Phase A–C | — |
@@ -123,6 +169,14 @@ Total 52 weeks (~12 months) assuming full-time solo work. Double the
 duration for a part-time schedule.
 
 ## 5. Compute budget
+
+```{mermaid}
+pie title Estimated Compute Budget Allocation (Total ~$100)
+    "EAGLE-3 Gemma 3N (v002)" : 30
+    "EAGLE Tree variant (v002)" : 15
+    "EAGLE-3 Gemma 4 (v003)" : 45
+    "Initial deposits" : 10
+```
 
 | Item | Cost | Window |
 |---|---|---|
@@ -164,6 +218,18 @@ flowchart TD
 ### Schedule (Week 53+)
 
 Week 53–76 (24 weeks / 6 months), full-time:
+
+```{mermaid}
+gantt
+    title Year 2 — Auto-Porting Pipeline α (Weeks 53–76)
+    dateFormat  YYYY-MM-DD
+    
+    section Core Pipeline
+    Parser & Resolver       :y2_1, 2027-01-01, 42d
+    Tier 2 (Llama, Mistral) :y2_2, after y2_1, 42d
+    MoE & Plugins           :y2_3, after y2_2, 42d
+    E2E UI / CLI / Docs     :y2_4, after y2_3, 42d
+```
 
 - Week 53–58 — Parser + Resolver + Gemma 3N/4 regeneration check
 - Week 59–64 — Tier 2 support (Llama, Qwen, Mistral)

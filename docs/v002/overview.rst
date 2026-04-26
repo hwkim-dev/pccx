@@ -38,7 +38,7 @@ Core Design Principles
    * - **Memory-centric Layout**
      - The L2 cache is physically centered in the floorplan and serves as
        the **shared activation source** for GEMM, GEMV, and CVO. This
-       removes the inter-layer shuffle cost that dogged v001.
+       removes the inter-layer shuffle cost present in v001.
 
 2. Target Workload
 ==================
@@ -92,7 +92,7 @@ improvement are covered in :doc:`Architecture/rationale`. In short:
      - Three-core layout: GEMM · GEMV · SFU
    * - L2 cache placement
      - Peripheral; overlaps with Global Cache
-     - **Central placement**, Global Cache absorbed, symmetric interconnect
+     - Central placement; Global Cache folded into L2; symmetric interconnect on both slices
    * - Quantization
      - W4A16 (BF16 activations)
      - **W4A8 (INT8 activations)**

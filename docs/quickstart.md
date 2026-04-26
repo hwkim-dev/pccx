@@ -14,12 +14,26 @@ The shortest path from "git clone" to "I'm looking at a pccx trace".
 Everything on this page is the **reproducer**: `docker compose up`
 lands you at a running profiler with a real capture loaded.
 
-```{contents}
-:local:
+```{contents} On this page
 :depth: 2
+:backlinks: none
 ```
 
 ## 0. What you get
+
+```{mermaid}
+flowchart LR
+    A[RTL Repository<br>Vivado Synth] -->|generates| B(16-token .pccx trace)
+    A -->|produces| C(Sail ISA Model)
+    
+    B -.->|loads into| D{pccx-lab Profiler}
+    C -.->|type-checks in| E[OCaml / opam]
+    
+    D --> F[CLI Analytics<br>roofline / report]
+    D --> G[Tauri Desktop App<br>Visual IDE]
+    
+    style D fill:#ff7a00,stroke:#fff,color:#fff
+```
 
 | Artefact | Produced by | Opens with |
 |---|---|---|

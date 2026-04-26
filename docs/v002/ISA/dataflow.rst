@@ -108,21 +108,16 @@ Characteristics
 5. CVO (SFU)
 =============
 
-CVO does not have a dedicated figure, but the path is:
+The Special Function Unit (SFU, or CVO) operates on BF16 scalar pipelines 
+to execute non-linear operations.
 
-.. code-block:: text
+.. figure:: /_static/diagrams/v002_dataflow_sfu.svg
+   :align: center
+   :width: 70%
+   :name: fig-dataflow-sfu
 
-   Dispatcher
-       │
-       ▼
-   cvo_control_uop_t → SFU (single BF16 scalar pipeline)
-                          ▲
-                          │ L2 cache ``src_addr``  ─── input vector
-                          │
-                          ▼
-                       function pipeline (CORDIC / LUT)
-                          │
-                          └─► L2 cache ``dst_addr`` / GEMV direct FIFO
+   **Figure 9.** SFU (CVO) instruction dataflow. Supports both L2 cache
+   streaming and a direct fast-path from the GEMV cores.
 
 **Fast Path**: if the SFU consumes the output of the preceding GEMV
 immediately, ``src_addr`` is set to a **special tag** and the L2 round

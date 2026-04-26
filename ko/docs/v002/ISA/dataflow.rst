@@ -1,11 +1,10 @@
-======================
-명령어별 데이터플로우
-======================
+========================
+Per-Instruction Dataflow
+========================
 
-각 오피코드가 디스패치된 후 실제 하드웨어 상에서 데이터가 어떻게
-이동하는지 도식화한다. 아래 그림들은
-:doc:`../Architecture/top_level`\ 의 블록 다이어그램을 명령어 관점에서
-재구성한 것이다.
+This page shows how data actually moves through the hardware once an
+instruction is dispatched. The figures below recast the block diagram
+from :doc:`../Architecture/top_level` through an instruction's lens.
 
 1. GEMM
 ========
@@ -13,21 +12,22 @@
 .. figure:: ../../../../assets/images/Architecture/v002/DataFlow_GEMM_v002.png
    :align: center
    :width: 85%
-   :alt: GEMM 명령어 데이터플로우
+   :alt: GEMM instruction dataflow
 
-   **Figure 5.** GEMM 명령어 디스패치 시의 데이터 경로.
-   dest_addr / src_addr은 L2 Cache 주소공간을, shape/size pointer는
-   Constant Cache 인덱스를 가리킨다.
+   **Figure 5.** Dataflow when a GEMM instruction dispatches.
+   ``dest_addr`` and ``src_addr`` live in the L2 cache address space;
+   shape / size pointers index the Constant Cache.
 
-경로 요약
----------
+Path Summary
+------------
 
-1. Dispatcher 가 ``shape_ptr_addr`` / ``size_ptr_addr`` 로 Constant Cache
-   조회 → 타일 파라미터 취득.
-2. Weight Buffer 가 HP 포트에서 **가중치 행렬** 을 타일 단위로 프리페치.
-3. L2 Cache ``src_addr`` → 시스톨릭 어레이로 **액티베이션 스트리밍**.
-4. 시스톨릭 어레이가 Weight Stationary 로 누적 → Accumulator → Post-Process.
-5. 결과가 L2 Cache ``dest_reg``\ 에 기록된다.
+1. Dispatcher reads ``shape_ptr_addr`` / ``size_ptr_addr`` from the
+   Constant Cache to obtain the tile parameters.
+2. Weight Buffer prefetches a tile's worth of **weights** from the HP
+   ports.
+3. L2 cache ``src_addr`` streams **activations** into the systolic array.
+4. The array accumulates Weight Stationary → Accumulator → Post-Process.
+5. The result is written back to L2 cache at ``dest_reg``.
 
 2. GEMV
 =======
@@ -35,20 +35,20 @@
 .. figure:: ../../../../assets/images/Architecture/v002/DataFlow_GEMV_v002.png
    :align: center
    :width: 85%
-   :alt: GEMV 명령어 데이터플로우
+   :alt: GEMV instruction dataflow
 
-   **Figure 6.** GEMV 명령어 데이터 경로.
-   GEMM과 동일한 ISA 레이아웃이지만, 가중치는 **Weight Streaming**\ 으로
-   소비되며, 4개 GEMV 코어가 병렬 분배된다.
+   **Figure 6.** Dataflow for a GEMV instruction. Same ISA layout as
+   GEMM, but weights are consumed in a **Weight Streaming** pattern,
+   fanning out across 4 GEMV cores in parallel.
 
-경로 요약
----------
+Path Summary
+------------
 
-1. Dispatcher 가 포인터 조회 → GEMV 코어별 shape 분배.
-2. Weight Buffer → 4 개 GEMV 코어로 **행 단위 분할** 스트리밍.
-3. L2 Cache → GEMV 코어의 L1 Cache 로 액티베이션 프리로드.
-4. 코어 내부 32 레인 LUT 기반 MAC + 5 단 reduction tree → 스칼라 결과.
-5. Post-Process (scale, bias) → L2 Cache 또는 SFU 직결.
+1. Dispatcher resolves pointers → per-core shape distribution.
+2. Weight Buffer → 4 GEMV cores, streaming **by row partition**.
+3. L2 cache → per-core L1 cache for activation preload.
+4. 32-lane LUT-based MAC inside each core + 5-stage reduction tree → scalar result.
+5. Post-Process (scale, bias) → L2 cache or direct SFU FIFO.
 
 3. MEMCPY
 =========
@@ -56,14 +56,13 @@
 .. figure:: ../../../../assets/images/Architecture/v002/DataFlow_MEMCPY_v002.png.png
    :align: center
    :width: 70%
-   :alt: MEMCPY 명령어 데이터플로우
+   :alt: MEMCPY instruction dataflow
 
-   **Figure 7.** MEMCPY 명령어.
-   ``from_device`` / ``to_device`` 비트 조합으로 호스트 ↔ NPU, NPU ↔ NPU
-   전송을 모두 지원한다.
+   **Figure 7.** MEMCPY instruction. The ``from_device`` / ``to_device``
+   combination supports host ↔ NPU and NPU ↔ NPU transfers.
 
-지원 조합
----------
+Supported Combinations
+----------------------
 
 .. list-table::
    :header-rows: 1
@@ -71,19 +70,19 @@
 
    * - from_device
      - to_device
-     - 경로
+     - Path
    * - 1 (Host)
      - 0 (NPU)
-     - ACP → L2 Cache 기록. 가중치/입력 로딩에 사용.
+     - ACP → L2 cache write. Used for weight / input loads.
    * - 0 (NPU)
      - 1 (Host)
-     - L2 Cache → ACP. 결과 토큰 / KV 캐시 반환.
+     - L2 cache → ACP. Returns output tokens / KV entries.
    * - 0 (NPU)
      - 0 (NPU)
-     - L2 내부 블록 간 이동 (디바이스 내 재배치).
+     - Intra-L2 block move (on-device rearrangement).
 
-``async`` 비트가 1이면 디스패치 후 즉시 다음 명령어로 진행한다.
-Global Scheduler가 완료 fence를 추적한다.
+When ``async = 1``, execution continues to the next instruction
+immediately. The Global Scheduler tracks the completion fence.
 
 4. MEMSET
 =========
@@ -91,49 +90,49 @@ Global Scheduler가 완료 fence를 추적한다.
 .. figure:: ../../../../assets/images/Architecture/v002/DataFlow_MEMSET_v002.png
    :align: center
    :width: 70%
-   :alt: MEMSET 명령어 데이터플로우
+   :alt: MEMSET instruction dataflow
 
-   **Figure 8.** MEMSET은 Dispatcher에서 직접 Constant Cache로 값을
-   기록한다. L2 Cache를 경유하지 않는 유일한 명령어이다.
+   **Figure 8.** MEMSET writes directly from the Dispatcher into the
+   Constant Cache — the only instruction that bypasses the L2 cache.
 
-특징
-----
+Characteristics
+---------------
 
-- 한 명령어로 최대 3 개의 16-bit 값(``a``, ``b``, ``c``) 을 동시 기록.
-- 컨텍스트: 레이어 시작 시 (M, N, K) 튜플 초기화, weight/activation
-  scale factor 주입.
-- ``dest_cache`` 필드가 대상 캐시 뱅크를 선택 (fmap_shape vs weight_shape).
+- A single instruction can write up to three 16-bit values (``a``,
+  ``b``, ``c``) at once.
+- Typical use: initialize the (M, N, K) tuple at the start of a layer,
+  or inject weight / activation scale factors.
+- ``dest_cache`` selects which cache bank is targeted (fmap_shape vs.
+  weight_shape).
 
 5. CVO (SFU)
 =============
 
-CVO는 별도 데이터플로우 다이어그램이 없으나, 아래 경로를 따른다.
+The Special Function Unit (SFU, or CVO) operates on BF16 scalar pipelines 
+to execute non-linear operations.
 
-.. code-block:: text
+.. figure:: ../../../../_static/diagrams/v002_dataflow_sfu.svg
+   :align: center
+   :width: 70%
+   :name: fig-dataflow-sfu
 
-   Dispatcher
-       │
-       ▼
-   cvo_control_uop_t → SFU (단일 BF16 스칼라 파이프라인)
-                          ▲
-                          │ L2 Cache ``src_addr``  ─── 입력 벡터
-                          │
-                          ▼
-                       함수 파이프라인 (CORDIC / LUT)
-                          │
-                          └─► L2 Cache ``dst_addr`` / GEMV 직결 FIFO
+   **Figure 9.** SFU (CVO) instruction dataflow. Supports both L2 cache
+   streaming and a direct fast-path from the GEMV cores.
 
-**Fast Path**: 직전 GEMV 결과를 SFU가 즉시 소비하는 경우,
-``src_addr``\ 를 **special tag**\ 로 지정하여 L2 왕복을 생략한다.
-이 최적화는 Dispatcher의 의존성 추적 로직이 자동 판단한다.
+**Fast Path**: if the SFU consumes the output of the preceding GEMV
+immediately, ``src_addr`` is set to a **special tag** and the L2 round
+trip is skipped. The Dispatcher's dependency-tracking logic decides this
+automatically.
 
-6. 의존성과 완료 통지
-======================
+6. Dependencies and Completion
+===============================
 
-명령어 간 의존성은 Global Scheduler가 다음 두 정보로 해소한다.
+Inter-instruction dependencies are resolved in the Global Scheduler via
+two checks.
 
-- **Address Hazard**: dest / src L2 주소의 read-after-write 검사.
-- **Resource Hazard**: GEMM·GEMV·SFU 자원의 점유 상태.
+- **Address hazard**: read-after-write on dest / src L2 addresses.
+- **Resource hazard**: occupancy of the GEMM / GEMV / SFU resources.
 
-비동기 명령어(``async = 1``)의 완료는 ``fsmout_npu_stat_collector``
-블록이 수집하여 AXI-Lite STAT_OUT 레지스터로 호스트에 통지한다.
+Completion of an asynchronous instruction (``async = 1``) is collected
+by the ``fsmout_npu_stat_collector`` block and reported to the host via
+the AXI-Lite STAT_OUT register.

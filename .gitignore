@@ -40,6 +40,9 @@ CLAUDE.md
 AGENTS.md
 GEMINI.md
 pccx-agent-integration-task.md
+todo.md
+PCCX_Lab_Tasks_for_Claude_CLI.md
+
 
 # Other CLI / IDE AI assistants — block the full config directory
 # *and* stray dotfiles they drop at the repo root.

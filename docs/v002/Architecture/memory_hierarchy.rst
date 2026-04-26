@@ -3,31 +3,19 @@ Memory Hierarchy
 ======================
 
 The pccx v002 memory subsystem is a four-level hierarchy:
-**host DDR4 → Weight Buffer / L2 Cache → L1 / Constant Cache → PE
-registers**. Each level is sized to **match bandwidth** with the next and
-to **prevent data starvation** in the compute cores.
+**host DDR4 → Weight Buffer / L2 Cache → L1 / Constant Cache →
+registers inside each PE**. Each level is sized to match the bandwidth
+of the next and to prevent data starvation in the compute cores.
 
-.. mermaid::
+.. _v002-memory-hierarchy-fig:
+.. figure:: /_static/diagrams/v002_memory_hierarchy.svg
+   :align: center
+   :width: 600px
+   :name: fig-memory-hierarchy
 
-   flowchart TB
-     DDR[("Host DDR4<br/>19.2 GB/s")]
-     subgraph ext["External 250 MHz"]
-       HP["AXI HP2 / HP3<br/>256 bit/clk × 2"]
-     end
-     subgraph core["Internal 400 MHz"]
-       WB["Weight Buffer<br/>URAM FIFO"]
-       L2[("L2 Cache<br/>URAM ~1.75 MB")]
-       L1["L1 Cache<br/>per-core BRAM"]
-       CC["Constant Cache<br/>BRAM"]
-       L0["L0 Accumulator<br/>DSP48E2 P-reg"]
-     end
-     DDR --> HP
-     HP -->|weights| WB
-     HP -->|activations| L2
-     WB --> L1
-     L2 --> L1
-     L2 --> CC
-     L1 --> L0
+   pccx v002 Memory Hierarchy & Interconnect Architecture. Weights and
+   activations are staged from host DDR4 through URAM-based L2 and
+   Weight Buffers to the compute-local BRAM caches.
 
 1. Hierarchy
 =============
@@ -85,8 +73,8 @@ GEMM systolic array each cycle.
   split at row 16 into two 32 × 16 sub-chains).
 - With W4A8 dual-channel packing, **1 DSP = 2 MAC**, so 2,048 MAC/clk.
 - Weight demand: 2,048 × 4 bit = **8,192 bit/clk @ 400 MHz**.
-- Supply: HP0 + HP1 deliver **2 × 128 bit/clk @ 250 MHz** (= 64 Gbit/s
-  total raw), which normalises to **~160 bit/clk @ 400 MHz** downstream
+- Supply: HP0 + HP1 deliver **2 × 128 bit/clk @ 250 MHz** (64 Gbit/s
+  total raw), which normalizes to **~160 bit/clk @ 400 MHz** downstream
   of the CDC FIFO.
 
 The gap is closed by **weight reuse (Weight Stationary)**: the GEMM
@@ -102,10 +90,11 @@ GEMV, and SFU.
 
 - L2 cache ports: **dual-port URAM** — ACP DMA on Port A, NPU compute
   on Port B, both 128-bit wide per cycle.
-- Peak slice-side demand: 4 GEMV cores × 32 INT8 elements/clk = 128
-  INT8 elem/clk total. A single 128-bit URAM read supplies 16 INT8
-  elements per cycle, so the GEMV broadcast path (activation is reused
-  across all 4 cores) works within a single port.
+- Peak per-slice activation demand from the GEMV cores: 4 cores ×
+  32 INT8 elements per clock = 128 INT8 elements per clock total.
+  A single 128-bit URAM read supplies 16 INT8 elements per cycle,
+  so the GEMV broadcast path (the same activation is reused across
+  all four cores) fits within a single port.
 
 2.3 Host ↔ Device Path
 ----------------------
@@ -125,7 +114,17 @@ plus token output during decoding.
 
 L2 cache runs as a **software-managed scratchpad** — there is no
 hardware replacement policy. Addresses are named directly in the
-instruction stream (``MEMCPY dest_addr``, ``GEMM src_addr``). Benefits:
+instruction stream (``MEMCPY dest_addr``, ``GEMM src_addr``). 
+
+The 1.75 MB L2 capacity is partitioned into 8 banks of dual-port URAM to 
+support concurrent access from multiple cores.
+
+.. pccx-memory-layout::
+   :banks: 8
+   :depth: 4
+   :title: L2 Shared Buffer Bank Organization (URAM)
+
+Benefits:
 
 - Predictable latency (no tag matching, no miss handling).
 - The compiler can lay out data statically and route around interconnect
@@ -152,10 +151,11 @@ pattern via bank-level interleaving.
 
 Pipeline stalls are avoided with **double-buffering** throughout:
 
-- **GEMM activations**: ping-pong buffers between L2 and PE.
-- **GEMV activations**: bank-split L1 cache for simultaneous read/write.
+- **GEMM activations**: ping-pong buffers between L2 and the PEs.
+- **GEMV activations**: L1 cache partitioned across banks so that
+  reads and writes proceed in parallel.
 - **Weights**: ping-pong FIFO inside the Weight Buffer.
 
-The design targets **100% busy-rate** for every compute core under ideal
+The design targets 100% utilization on every compute core under ideal
 conditions. Measured utilization will be reported in the Implementation
-section once synthesis results come in.
+section once synthesis results are in.

@@ -33,15 +33,11 @@ dual-channel packing.
 2. Bit-Packing Layout
 ======================
 
-.. figure:: ../../../assets/images/Architecture/v002/Processing_Elements_GEMM_4_v002.png
-   :align: center
-   :width: 95%
-   :alt: DSP48E2 Port A / Port B W4A8 dual-channel packing layout
+To achieve 2 MACs per DSP, we pack two 4-bit weights with a large 
+separation gap to prevent overflow between channels during accumulation.
 
-   **Figure W4A8-Layout.** Port A (27 bits) holds W₁ in the top 4 bits
-   and W₂ in the bottom 4 bits, with 19 guard bits between them. Port B
-   (18 bits) holds activation ``A₁`` in the bottom 8 bits and
-   sign-extends it (``A₁[7]``) through the upper 10 bits.
+.. pccx-bit-packing::
+   :title: DSP48E2 Port A (27-bit) W4A8 Dual-Channel Packing
 
 2.1 Port A — Dual Weight (27 bits)
 -----------------------------------

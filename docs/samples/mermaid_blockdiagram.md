@@ -28,8 +28,10 @@ error (most often caused by reserved keywords inside labels).
 
 - High-level flow, state-machine, or sequence diagrams that benefit from
   being diffable text.
-- Quick sketches where fidelity is less important than authoring speed.
+- **Quick sketches only**: fidelity is secondary to authoring speed.
 
-For performance-critical datapath diagrams with exact proportions, prefer
-inline SVG ({doc}`svg_themed_demo`) — Mermaid's auto-layout is convenient
-but coarse.
+**Warning for NPU Architecture:**
+For performance-critical datapath diagrams, PE arrays, or memory layouts,
+**DO NOT use Mermaid**. Use hand-crafted SVG following the
+`CLAUDE.md §5.2` guidelines to ensure exact proportions and technical
+accuracy.

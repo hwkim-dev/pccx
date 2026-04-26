@@ -54,17 +54,17 @@ token alone — enough to drag TPS below 8.
 ===================================
 
 pccx v002 prioritizes three techniques across the RTL, the NPU memory
-controller, and the driver.
+controller, and the driver. The KV cache is managed as a **circular ring
+buffer** within the L2 cache / DDR address space.
 
-.. mermaid::
+.. pccx-memory-layout::
+   :banks: 8
+   :depth: 4
+   :title: KV Cache Ring Buffer Layout (L2/DDR)
 
-   flowchart TB
-     KV["40 KB per token<br/>KV entry"]
-     Q["① <b>KV Quantization</b><br/>FP16 → INT8 / INT4<br/>2–4× bandwidth savings"]
-     E["② <b>Compression / Eviction</b><br/>Attention Sink + Local Window<br/>+ Google Turbo Quant"]
-     C["③ <b>Size Hard Cap</b><br/>Ring Buffer + firmware limit"]
-     OUT[("Effective Bandwidth<br/>Manageable level")]
-     KV --> Q --> E --> C --> OUT
+*Figure KV-Layout: KV entries are stored in tiled banks. As the sequence 
+length grows, the ring buffer wraps around, preserving only the 
+Attention Sink and the most recent Window tokens.*
 
 2.1 KV Cache Quantization
 --------------------------

@@ -86,20 +86,13 @@ Rather than re-reading weights from the HP ports for every tile, we
 1. The relevant INT8 activation tile is streamed from the L2 cache into
    the top of the systolic array.
 2. A per-column **fmap staggered delay** keeps pipeline timing aligned.
-3. Activations propagate top-to-bottom through the array; the output row
-   axis maps onto the array's column direction.
+3. Activations propagate left-to-right through the array; partial sums 
+   accumulate top-to-bottom.
 
-.. mermaid::
-
-   flowchart LR
-     subgraph Host[Host DDR4]
-       W[Weights INT4]
-     end
-     WB[Weight Buffer<br/>URAM FIFO] -->|staggered| PE[(PE Grid<br/>32×32 · cascade break @ row 16)]
-     L2[L2 Cache<br/>URAM] -->|activations INT8| PE
-     PE -->|partial sums| RA[Result Accumulator]
-     RA -->|scale / requant| L2
-     W --> WB
+.. pccx-pe-array::
+   :rows: 4
+   :cols: 4
+   :show-arrows:
 
 3.3 Accumulation
 -----------------

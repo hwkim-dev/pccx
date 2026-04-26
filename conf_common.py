@@ -71,6 +71,7 @@ extensions = [
     #       See CLAUDE.md §3.5 and §12 (Roadmap).
     # -- Local
     "_ext.rtl_source",
+    "_ext.pccx_diagrams",
     "_ext.schema_org",
     "_ext.archive_banner",
 ]

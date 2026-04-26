@@ -13,12 +13,26 @@ myst:
 이 페이지는 **재현기** 이다: `docker compose up` 한 번으로 샘플
 캡처가 로딩된 프로파일러가 실행 상태로 떠야 한다.
 
-```{contents}
-:local:
+```{contents} 이 페이지 목차
 :depth: 2
+:backlinks: none
 ```
 
 ## 0. 얻게 되는 산출물
+
+```{mermaid}
+flowchart LR
+    A[RTL Repository<br>Vivado Synth] -->|생성| B(16-토큰 .pccx 트레이스)
+    A -->|산출| C(Sail ISA 모델)
+    
+    B -.->|로딩| D{pccx-lab 프로파일러}
+    C -.->|타입체크| E[OCaml / opam]
+    
+    D --> F[CLI Analytics<br>roofline / report]
+    D --> G[Tauri Desktop 앱<br>Visual IDE]
+    
+    style D fill:#ff7a00,stroke:#fff,color:#fff
+```
 
 | 산출물 | 생성 주체 | 여는 도구 |
 |---|---|---|
