@@ -3,7 +3,7 @@
 This page documents the Vivado build flow for the pccx v002 NPU core.
 All build scripts reside under `hw/vivado/`; `build.sh` is the single
 entry point. Source files are managed in the
-`hwkim-dev/pccx-FPGA-NPU-LLM-kv260` repository.
+`hkimw/pccx-FPGA-NPU-LLM-kv260` repository.
 
 ## Build Flow
 
@@ -204,5 +204,5 @@ When adding a new `.sv` file, insert it in dependency order inside
 :::{admonition} Last verified against
 :class: note
 
-Commit `8c09e5e` @ `hwkim-dev/pccx-FPGA-NPU-LLM-kv260` (2026-04-29)
+Commit `8c09e5e` @ `hkimw/pccx-FPGA-NPU-LLM-kv260` (2026-04-29)
 :::

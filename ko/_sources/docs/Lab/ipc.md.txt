@@ -253,12 +253,12 @@ JS 측에서는 반환값을 `new Uint8Array(...)` 또는
                   and boundary rules},
   author       = {Kim, Hyunwoo},
   year         = {2026},
-  howpublished = {\url{https://hwkim-dev.github.io/pccx/ko/docs/Lab/ipc.html}},
-  note         = {Part of pccx: \url{https://hwkim-dev.github.io/pccx/}}
+  howpublished = {\url{https://hkimw.github.io/pccx/ko/docs/Lab/ipc.html}},
+  note         = {Part of pccx: \url{https://hkimw.github.io/pccx/}}
 }
 ```
 
 커맨드 소스는
-<https://github.com/hwkim-dev/pccx-lab/blob/main/ui/src-tauri/src/lib.rs> 에,
+<https://github.com/hkimw/pccx-lab/blob/main/ui/src-tauri/src/lib.rs> 에,
 DTO 스키마는
-<https://github.com/hwkim-dev/pccx-lab/blob/main/crates/schema/src/lib.rs> 에 있다.
+<https://github.com/hkimw/pccx-lab/blob/main/crates/schema/src/lib.rs> 에 있다.

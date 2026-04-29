@@ -160,5 +160,5 @@ pointer; the caller must ensure no HAL calls follow `uca_hal_deinit`.
 :::{admonition} Last verified against
 :class: note
 
-Commit `8c09e5e` @ `hwkim-dev/pccx-FPGA-NPU-LLM-kv260` (2026-04-29)
+Commit `8c09e5e` @ `hkimw/pccx-FPGA-NPU-LLM-kv260` (2026-04-29)
 :::

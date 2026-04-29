@@ -346,10 +346,10 @@ read (permissions, broken symlinks) are silently skipped.
                   hardware view, verification, and editing components},
   author       = {Kim, Hyunwoo},
   year         = {2026},
-  howpublished = {\url{https://hwkim-dev.github.io/pccx/en/docs/Lab/panels.html}},
-  note         = {Part of pccx: \url{https://hwkim-dev.github.io/pccx/}}
+  howpublished = {\url{https://hkimw.github.io/pccx/en/docs/Lab/panels.html}},
+  note         = {Part of pccx: \url{https://hkimw.github.io/pccx/}}
 }
 ```
 
 Panel sources live at
-<https://github.com/hwkim-dev/pccx-lab/tree/main/ui/src/>.
+<https://github.com/hkimw/pccx-lab/tree/main/ui/src/>.

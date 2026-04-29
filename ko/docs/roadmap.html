@@ -496,7 +496,8 @@ tree mask + scheduler 0.25 MB, hot attention 0.5 MB</p></li>
 <section id="track-1-v002-extended-gemma-3n-e4b-20-tok-s">
 <h2>2. Track 1 — v002 Extended (Gemma 3N E4B, 20 tok/s)<a class="headerlink" href="#track-1-v002-extended-gemma-3n-e4b-20-tok-s" title="Link to this heading">¶</a></h2>
 <p>현재 v002 active 구성 위에 sparsity 확장과 speculative decoding 스택을 얹어
-<strong>약속된 20 tok/s 실측</strong>을 달성하는 목표를 갖는다.</p>
+KV260 보드에서 <strong>Gemma 3N E4B 20 tok/s 디코딩 타겟</strong>을 달성하는 것을 목표로
+한다. 보드 레벨 벤치마크 로그가 공개되기 전까지는 계획상 타겟이다.</p>
 <section id="tiered-targets">
 <h3>Tiered targets<a class="headerlink" href="#tiered-targets" title="Link to this heading">¶</a></h3>
 <div class="table-wrapper colwidths-auto docutils container">
@@ -516,7 +517,7 @@ tree mask + scheduler 0.25 MB, hot attention 0.5 MB</p></li>
 <td><p>10–12</p></td>
 <td><p>Phase G + H 완료</p></td>
 </tr>
-<tr class="row-even"><td><p><strong>Promise</strong></p></td>
+<tr class="row-even"><td><p><strong>Target</strong></p></td>
 <td><p><strong>20</strong></p></td>
 <td><p>Phase G–K 완료</p></td>
 </tr>
@@ -900,7 +901,7 @@ ISCA / MICRO / HPCA / FCCM / FPGA 타겟.</p>
 <ul class="contains-task-list simple">
 <li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> Week 26 — Gemma 3N E4B 보드 코히런트 출력, 5+ tok/s</p></li>
 <li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> Week 38 — EAGLE-3 Gemma 3N checkpoint HF 공개 (세계 최초)</p></li>
-<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> Week 47 — <strong>Gemma 3N E4B 20 tok/s 공식 실측</strong> ← 약속 이행</p></li>
+<li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> Week 47 — <strong>Gemma 3N E4B 20 tok/s 디코딩 타겟 KV260 보드 달성</strong></p></li>
 <li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> Week 52 — Gemma 4 E4B 12+ tok/s 달성</p></li>
 <li class="task-list-item"><p><input class="task-list-item-checkbox" disabled="disabled" type="checkbox"> Blog post / 논문 초안 (v002 결과 정리)</p></li>
 </ul>

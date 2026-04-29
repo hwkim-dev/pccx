@@ -13,16 +13,18 @@ pccx: Parallel Compute Core eXecutor
 1. Architecture Overview
 ------------------------
 
-pccx is a device-agnostic hardware-software co-design framework. It
-attacks the memory-bandwidth and compute bottlenecks of edge hardware
-by scaling the core architecture to match the physical resource budget
-of each target device.
+pccx is a hardware-software co-design framework for autoregressive
+Transformer-LLM decoding on resource-constrained edge devices. The
+core architecture is sized at synthesis time to match the DSP, BRAM,
+and URAM budget of each target device. The primary target is the
+Xilinx Kria KV260 SoM (Zynq UltraScale+ ZU5EV).
 
 1.1 Ecosystem Structure
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-The project is strictly separated into three layers for maximum
-portability and scalability.
+The project is structured in three layers so that the same logic
+can be resynthesized for a different device or driven by a different
+host stack.
 
 -  ``/architecture`` **(Logic Layer)** — core RTL and generate
    parameters.
@@ -54,8 +56,7 @@ portability and scalability.
 
 pccx uses a **custom 64-bit ISA** tuned for matrix and vector
 operations. A **decoupled-dataflow** pipeline separates instruction
-decode from execution, eliminating dispatch-side stalls and maximizing
-throughput.
+decode from execution to reduce dispatch-side stalls.
 
 2.2 W4A8 Dynamic Precision Promotion
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

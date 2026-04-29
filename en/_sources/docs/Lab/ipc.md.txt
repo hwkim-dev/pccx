@@ -253,12 +253,12 @@ This is a design decision stated in `CLAUDE.md §5.5` and motivated in
                   and boundary rules},
   author       = {Kim, Hyunwoo},
   year         = {2026},
-  howpublished = {\url{https://hwkim-dev.github.io/pccx/en/docs/Lab/ipc.html}},
-  note         = {Part of pccx: \url{https://hwkim-dev.github.io/pccx/}}
+  howpublished = {\url{https://hkimw.github.io/pccx/en/docs/Lab/ipc.html}},
+  note         = {Part of pccx: \url{https://hkimw.github.io/pccx/}}
 }
 ```
 
 Command source is at
-<https://github.com/hwkim-dev/pccx-lab/blob/main/ui/src-tauri/src/lib.rs>;
+<https://github.com/hkimw/pccx-lab/blob/main/ui/src-tauri/src/lib.rs>;
 DTO schema is at
-<https://github.com/hwkim-dev/pccx-lab/blob/main/crates/schema/src/lib.rs>.
+<https://github.com/hkimw/pccx-lab/blob/main/crates/schema/src/lib.rs>.

@@ -2,7 +2,7 @@
 
 pccx v002 NPU 코어의 Vivado 빌드 흐름을 설명한다. 빌드 스크립트는
 `hw/vivado/` 아래에 위치하며, `build.sh` 가 단일 진입점이다.
-구현 파일은 `hwkim-dev/pccx-FPGA-NPU-LLM-kv260` 저장소에서 관리한다.
+구현 파일은 `hkimw/pccx-FPGA-NPU-LLM-kv260` 저장소에서 관리한다.
 
 ## 빌드 흐름
 
@@ -197,5 +197,5 @@ Vivado 프로젝트에 추가한다.
 :::{admonition} Last verified against
 :class: note
 
-Commit `8c09e5e` @ `hwkim-dev/pccx-FPGA-NPU-LLM-kv260` (2026-04-29)
+Commit `8c09e5e` @ `hkimw/pccx-FPGA-NPU-LLM-kv260` (2026-04-29)
 :::

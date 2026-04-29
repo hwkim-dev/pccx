@@ -497,18 +497,18 @@ target.</p>
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p><strong>Generality</strong></p></td>
+<tr class="row-even"><td><p><strong>Model-agnostic ISA</strong></p></td>
 <td><p>The architecture is not tied to a single model (e.g., Gemma 3N E4B).
-A <strong>device-agnostic instruction set (ISA)</strong> and a <strong>decoupled
+A <strong>model-agnostic instruction set (ISA)</strong> and a <strong>decoupled
 dataflow</strong> let the same silicon host a wide range of Transformer
 variants.</p></td>
 </tr>
-<tr class="row-odd"><td><p><strong>Scalability</strong></p></td>
+<tr class="row-odd"><td><p><strong>Generate-time resource scaling</strong></p></td>
 <td><p>Systolic-array dimensions, GEMV/SFU core counts, and local cache
 sizes are all exposed as <strong>generate parameters</strong> so the design can
 be resynthesized to fit the resource budget of a different target.</p></td>
 </tr>
-<tr class="row-even"><td><p><strong>Memory-centric Layout</strong></p></td>
+<tr class="row-even"><td><p><strong>Shared central L2</strong></p></td>
 <td><p>The L2 cache is physically centered in the floorplan and serves as
 the <strong>shared activation source</strong> for GEMM, GEMV, and CVO. This
 removes the inter-layer shuffle cost present in v001.</p></td>

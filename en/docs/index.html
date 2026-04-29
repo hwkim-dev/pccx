@@ -486,14 +486,16 @@ resource-constrained edge devices.</p>
 <hr class="docutils" />
 <section id="architecture-overview">
 <h2>1. Architecture Overview<a class="headerlink" href="#architecture-overview" title="Link to this heading">¶</a></h2>
-<p>pccx is a device-agnostic hardware-software co-design framework. It
-attacks the memory-bandwidth and compute bottlenecks of edge hardware
-by scaling the core architecture to match the physical resource budget
-of each target device.</p>
+<p>pccx is a hardware-software co-design framework for autoregressive
+Transformer-LLM decoding on resource-constrained edge devices. The
+core architecture is sized at synthesis time to match the DSP, BRAM,
+and URAM budget of each target device. The primary target is the
+Xilinx Kria KV260 SoM (Zynq UltraScale+ ZU5EV).</p>
 <section id="ecosystem-structure">
 <h3>1.1 Ecosystem Structure<a class="headerlink" href="#ecosystem-structure" title="Link to this heading">¶</a></h3>
-<p>The project is strictly separated into three layers for maximum
-portability and scalability.</p>
+<p>The project is structured in three layers so that the same logic
+can be resynthesized for a different device or driven by a different
+host stack.</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">/architecture</span></code> <strong>(Logic Layer)</strong> — core RTL and generate
 parameters.</p>
@@ -528,8 +530,7 @@ high-level AI models with the pccx hardware.</p></li>
 <h3>2.1 Decoupled Dataflow &amp; Custom ISA<a class="headerlink" href="#decoupled-dataflow-custom-isa" title="Link to this heading">¶</a></h3>
 <p>pccx uses a <strong>custom 64-bit ISA</strong> tuned for matrix and vector
 operations. A <strong>decoupled-dataflow</strong> pipeline separates instruction
-decode from execution, eliminating dispatch-side stalls and maximizing
-throughput.</p>
+decode from execution to reduce dispatch-side stalls.</p>
 </section>
 <section id="w4a8-dynamic-precision-promotion">
 <h3>2.2 W4A8 Dynamic Precision Promotion<a class="headerlink" href="#w4a8-dynamic-precision-promotion" title="Link to this heading">¶</a></h3>

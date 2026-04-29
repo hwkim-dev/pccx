@@ -26,16 +26,16 @@ Core Design Principles
 
    * - Principle
      - Description
-   * - **Generality**
+   * - **Model-agnostic ISA**
      - The architecture is not tied to a single model (e.g., Gemma 3N E4B).
-       A **device-agnostic instruction set (ISA)** and a **decoupled
+       A **model-agnostic instruction set (ISA)** and a **decoupled
        dataflow** let the same silicon host a wide range of Transformer
        variants.
-   * - **Scalability**
+   * - **Generate-time resource scaling**
      - Systolic-array dimensions, GEMV/SFU core counts, and local cache
        sizes are all exposed as **generate parameters** so the design can
        be resynthesized to fit the resource budget of a different target.
-   * - **Memory-centric Layout**
+   * - **Shared central L2**
      - The L2 cache is physically centered in the floorplan and serves as
        the **shared activation source** for GEMM, GEMV, and CVO. This
        removes the inter-layer shuffle cost present in v001.
