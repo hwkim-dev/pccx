@@ -33,7 +33,7 @@ dual-channel packing.
 2. Bit-Packing Layout
 ======================
 
-To achieve 2 MACs per DSP, we pack two 4-bit weights with a large 
+To achieve 2 MACs per DSP, we pack two 4-bit weights with a large
 separation gap to prevent overflow between channels during accumulation.
 
 .. pccx-bit-packing::

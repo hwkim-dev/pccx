@@ -62,8 +62,8 @@ buffer** within the L2 cache / DDR address space.
    :depth: 4
    :title: KV Cache Ring Buffer Layout (L2/DDR)
 
-*Figure KV-Layout: KV entries are stored in tiled banks. As the sequence 
-length grows, the ring buffer wraps around, preserving only the 
+*Figure KV-Layout: KV entries are stored in tiled banks. As the sequence
+length grows, the ring buffer wraps around, preserving only the
 Attention Sink and the most recent Window tokens.*
 
 2.1 KV Cache Quantization

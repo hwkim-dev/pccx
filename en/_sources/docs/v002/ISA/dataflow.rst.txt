@@ -108,7 +108,7 @@ Characteristics
 5. CVO (SFU)
 =============
 
-The Special Function Unit (SFU, or CVO) operates on BF16 scalar pipelines 
+The Special Function Unit (SFU, or CVO) operates on BF16 scalar pipelines
 to execute non-linear operations.
 
 .. figure:: /_static/diagrams/v002_dataflow_sfu.svg

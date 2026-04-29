@@ -56,11 +56,11 @@ Evidence
    * - End-to-end Gemma-3N E4B 디코드 tok/s
      - 보드 실행 대기
      - §4.1 RTL dispatcher + Global_Scheduler 와이어링
-       ({doc}`../v002/Architecture/index`)
+       (:doc:`../v002/Architecture/index`)
    * - KV260 자원 사용량 (LUT / DSP / URAM / BRAM)
      - Vivado impl 대기
      - ``pccx_analyze --run-synth <rtl_repo>`` 랜딩
-       ({doc}`../Lab/cli`)
+       (:doc:`../Lab/cli`)
    * - Timing closure @ 400 MHz core / 250 MHz AXI
      - Vivado impl 대기
      - 위와 동일

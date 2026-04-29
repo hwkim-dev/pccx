@@ -420,7 +420,6 @@
 <li class="toctree-l1 has-children"><a class="reference internal" href="../samples/index.html">Toolchain Demos</a><input aria-label="Toggle navigation of Toolchain Demos" class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" role="switch" type="checkbox"/><label for="toctree-checkbox-15"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../samples/mermaid_blockdiagram.html">Mermaid — NPU block diagram</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../samples/wavedrom_axi_read.html">WaveDrom — AXI4 read transaction</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../samples/test_diagrams.html">Test: Deterministic SVG Generation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../samples/svg_themed_demo.html">SVG — themed 4×4 PE array</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../samples/plot_bandwidth.html">scienceplots — bandwidth vs batch size</a></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../auto_plots/index.html">Plot gallery</a><input aria-label="Toggle navigation of Plot gallery" class="toctree-checkbox" id="toctree-checkbox-16" name="toctree-checkbox-16" role="switch" type="checkbox"/><label for="toctree-checkbox-16"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
@@ -550,12 +549,12 @@ the gating task explicitly called out — never a speculative figure.</p>
 <tr class="row-even"><td><p>End-to-end Gemma-3N E4B decode tok/s</p></td>
 <td><p>pending board run</p></td>
 <td><p>§4.1 RTL dispatcher + Global_Scheduler wiring
-({doc}`../v002/Architecture/index`)</p></td>
+(<a class="reference internal" href="../v002/Architecture/index.html"><span class="doc">Hardware Architecture</span></a>)</p></td>
 </tr>
 <tr class="row-odd"><td><p>KV260 resource usage (LUT / DSP / URAM / BRAM)</p></td>
 <td><p>pending Vivado impl</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">pccx_analyze</span> <span class="pre">--run-synth</span> <span class="pre">&lt;rtl_repo&gt;</span></code> landing
-({doc}`../Lab/cli`)</p></td>
+(<a class="reference internal" href="../Lab/cli.html"><span class="doc">CLI Reference</span></a>)</p></td>
 </tr>
 <tr class="row-even"><td><p>Timing closure &#64; 400 MHz core / 250 MHz AXI</p></td>
 <td><p>pending Vivado impl</p></td>
@@ -565,8 +564,8 @@ the gating task explicitly called out — never a speculative figure.</p>
 <td><p>pending <code class="docutils literal notranslate"><span class="pre">tools/pytorch_reference.py</span></code> landing</p></td>
 <td><p>Scaffold (<code class="docutils literal notranslate"><span class="pre">pccx_golden_diff</span></code> CLI + <code class="docutils literal notranslate"><span class="pre">.ref.jsonl</span></code> schema)
 already landed — see the measured row above.  PyTorch side
-will replace self-calibrated references with semantically-
-grounded expectations.</p></td>
+will replace self-calibrated references with
+semantically-grounded expectations.</p></td>
 </tr>
 <tr class="row-even"><td><p>P99 decode latency under sustained load</p></td>
 <td><p>pending board capture</p></td>

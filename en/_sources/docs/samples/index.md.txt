@@ -10,7 +10,6 @@ architecture chapter.
 
 mermaid_blockdiagram
 wavedrom_axi_read
-test_diagrams
 svg_themed_demo
 
 plot_bandwidth

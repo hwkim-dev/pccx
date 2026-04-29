@@ -114,9 +114,9 @@ plus token output during decoding.
 
 L2 cache runs as a **software-managed scratchpad** — there is no
 hardware replacement policy. Addresses are named directly in the
-instruction stream (``MEMCPY dest_addr``, ``GEMM src_addr``). 
+instruction stream (``MEMCPY dest_addr``, ``GEMM src_addr``).
 
-The 1.75 MB L2 capacity is partitioned into 8 banks of dual-port URAM to 
+The 1.75 MB L2 capacity is partitioned into 8 banks of dual-port URAM to
 support concurrent access from multiple cores.
 
 .. pccx-memory-layout::

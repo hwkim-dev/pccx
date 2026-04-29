@@ -109,7 +109,7 @@ Each core's 32 partial products collapse to a single scalar through a
 
    **Figure GEMV-Reduction.** GEMV uses a 32-lane reduction tree to
    collapse partial products into a single scalar. Stage 1 uses DSP48E2
-   slices for high-speed addition; subsequent stages use LUT-based 
+   slices for high-speed addition; subsequent stages use LUT-based
    FP/Int adders.
 
 Stage 1 uses the DSP48E2 ``A:B + C`` (ONE48) mode purely to add two

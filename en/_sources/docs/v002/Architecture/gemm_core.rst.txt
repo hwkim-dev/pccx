@@ -86,7 +86,7 @@ Rather than re-reading weights from the HP ports for every tile, we
 1. The relevant INT8 activation tile is streamed from the L2 cache into
    the top of the systolic array.
 2. A per-column **fmap staggered delay** keeps pipeline timing aligned.
-3. Activations propagate left-to-right through the array; partial sums 
+3. Activations propagate left-to-right through the array; partial sums
    accumulate top-to-bottom.
 
 .. pccx-pe-array::

@@ -56,11 +56,11 @@ Pending (board / synth)
    * - End-to-end Gemma-3N E4B decode tok/s
      - pending board run
      - §4.1 RTL dispatcher + Global_Scheduler wiring
-       ({doc}`../v002/Architecture/index`)
+       (:doc:`../v002/Architecture/index`)
    * - KV260 resource usage (LUT / DSP / URAM / BRAM)
      - pending Vivado impl
      - ``pccx_analyze --run-synth <rtl_repo>`` landing
-       ({doc}`../Lab/cli`)
+       (:doc:`../Lab/cli`)
    * - Timing closure @ 400 MHz core / 250 MHz AXI
      - pending Vivado impl
      - Gate as above
@@ -68,8 +68,8 @@ Pending (board / synth)
      - pending ``tools/pytorch_reference.py`` landing
      - Scaffold (``pccx_golden_diff`` CLI + ``.ref.jsonl`` schema)
        already landed — see the measured row above.  PyTorch side
-       will replace self-calibrated references with semantically-
-       grounded expectations.
+       will replace self-calibrated references with
+       semantically-grounded expectations.
    * - P99 decode latency under sustained load
      - pending board capture
      - Requires 512-token run on real DDR traffic.
