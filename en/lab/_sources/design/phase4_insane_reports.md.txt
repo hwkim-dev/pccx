@@ -12,7 +12,7 @@ Not "prettier markdown".  Every report section is:
    synth + verification result), NOT copy-pasted.
 2. **Interactive** — waveforms, heatmaps, proof trees respond to user
    input (zoom, filter, replay counter-example).
-3. **AI-annotated** — Claude narrates glitches, hotspots, what-ifs
+3. **AI-annotated** — the LLM narrates glitches, hotspots, what-ifs
    at *just* enough length to matter.
 4. **Comparable** — every report links its numbers to the benchmark
    database so a reviewer sees "17% faster than Llama-2 at same area"
@@ -50,7 +50,7 @@ struct Report {
 }
 
 enum Section {
-    Summary(AiNarration),                    // Claude-written exec summary
+    Summary(AiNarration),                    // LLM-written exec summary
     Waveform(WaveformRef),                    // M4.2
     Heatmap { kind: HeatmapKind, data: … },   // M4.3
     FormalProof(ProofTreeRef),                // M4.4
@@ -85,7 +85,7 @@ enum Section {
 ### M4.3 — Power / area / timing heatmaps (Week 15)
 
 - Vivado / OpenROAD report ingestion via pccx-core::synth_report.
-- D3.js heatmap in pccx-ide; hover a tile for Claude hotspot narration
+- D3.js heatmap in pccx-ide; hover a tile for LLM hotspot narration
   ("DSP48E2 cluster 3,7 is 92% utilised — consider dual-pumping").
 - Export: SVG (static) + JSON (interactive source).
 
@@ -108,7 +108,7 @@ enum Section {
 
 - User types natural-language spec ("I want a 16-lane INT8 GEMV that
   fits in a KV260").
-- Agent team (research-scout + doc-drafter subagents) proposes an
+- Agent team (research + doc drafting subagents) proposes an
   architecture.
 - pccx-authoring emits a first-pass ISA + RTL skeleton.
 - User reviews, tweaks, rebuilds.

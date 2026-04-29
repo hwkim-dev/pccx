@@ -50,8 +50,8 @@ out to the right backend per language.
 
 | Tier | Model | Latency budget | Purpose |
 |---|---|---|---|
-| Hot path | Claude Haiku | < 40 ms | Ghost-text completion while typing |
-| Cold path | Claude Sonnet | < 2 s (async) | "Why is this slow?" explanation, refactor proposals |
+| Hot path | fast cloud LLM | < 40 ms | Ghost-text completion while typing |
+| Cold path | deep cloud LLM | < 2 s (async) | "Why is this slow?" explanation, refactor proposals |
 | Cache | AST-hash LRU | 0 ms | Dedup identical queries within a session |
 
 Cache key: `(language, file_path, AST_hash_of_cursor_subtree, cursor_col)`.

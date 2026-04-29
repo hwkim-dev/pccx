@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 540 320" role="img">
+  <title>SFU (CVO) Instruction Dataflow</title>
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#000000"/>
+    </marker>
+    <style><![CDATA[
+      text { fill: #000000; font: 400 11px ui-sans-serif, system-ui, sans-serif; }
+      .t-title { font-weight: 600; font-size: 13px; text-anchor: middle; }
+      .t-label { font-size: 10px; text-anchor: middle; }
+      .block-mem  { fill: #e2efd8; stroke: #000000; stroke-width: 0.8; }
+      .block-ctrl { fill: #fce5c6; stroke: #000000; stroke-width: 0.8; }
+      .block-comp { fill: #ffffff; stroke: #000000; stroke-width: 0.8; }
+      .line       { stroke: #000000; stroke-width: 0.8; fill: none; marker-end: url(#arr); }
+      .line-dash  { stroke: #666666; stroke-width: 0.8; fill: none; stroke-dasharray: 3 2; marker-end: url(#arr); }
+    ]]></style>
+  </defs>
+
+  <!-- White canvas -->
+  <rect x="0" y="0" width="540" height="320" fill="#ffffff"/>
+
+  <!-- Top: Dispatcher -->
+  <rect class="block-ctrl" x="195" y="30" width="150" height="40"/>
+  <text class="t-title" x="270" y="55">Global Dispatcher</text>
+
+  <!-- Control Flow -->
+  <line class="line" x1="270" y1="70" x2="270" y2="120"/>
+  <text class="t-label" x="315" y="100">cvo_control_uop_t</text>
+
+  <!-- Middle: SFU Core -->
+  <rect class="block-comp" x="170" y="120" width="200" height="120"/>
+  <text class="t-title" x="270" y="140">SFU (CVO Core)</text>
+  
+  <!-- Pipelines inside SFU -->
+  <rect class="block-comp" x="185" y="160" width="80" height="30"/>
+  <text class="t-label" x="225" y="178">CORDIC / Exp</text>
+  
+  <rect class="block-comp" x="275" y="160" width="80" height="30"/>
+  <text class="t-label" x="315" y="178">LUT / Log</text>
+
+  <rect class="block-comp" x="210" y="200" width="120" height="30"/>
+  <text class="t-label" x="270" y="218">BF16 Pipeline</text>
+
+  <!-- Left: L2 Cache (Source) -->
+  <rect class="block-mem" x="30" y="130" width="100" height="100"/>
+  <text class="t-title" x="80" y="170">L2 Cache</text>
+  <text class="t-label" x="80" y="190">(src_addr)</text>
+
+  <!-- Input Path -->
+  <line class="line" x1="130" y1="180" x2="170" y2="180"/>
+  
+  <!-- Fast Path from GEMV -->
+  <line class="line-dash" x1="270" y1="280" x2="270" y2="240"/>
+  <text class="t-label" x="270" y="300">GEMV Direct FIFO (Special Tag)</text>
+
+  <!-- Output Path -->
+  <path class="line" d="M370,180 L440,180 L440,240 L370,240" marker-end="none"/>
+  <line class="line" x1="370" y1="240" x2="130" y2="210"/>
+  <text class="t-label" x="430" y="210" transform="rotate(90 430 210)">dst_addr</text>
+
+</svg>

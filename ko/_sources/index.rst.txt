@@ -16,11 +16,11 @@ pccx는 엣지 디바이스에서 Transformer 기반 LLM을 가속하기 위한
    .. grid-item-card:: :octicon:`cpu;1.5em;sd-mr-2` RTL 구현체
       :columns: 12 12 8 8
       :class-card: pccx-hero-card
-      :link: https://github.com/hwkim-dev/pccx-FPGA-NPU-LLM-kv260
+      :link: https://github.com/hkimw/pccx-FPGA-NPU-LLM-kv260
       :link-type: url
       :link-alt: pccx-FPGA-NPU-LLM-kv260 저장소를 GitHub 에서 열기
 
-      **github.com/hwkim-dev/pccx-FPGA-NPU-LLM-kv260**
+      **github.com/hkimw/pccx-FPGA-NPU-LLM-kv260**
 
       활성 **v002** SystemVerilog 원본 — ISA 패키지, 컨트롤러,
       컴퓨트 코어 (GEMM / GEMV / CVO), 메모리 계층. 타겟 디바이스는
@@ -40,28 +40,28 @@ pccx는 엣지 디바이스에서 Transformer 기반 LLM을 가속하기 위한
          :gutter: 3
 
          .. grid-item-card:: :octicon:`book;1em;sd-mr-1` 문서 소스
-            :link: https://github.com/hwkim-dev/pccx
+            :link: https://github.com/hkimw/pccx
             :link-type: url
             :link-alt: pccx 문서 저장소를 GitHub 에서 열기
 
-            **github.com/hwkim-dev/pccx** — 이 사이트를 빌드하는 Sphinx 프로젝트.
+            **github.com/hkimw/pccx** — 이 사이트를 빌드하는 Sphinx 프로젝트.
 
          .. grid-item-card:: :octicon:`telescope;1em;sd-mr-1` pccx-lab (검증 / 프로파일)
-            :link: https://hwkim-dev.github.io/pccx/ko/lab/
+            :link: https://hkimw.github.io/pccx/ko/lab/
             :link-type: url
             :link-alt: pccx-lab 검증·프로파일링 허브 열기
 
             **pccx-lab** — Tauri 2 IDE. ``.pccx`` 트레이스 로딩,
             ``run_verification`` 러너, Roofline / Bottleneck 카드,
             Vivado synth 리포트 뷰.
-            `검증 워크플로우 가이드 <https://hwkim-dev.github.io/pccx/ko/lab/verification-workflow.html>`_
+            `검증 워크플로우 가이드 <https://hkimw.github.io/pccx/ko/lab/verification-workflow.html>`_
 
          .. grid-item-card:: :octicon:`person;1em;sd-mr-1` 저자 포트폴리오
-            :link: https://hwkim-dev.github.io/hwkim-dev/
+            :link: https://hkimw.github.io/hkimw/
             :link-type: url
-            :link-alt: hwkim-dev 포트폴리오 사이트 열기
+            :link-alt: hkimw 포트폴리오 사이트 열기
 
-            **hwkim-dev.github.io/hwkim-dev** — 블로그, 다른 프로젝트, 소개.
+            **hkimw.github.io/hkimw** — 블로그, 다른 프로젝트, 소개.
 
 도구 & 랩
 ---------
@@ -71,7 +71,7 @@ pccx는 엣지 디바이스에서 Transformer 기반 LLM을 가속하기 위한
    :class-container: pccx-toolchain-grid
 
    .. grid-item-card:: :octicon:`beaker;1.2em;sd-mr-1` pccx-lab
-      :link: https://hwkim-dev.github.io/pccx/ko/lab/
+      :link: https://hkimw.github.io/pccx/ko/lab/
       :link-type: url
       :link-alt: pccx-lab 시뮬레이터 & 프로파일러 열기
       :class-card: pccx-lab-card
@@ -82,10 +82,10 @@ pccx는 엣지 디바이스에서 Transformer 기반 LLM을 가속하기 위한
 
       :bdg-warning:`Work in Progress`
 
-      소스: github.com/hwkim-dev/pccx-lab
+      소스: github.com/hkimw/pccx-lab
 
    .. grid-item-card:: :octicon:`project-roadmap;1.2em;sd-mr-1` 설계 근거
-      :link: https://hwkim-dev.github.io/pccx/ko/lab/design/rationale.html
+      :link: https://hkimw.github.io/pccx/ko/lab/design/rationale.html
       :link-type: url
       :link-alt: pccx-lab 설계 근거 읽기
 
@@ -148,4 +148,4 @@ pccx는 엣지 디바이스에서 Transformer 기반 LLM을 가속하기 위한
    :maxdepth: 1
    :caption: 도구
 
-   pccx-lab — 시뮬레이터 & AI 프로파일러 <https://hwkim-dev.github.io/pccx/ko/lab/>
+   pccx-lab — 시뮬레이터 & AI 프로파일러 <https://hkimw.github.io/pccx/ko/lab/>

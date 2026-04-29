@@ -28,6 +28,7 @@ pccx v002 하드웨어는 **탑레벨 인터커넥트**, **\ 이기종 컴퓨트
    gemm_core
    gemv_core
    sfu_core
+   preprocess
 
 .. toctree::
    :maxdepth: 1

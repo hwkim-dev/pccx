@@ -174,11 +174,11 @@ pccx-core 플러그인 레지스트리 프리미티브를 논문, 블로그, AI 
   title        = {pccx-core plugin registry: the generic primitive every pccx-lab crate hangs its trait-object plugins off},
   author       = {Kim, Hyunwoo},
   year         = {2026},
-  howpublished = {\url{https://hwkim-dev.github.io/pccx/ko/docs/Lab/analyzer_api.html}},
-  note         = {Part of pccx: \url{https://hwkim-dev.github.io/pccx/}}
+  howpublished = {\url{https://hkimw.github.io/pccx/ko/docs/Lab/analyzer_api.html}},
+  note         = {Part of pccx: \url{https://hkimw.github.io/pccx/}}
 }
 ```
 
 프리미티브 소스는
-<https://github.com/hwkim-dev/pccx-lab/blob/main/crates/core/src/plugin.rs>
+<https://github.com/hkimw/pccx-lab/blob/main/crates/core/src/plugin.rs>
 에 있다.

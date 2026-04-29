@@ -15,7 +15,17 @@ The implementation lives under
 :file:`uCA_v1_api.c` and carries forward the v001 design with minor
 comment updates for the pccx v002 ISA reference URL.
 
+.. admonition:: Implementation status
+   :class: warning
+
+   v002 driver is at **bring-up** stage: the public ``uca_*`` API
+   surface compiles and the AXI-Lite HAL skeleton exists, but the
+   end-to-end ``MEMSET → MEMCPY → GEMV → MEMCPY readback`` flow has
+   not yet been validated against the RTL on hardware. See
+   :doc:`../Verification/index` §2 for the open verification items.
+
 .. toctree::
    :maxdepth: 1
 
    api
+   hal

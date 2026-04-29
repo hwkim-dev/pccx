@@ -142,4 +142,4 @@ How each tensor type lands on pccx v002 compute:
 - Full operator-level spec (embedding → sampling): :doc:`gemma3n_pipeline`.
 - Instruction-level mapping and scheduling: :doc:`gemma3n_execution`.
 - Baseline x64 CPU reference: `llm-lite
-  <https://github.com/hwkim-dev/llm-lite>`_.
+  <https://github.com/hkimw/llm-lite>`_.

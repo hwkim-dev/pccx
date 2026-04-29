@@ -9,7 +9,7 @@
 - pccx-lab 빌드가 완료되어야 합니다 (`cargo tauri dev` 또는 릴리스
   바이너리).
 - 샘플 트레이스 `hw/sim/fixtures/smoke.pccx` 는
-  [pccx-FPGA](https://github.com/hwkim-dev/pccx-FPGA-NPU-LLM-kv260)
+  [pccx-FPGA](https://github.com/hkimw/pccx-FPGA-NPU-LLM-kv260)
   저장소의 `hw/sim/run_verification.sh` 를 한 번 실행하면 생성됩니다.
   아직 없다면 이 단계를 먼저 수행하십시오.
 

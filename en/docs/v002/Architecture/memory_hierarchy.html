@@ -5,18 +5,18 @@
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta property="og:title" content="Memory Hierarchy" />
 <meta property="og:type" content="website" />
-<meta property="og:url" content="https://hwkim-dev.github.io/pccx/docs/v002/Architecture/memory_hierarchy.html" />
+<meta property="og:url" content="https://hkimw.github.io/pccx/docs/v002/Architecture/memory_hierarchy.html" />
 <meta property="og:site_name" content="pccx — Parallel Compute Core eXecutor" />
-<meta property="og:description" content="The pccx v002 memory subsystem is a four-level hierarchy: host DDR4 → Weight Buffer / L2 Cache → L1 / Constant Cache → PE registers. Each level is sized to match bandwidth with the next and to prev..." />
+<meta property="og:description" content="The pccx v002 memory subsystem is a four-level hierarchy: host DDR4 → Weight Buffer / L2 Cache → L1 / Constant Cache → registers inside each PE. Each level is sized to match the bandwidth of the ne..." />
 <meta property="og:image:width" content="1146" />
 <meta property="og:image:height" content="600" />
-<meta property="og:image" content="https://hwkim-dev.github.io/pccx/_images/social_previews/summary_docs_v002_Architecture_memory_hierarchy_76af201d.png" />
-<meta property="og:image:alt" content="The pccx v002 memory subsystem is a four-level hierarchy: host DDR4 → Weight Buffer / L2 Cache → L1 / Constant Cache → PE registers. Each level is sized to match bandwidth with the next and to prev..." />
-<meta name="description" content="The pccx v002 memory subsystem is a four-level hierarchy: host DDR4 → Weight Buffer / L2 Cache → L1 / Constant Cache → PE registers. Each level is sized to match bandwidth with the next and to prev..." />
+<meta property="og:image" content="https://hkimw.github.io/pccx/_images/social_previews/summary_docs_v002_Architecture_memory_hierarchy_46f5d9a3.png" />
+<meta property="og:image:alt" content="The pccx v002 memory subsystem is a four-level hierarchy: host DDR4 → Weight Buffer / L2 Cache → L1 / Constant Cache → registers inside each PE. Each level is sized to match the bandwidth of the ne..." />
+<meta name="description" content="The pccx v002 memory subsystem is a four-level hierarchy: host DDR4 → Weight Buffer / L2 Cache → L1 / Constant Cache → registers inside each PE. Each level is sized to match the bandwidth of the ne..." />
 <meta name="twitter:card" content="summary_large_image" />
 
-<script type="application/ld+json">[{"@context":"https://schema.org","@type":"WebSite","name":"pccx — Parallel Compute Core eXecutor","alternateName":"pccx","url":"https://hwkim-dev.github.io/pccx/","inLanguage":["en","en","ko"],"author":{"@type":"Person","name":"Hyunwoo Kim","url":"https://hwkim-dev.github.io/hwkim-dev/"},"publisher":{"@type":"Person","name":"Hyunwoo Kim","url":"https://hwkim-dev.github.io/hwkim-dev/"},"description":"pccx is an open-source scalable NPU architecture for edge LLM inference.  W4A8KV4 quantisation on the Xilinx Kria KV260; v002 reference implementation in SystemVerilog.","keywords":["NPU","FPGA","LLM inference","edge AI","W4A8","KV cache","systolic array","Kria KV260","ZU5EV","Transformer accelerator","speculative decoding","FlashAttention","QServe","Gemma 3N","Matryoshka","Sail ISA","Sail language","formal ISA specification","ISA semantics","RISC-V Sail","Arm Sail","CHERI","Morello","Isabelle/HOL","Coq"]},{"@context":"https://schema.org","@type":"TechArticle","headline":"Memory Hierarchy","name":"Memory Hierarchy","url":"https://hwkim-dev.github.io/pccx/en/docs/v002/Architecture/memory_hierarchy.html","mainEntityOfPage":{"@type":"WebPage","@id":"https://hwkim-dev.github.io/pccx/en/docs/v002/Architecture/memory_hierarchy.html"},"isPartOf":{"@type":"WebSite","name":"pccx — Parallel Compute Core eXecutor","url":"https://hwkim-dev.github.io/pccx/"},"author":{"@type":"Person","name":"Hyunwoo Kim","url":"https://hwkim-dev.github.io/hwkim-dev/"},"publisher":{"@type":"Organization","name":"pccx project","url":"https://hwkim-dev.github.io/pccx/"},"datePublished":"2026-04-24","dateModified":"2026-04-24","description":"pccx documentation page: Memory Hierarchy. Open-source NPU architecture + pccx-lab profiler implementing research from QServe, FlashAttention, OpenPangu speculative decoding, and Matryoshka subnet swap.","inLanguage":"en","license":"https://www.apache.org/licenses/LICENSE-2.0","citation":{"@type":"CreativeWork","name":"pccx: Parallel Compute Core eXecutor","url":"https://hwkim-dev.github.io/pccx/","author":"Hyunwoo Kim","datePublished":"2026"}}]</script><link rel="index" title="Index" href="../../../genindex.html"><link rel="search" title="Search" href="../../../search.html"><link rel="next" title="KV Cache Optimization Strategy" href="kv_cache.html"><link rel="prev" title="Physical Floorplan" href="floorplan.html">
-        <link rel="canonical" href="https://hwkim-dev.github.io/pccx/docs/v002/Architecture/memory_hierarchy.html">
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"WebSite","name":"pccx — Parallel Compute Core eXecutor","alternateName":"pccx","url":"https://hkimw.github.io/pccx/","inLanguage":["en","en","ko"],"author":{"@type":"Person","name":"Hyunwoo Kim","url":"https://hkimw.github.io/hkimw/"},"publisher":{"@type":"Person","name":"Hyunwoo Kim","url":"https://hkimw.github.io/hkimw/"},"description":"pccx is an open-source scalable NPU architecture for edge LLM inference.  W4A8KV4 quantisation on the Xilinx Kria KV260; v002 reference implementation in SystemVerilog.","keywords":["NPU","FPGA","LLM inference","edge AI","W4A8","KV cache","systolic array","Kria KV260","ZU5EV","Transformer accelerator","speculative decoding","FlashAttention","QServe","Gemma 3N","Matryoshka","Sail ISA","Sail language","formal ISA specification","ISA semantics","RISC-V Sail","Arm Sail","CHERI","Morello","Isabelle/HOL","Coq"]},{"@context":"https://schema.org","@type":"TechArticle","headline":"Memory Hierarchy","name":"Memory Hierarchy","url":"https://hkimw.github.io/pccx/en/docs/v002/Architecture/memory_hierarchy.html","mainEntityOfPage":{"@type":"WebPage","@id":"https://hkimw.github.io/pccx/en/docs/v002/Architecture/memory_hierarchy.html"},"isPartOf":{"@type":"WebSite","name":"pccx — Parallel Compute Core eXecutor","url":"https://hkimw.github.io/pccx/"},"author":{"@type":"Person","name":"Hyunwoo Kim","url":"https://hkimw.github.io/hkimw/"},"publisher":{"@type":"Organization","name":"pccx project","url":"https://hkimw.github.io/pccx/"},"datePublished":"2026-04-29","dateModified":"2026-04-29","description":"pccx documentation page: Memory Hierarchy. Open-source NPU architecture + pccx-lab profiler implementing research from QServe, FlashAttention, OpenPangu speculative decoding, and Matryoshka subnet swap.","inLanguage":"en","license":"https://www.apache.org/licenses/LICENSE-2.0","citation":{"@type":"CreativeWork","name":"pccx: Parallel Compute Core eXecutor","url":"https://hkimw.github.io/pccx/","author":"Hyunwoo Kim","datePublished":"2026"}}]</script><link rel="index" title="Index" href="../../../genindex.html"><link rel="search" title="Search" href="../../../search.html"><link rel="next" title="KV Cache Optimization Strategy" href="kv_cache.html"><link rel="prev" title="Physical Floorplan" href="floorplan.html">
+        <link rel="canonical" href="https://hkimw.github.io/pccx/docs/v002/Architecture/memory_hierarchy.html">
 
     <!-- Generated with Sphinx 7.4.7 and Furo 2025.12.19 -->
         <title>Memory Hierarchy - pccx</title>
@@ -33,7 +33,7 @@
     <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
     <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo-extensions.css?v=8dab3a3b" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=7b993dbb" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=4880187a" />
     <link rel="stylesheet" type="text/css" href="../../../_static/image-lightbox.css?v=884c9d5a" />
     <link rel="stylesheet" type="text/css" href="../../../_static/language-switcher.css?v=cc8629cf" />
     
@@ -240,7 +240,7 @@
 
 <nav class="pccx-repolinks" aria-label="Project repositories">
   <a class="pccx-repolinks__btn"
-     href="https://github.com/hwkim-dev/pccx-FPGA-NPU-LLM-kv260"
+     href="https://github.com/hkimw/pccx-FPGA-NPU-LLM-kv260"
      title="Active v002 RTL — pccx-FPGA-NPU-LLM-kv260"
      target="_blank" rel="noopener">
     <svg aria-hidden="true" viewBox="0 0 24 24" width="1em" height="1em"
@@ -267,8 +267,8 @@
     <span class="pccx-repolinks__label">Lab</span>
   </a>
   <a class="pccx-repolinks__btn"
-     href="https://github.com/hwkim-dev/pccx"
-     title="Docs source — github.com/hwkim-dev/pccx"
+     href="https://github.com/hkimw/pccx"
+     title="Docs source — github.com/hkimw/pccx"
      target="_blank" rel="noopener">
     <svg aria-hidden="true" viewBox="0 0 16 16" width="1em" height="1em"
          fill="currentColor">
@@ -277,8 +277,8 @@
     <span class="pccx-repolinks__label">Docs</span>
   </a>
   <a class="pccx-repolinks__btn"
-     href="https://hwkim-dev.github.io/hwkim-dev/"
-     title="Author portfolio — hwkim-dev.github.io"
+     href="https://hkimw.github.io/hkimw/"
+     title="Author portfolio — hkimw.github.io"
      target="_blank" rel="noopener">
     <svg aria-hidden="true" viewBox="0 0 24 24" width="1em" height="1em"
          fill="none" stroke="currentColor" stroke-width="1.6"
@@ -316,6 +316,7 @@
 <li class="toctree-l3"><a class="reference internal" href="gemm_core.html">GEMM Core (Systolic Array)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="gemv_core.html">GEMV Core</a></li>
 <li class="toctree-l3"><a class="reference internal" href="sfu_core.html">SFU Core (Complex Vector Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="preprocess.html">PREPROCESS Stage</a></li>
 <li class="toctree-l3"><a class="reference internal" href="dsp48e2_w4a8.html">DSP48E2 W4A8 Bit Packing and Sign Recovery</a></li>
 </ul>
 </li>
@@ -330,6 +331,7 @@
 </li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../Drivers/index.html">Software Stack</a><input aria-label="Toggle navigation of Software Stack" class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../Drivers/api.html">C API Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Drivers/hal.html">HAL — AXI-Lite MMIO Layer</a></li>
 </ul>
 </li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../Models/index.html">Target Models</a><input aria-label="Toggle navigation of Target Models" class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
@@ -346,39 +348,56 @@
 <li class="toctree-l3"><a class="reference internal" href="../RTL/npu_top.html">NPU Top-Level</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../RTL/compute_cores.html">Compute Core Modules</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../RTL/controller.html">NPU Controller Modules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../RTL/frontend.html">NPU Frontend Modules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../RTL/memory_l2.html">L2 Cache (URAM)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../RTL/memory_dispatch.html">Memory Dispatch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../RTL/preprocess.html">PREPROCESS RTL Reference</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../RTL/packages.html">Compile-Priority Packages</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../RTL/library.html">Shared Library</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../Verification/index.html">Verification</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../Build/index.html">Vivado Build</a><input aria-label="Toggle navigation of Vivado Build" class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="simple">
+</ul>
+</li>
 </ul>
 </li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Target Hardware</span></p>
 <ul>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../Devices/index.html">Devices</a><input aria-label="Toggle navigation of Devices" class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../Devices/index.html">Devices</a><input aria-label="Toggle navigation of Devices" class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" role="switch" type="checkbox"/><label for="toctree-checkbox-10"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../Devices/kv260.html">Target Hardware: Xilinx Kria KV260</a></li>
 </ul>
 </li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">pccx-lab Handbook</span></p>
 <ul>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../Lab/index.html">pccx-lab Handbook</a><input aria-label="Toggle navigation of pccx-lab Handbook" class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" role="switch" type="checkbox"/><label for="toctree-checkbox-10"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../Lab/index.html">pccx-lab Handbook</a><input aria-label="Toggle navigation of pccx-lab Handbook" class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" role="switch" type="checkbox"/><label for="toctree-checkbox-11"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../Lab/architecture.html">Architecture Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../Lab/cli.html">CLI Reference</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../Lab/analyzer_api.html">Analyzer API</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../Lab/copilot.html">Copilot API</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../Lab/research.html">pccx-lab research lineage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Lab/panels.html">UI Panel Catalogue</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Lab/ipc.html">Tauri IPC Contract</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Lab/verification-workflow.html">Verification Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Lab/pccx-format.html">.pccx Binary Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Lab/uvm-bridge.html">UVM Bridge</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Lab/self-evolution.html">Cycle Loop</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Lab/quickstart.html">pccx-lab Quickstart</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Lab/core-modules.html">pccx-core Module Reference</a></li>
 </ul>
 </li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Archive</span></p>
 <ul>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../archive/index.html">Archive</a><input aria-label="Toggle navigation of Archive" class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" role="switch" type="checkbox"/><label for="toctree-checkbox-11"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../archive/experimental_v001/index.html">Archive: v001 Experimental Architecture</a><input aria-label="Toggle navigation of Archive: v001 Experimental Architecture" class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" role="switch" type="checkbox"/><label for="toctree-checkbox-12"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../archive/index.html">Archive</a><input aria-label="Toggle navigation of Archive" class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" role="switch" type="checkbox"/><label for="toctree-checkbox-12"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../archive/experimental_v001/index.html">Archive: v001 Experimental Architecture</a><input aria-label="Toggle navigation of Archive: v001 Experimental Architecture" class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" role="switch" type="checkbox"/><label for="toctree-checkbox-13"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../archive/experimental_v001/Architecture/v001_architecture.html">pccx: Parallel Compute Core eXecutor</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../archive/experimental_v001/Drivers/ISA.html">pccx ISA Specification</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../archive/experimental_v001/Drivers/ISA_Spreadsheet.html">pccx ISA Spreadsheet View</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../archive/experimental_v001/Drivers/v001_API.html">Developer Reference for pccx v001 Host API</a></li>
-<li class="toctree-l3 has-children"><a class="reference internal" href="../../archive/experimental_v001/RTL/index.html">RTL Source Reference (v001)</a><input aria-label="Toggle navigation of RTL Source Reference (v001)" class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" role="switch" type="checkbox"/><label for="toctree-checkbox-13"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../archive/experimental_v001/RTL/index.html">RTL Source Reference (v001)</a><input aria-label="Toggle navigation of RTL Source Reference (v001)" class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" role="switch" type="checkbox"/><label for="toctree-checkbox-14"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../archive/experimental_v001/RTL/top.html">Top level</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../archive/experimental_v001/RTL/packages.html">Packages and Constants</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../archive/experimental_v001/RTL/controller.html">NPU Controller</a></li>
@@ -398,12 +417,13 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Toolchain Demos</span></p>
 <ul>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../samples/index.html">Toolchain Demos</a><input aria-label="Toggle navigation of Toolchain Demos" class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" role="switch" type="checkbox"/><label for="toctree-checkbox-14"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../samples/index.html">Toolchain Demos</a><input aria-label="Toggle navigation of Toolchain Demos" class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" role="switch" type="checkbox"/><label for="toctree-checkbox-15"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../samples/mermaid_blockdiagram.html">Mermaid — NPU block diagram</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../samples/wavedrom_axi_read.html">WaveDrom — AXI4 read transaction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../samples/test_diagrams.html">Test: Deterministic SVG Generation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../samples/svg_themed_demo.html">SVG — themed 4×4 PE array</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../samples/plot_bandwidth.html">scienceplots — bandwidth vs batch size</a></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../../auto_plots/index.html">Plot gallery</a><input aria-label="Toggle navigation of Plot gallery" class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" role="switch" type="checkbox"/><label for="toctree-checkbox-15"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../auto_plots/index.html">Plot gallery</a><input aria-label="Toggle navigation of Plot gallery" class="toctree-checkbox" id="toctree-checkbox-16" name="toctree-checkbox-16" role="switch" type="checkbox"/><label for="toctree-checkbox-16"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../auto_plots/plot_bandwidth.html">Batch size vs achieved HP-AXI bandwidth</a></li>
 </ul>
 </li>
@@ -412,7 +432,7 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Tools</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference external" href="https://hwkim-dev.github.io/pccx/en/lab/">pccx-lab — Simulator &amp; AI Profiler</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://hkimw.github.io/pccx/en/lab/">pccx-lab — Simulator &amp; AI Profiler</a></li>
 </ul>
 
 </div>
@@ -433,12 +453,12 @@
         </a>
         <div class="content-icon-container">
           <div class="view-this-page">
-  <a class="muted-link" href="https://github.com/hwkim-dev/pccx/blob/main/docs/docs/v002/Architecture/memory_hierarchy.rst?plain=true" title="View this page">
+  <a class="muted-link" href="https://github.com/hkimw/pccx/blob/main/docs/docs/v002/Architecture/memory_hierarchy.rst?plain=true" title="View this page">
     <svg><use href="#svg-eye"></use></svg>
     <span class="visually-hidden">View this page</span>
   </a>
 </div><div class="edit-this-page">
-  <a class="muted-link" href="https://github.com/hwkim-dev/pccx/edit/main/docs/docs/v002/Architecture/memory_hierarchy.rst" rel="edit" title="Edit this page">
+  <a class="muted-link" href="https://github.com/hkimw/pccx/edit/main/docs/docs/v002/Architecture/memory_hierarchy.rst" rel="edit" title="Edit this page">
     <svg><use href="#svg-pencil"></use></svg>
     <span class="visually-hidden">Edit this page</span>
   </a>
@@ -458,30 +478,19 @@
           <section id="memory-hierarchy">
 <h1>Memory Hierarchy<a class="headerlink" href="#memory-hierarchy" title="Link to this heading">¶</a></h1>
 <p>The pccx v002 memory subsystem is a four-level hierarchy:
-<strong>host DDR4 → Weight Buffer / L2 Cache → L1 / Constant Cache → PE
-registers</strong>. Each level is sized to <strong>match bandwidth</strong> with the next and
-to <strong>prevent data starvation</strong> in the compute cores.</p>
-<pre  class="mermaid">
-        flowchart TB
-  DDR[(&quot;Host DDR4&lt;br/&gt;19.2 GB/s&quot;)]
-  subgraph ext[&quot;External 250 MHz&quot;]
-    HP[&quot;AXI HP2 / HP3&lt;br/&gt;256 bit/clk × 2&quot;]
-  end
-  subgraph core[&quot;Internal 400 MHz&quot;]
-    WB[&quot;Weight Buffer&lt;br/&gt;URAM FIFO&quot;]
-    L2[(&quot;L2 Cache&lt;br/&gt;URAM ~1.75 MB&quot;)]
-    L1[&quot;L1 Cache&lt;br/&gt;per-core BRAM&quot;]
-    CC[&quot;Constant Cache&lt;br/&gt;BRAM&quot;]
-    L0[&quot;L0 Accumulator&lt;br/&gt;DSP48E2 P-reg&quot;]
-  end
-  DDR --&gt; HP
-  HP --&gt;|weights| WB
-  HP --&gt;|activations| L2
-  WB --&gt; L1
-  L2 --&gt; L1
-  L2 --&gt; CC
-  L1 --&gt; L0
-    </pre><section id="hierarchy">
+<strong>host DDR4 → Weight Buffer / L2 Cache → L1 / Constant Cache →
+registers inside each PE</strong>. Each level is sized to match the bandwidth
+of the next and to prevent data starvation in the compute cores.</p>
+<figure class="align-center" id="fig-memory-hierarchy">
+<span id="v002-memory-hierarchy-fig"></span><a class="reference internal image-reference" href="../../../_images/v002_memory_hierarchy.svg"><img alt="../../../_images/v002_memory_hierarchy.svg" src="../../../_images/v002_memory_hierarchy.svg" style="width: 600px;" />
+</a>
+<figcaption>
+<p><span class="caption-number">Figure 4 </span><span class="caption-text">pccx v002 Memory Hierarchy &amp; Interconnect Architecture. Weights and
+activations are staged from host DDR4 through URAM-based L2 and
+Weight Buffers to the compute-local BRAM caches.</span><a class="headerlink" href="#fig-memory-hierarchy" title="Link to this image">¶</a></p>
+</figcaption>
+</figure>
+<section id="hierarchy">
 <h2>1. Hierarchy<a class="headerlink" href="#hierarchy" title="Link to this heading">¶</a></h2>
 <div class="table-wrapper colwidths-given docutils container">
 <table class="docutils align-default">
@@ -552,8 +561,8 @@ GEMM systolic array each cycle.</p>
 split at row 16 into two 32 × 16 sub-chains).</p></li>
 <li><p>With W4A8 dual-channel packing, <strong>1 DSP = 2 MAC</strong>, so 2,048 MAC/clk.</p></li>
 <li><p>Weight demand: 2,048 × 4 bit = <strong>8,192 bit/clk &#64; 400 MHz</strong>.</p></li>
-<li><p>Supply: HP0 + HP1 deliver <strong>2 × 128 bit/clk &#64; 250 MHz</strong> (= 64 Gbit/s
-total raw), which normalises to <strong>~160 bit/clk &#64; 400 MHz</strong> downstream
+<li><p>Supply: HP0 + HP1 deliver <strong>2 × 128 bit/clk &#64; 250 MHz</strong> (64 Gbit/s
+total raw), which normalizes to <strong>~160 bit/clk &#64; 400 MHz</strong> downstream
 of the CDC FIFO.</p></li>
 </ul>
 <p>The gap is closed by <strong>weight reuse (Weight Stationary)</strong>: the GEMM
@@ -568,10 +577,11 @@ GEMV, and SFU.</p>
 <ul class="simple">
 <li><p>L2 cache ports: <strong>dual-port URAM</strong> — ACP DMA on Port A, NPU compute
 on Port B, both 128-bit wide per cycle.</p></li>
-<li><p>Peak slice-side demand: 4 GEMV cores × 32 INT8 elements/clk = 128
-INT8 elem/clk total. A single 128-bit URAM read supplies 16 INT8
-elements per cycle, so the GEMV broadcast path (activation is reused
-across all 4 cores) works within a single port.</p></li>
+<li><p>Peak per-slice activation demand from the GEMV cores: 4 cores ×
+32 INT8 elements per clock = 128 INT8 elements per clock total.
+A single 128-bit URAM read supplies 16 INT8 elements per cycle,
+so the GEMV broadcast path (the same activation is reused across
+all four cores) fits within a single port.</p></li>
 </ul>
 </section>
 <section id="host-device-path">
@@ -591,7 +601,63 @@ updates and new token writes — well within the budget.</p></li>
 <h3>3.1 L2 Cache: Central Shared Buffer<a class="headerlink" href="#l2-cache-central-shared-buffer" title="Link to this heading">¶</a></h3>
 <p>L2 cache runs as a <strong>software-managed scratchpad</strong> — there is no
 hardware replacement policy. Addresses are named directly in the
-instruction stream (<code class="docutils literal notranslate"><span class="pre">MEMCPY</span> <span class="pre">dest_addr</span></code>, <code class="docutils literal notranslate"><span class="pre">GEMM</span> <span class="pre">src_addr</span></code>). Benefits:</p>
+instruction stream (<code class="docutils literal notranslate"><span class="pre">MEMCPY</span> <span class="pre">dest_addr</span></code>, <code class="docutils literal notranslate"><span class="pre">GEMM</span> <span class="pre">src_addr</span></code>).</p>
+<p>The 1.75 MB L2 capacity is partitioned into 8 banks of dual-port URAM to
+support concurrent access from multiple cores.</p>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 220" class="pccx-diagram">
+  <rect x="0" y="0" width="620" height="220" fill="#ffffff"/>
+  <style>
+    .block-mem { fill: #e2efd8; stroke: #000000; stroke-width: 0.8; }
+    .text-main { fill: #000000; font-family: ui-sans-serif, system-ui; font-size: 12px; }
+    .text-label { fill: #000000; font-family: ui-sans-serif, system-ui; font-size: 10px; text-anchor: middle; }
+    .text-title { fill: #000000; font-family: ui-sans-serif, system-ui; font-size: 13px; font-weight: bold; text-anchor: middle; }
+  </style>
+  <text class="text-title" x="310.0" y="25">L2 Shared Buffer Bank Organization (URAM)</text>
+  <text class="text-label" x="80.0" y="45">Bank 0</text>
+  <rect class="block-mem" x="50" y="55" width="60" height="30"/>
+  <text class="text-label" x="25" y="74.0" text-anchor="middle">Row 0</text>
+  <rect class="block-mem" x="50" y="90" width="60" height="30"/>
+  <text class="text-label" x="25" y="109.0" text-anchor="middle">Row 1</text>
+  <rect class="block-mem" x="50" y="125" width="60" height="30"/>
+  <text class="text-label" x="25" y="144.0" text-anchor="middle">Row 2</text>
+  <rect class="block-mem" x="50" y="160" width="60" height="30"/>
+  <text class="text-label" x="25" y="179.0" text-anchor="middle">Row 3</text>
+  <text class="text-label" x="145.0" y="45">Bank 1</text>
+  <rect class="block-mem" x="115" y="55" width="60" height="30"/>
+  <rect class="block-mem" x="115" y="90" width="60" height="30"/>
+  <rect class="block-mem" x="115" y="125" width="60" height="30"/>
+  <rect class="block-mem" x="115" y="160" width="60" height="30"/>
+  <text class="text-label" x="210.0" y="45">Bank 2</text>
+  <rect class="block-mem" x="180" y="55" width="60" height="30"/>
+  <rect class="block-mem" x="180" y="90" width="60" height="30"/>
+  <rect class="block-mem" x="180" y="125" width="60" height="30"/>
+  <rect class="block-mem" x="180" y="160" width="60" height="30"/>
+  <text class="text-label" x="275.0" y="45">Bank 3</text>
+  <rect class="block-mem" x="245" y="55" width="60" height="30"/>
+  <rect class="block-mem" x="245" y="90" width="60" height="30"/>
+  <rect class="block-mem" x="245" y="125" width="60" height="30"/>
+  <rect class="block-mem" x="245" y="160" width="60" height="30"/>
+  <text class="text-label" x="340.0" y="45">Bank 4</text>
+  <rect class="block-mem" x="310" y="55" width="60" height="30"/>
+  <rect class="block-mem" x="310" y="90" width="60" height="30"/>
+  <rect class="block-mem" x="310" y="125" width="60" height="30"/>
+  <rect class="block-mem" x="310" y="160" width="60" height="30"/>
+  <text class="text-label" x="405.0" y="45">Bank 5</text>
+  <rect class="block-mem" x="375" y="55" width="60" height="30"/>
+  <rect class="block-mem" x="375" y="90" width="60" height="30"/>
+  <rect class="block-mem" x="375" y="125" width="60" height="30"/>
+  <rect class="block-mem" x="375" y="160" width="60" height="30"/>
+  <text class="text-label" x="470.0" y="45">Bank 6</text>
+  <rect class="block-mem" x="440" y="55" width="60" height="30"/>
+  <rect class="block-mem" x="440" y="90" width="60" height="30"/>
+  <rect class="block-mem" x="440" y="125" width="60" height="30"/>
+  <rect class="block-mem" x="440" y="160" width="60" height="30"/>
+  <text class="text-label" x="535.0" y="45">Bank 7</text>
+  <rect class="block-mem" x="505" y="55" width="60" height="30"/>
+  <rect class="block-mem" x="505" y="90" width="60" height="30"/>
+  <rect class="block-mem" x="505" y="125" width="60" height="30"/>
+  <rect class="block-mem" x="505" y="160" width="60" height="30"/>
+</svg><p>Benefits:</p>
 <ul class="simple">
 <li><p>Predictable latency (no tag matching, no miss handling).</p></li>
 <li><p>The compiler can lay out data statically and route around interconnect
@@ -617,13 +683,14 @@ pattern via bank-level interleaving.</p>
 <h2>4. Preventing Data Starvation<a class="headerlink" href="#preventing-data-starvation" title="Link to this heading">¶</a></h2>
 <p>Pipeline stalls are avoided with <strong>double-buffering</strong> throughout:</p>
 <ul class="simple">
-<li><p><strong>GEMM activations</strong>: ping-pong buffers between L2 and PE.</p></li>
-<li><p><strong>GEMV activations</strong>: bank-split L1 cache for simultaneous read/write.</p></li>
+<li><p><strong>GEMM activations</strong>: ping-pong buffers between L2 and the PEs.</p></li>
+<li><p><strong>GEMV activations</strong>: L1 cache partitioned across banks so that
+reads and writes proceed in parallel.</p></li>
 <li><p><strong>Weights</strong>: ping-pong FIFO inside the Weight Buffer.</p></li>
 </ul>
-<p>The design targets <strong>100% busy-rate</strong> for every compute core under ideal
+<p>The design targets 100% utilization on every compute core under ideal
 conditions. Measured utilization will be reported in the Implementation
-section once synthesis results come in.</p>
+section once synthesis results are in.</p>
 </section>
 </section>
 
@@ -667,14 +734,14 @@ section once synthesis results come in.</p>
             Made with 
             <a href="https://github.com/pradyunsg/furo">Furo</a>
             <div class="last-updated">
-              Last updated on 2026-04-24</div>
+              Last updated on 2026-04-29</div>
           </div>
           <div class="right-details">
             <div class="icons">
-              <a class="muted-link pccx-footer-icon" href="https://github.com/hwkim-dev/pccx-FPGA-NPU-LLM-kv260" aria-label="RTL implementation — github.com/hwkim-dev/pccx-FPGA-NPU-LLM-kv260"><svg fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="1.2"/><rect x="10" y="10" width="4" height="4" fill="currentColor" stroke="none"/><path d="M9 3v3M15 3v3M9 18v3M15 18v3M3 9h3M3 15h3M18 9h3M18 15h3"/></svg><span class="pccx-footer-icon__label">RTL</span></a>
-              <a class="muted-link pccx-footer-icon" href="https://hwkim-dev.github.io/pccx/en/lab/" aria-label="pccx-lab — simulator & AI profiler"><svg fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path d="M9 3h6"/><path d="M10 3v6.2L4.6 19a1 1 0 0 0 .86 1.5h13.08a1 1 0 0 0 .86-1.5L14 9.2V3"/><path d="M6.8 14h10.4"/></svg><span class="pccx-footer-icon__label">Lab</span></a>
-              <a class="muted-link pccx-footer-icon" href="https://github.com/hwkim-dev/pccx" aria-label="Docs repository — github.com/hwkim-dev/pccx"><svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16" width="1em" height="1em" aria-hidden="true"><path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg><span class="pccx-footer-icon__label">Docs</span></a>
-              <a class="muted-link pccx-footer-icon" href="https://hwkim-dev.github.io/hwkim-dev/" aria-label="Author portfolio — hwkim-dev.github.io/hwkim-dev"><svg fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M4.5 20.5c1-3.5 4-5.5 7.5-5.5s6.5 2 7.5 5.5"/></svg><span class="pccx-footer-icon__label">Blog</span></a>
+              <a class="muted-link pccx-footer-icon" href="https://github.com/hkimw/pccx-FPGA-NPU-LLM-kv260" aria-label="RTL implementation — github.com/hkimw/pccx-FPGA-NPU-LLM-kv260"><svg fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="1.2"/><rect x="10" y="10" width="4" height="4" fill="currentColor" stroke="none"/><path d="M9 3v3M15 3v3M9 18v3M15 18v3M3 9h3M3 15h3M18 9h3M18 15h3"/></svg><span class="pccx-footer-icon__label">RTL</span></a>
+              <a class="muted-link pccx-footer-icon" href="https://hkimw.github.io/pccx/en/lab/" aria-label="pccx-lab — simulator & AI profiler"><svg fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path d="M9 3h6"/><path d="M10 3v6.2L4.6 19a1 1 0 0 0 .86 1.5h13.08a1 1 0 0 0 .86-1.5L14 9.2V3"/><path d="M6.8 14h10.4"/></svg><span class="pccx-footer-icon__label">Lab</span></a>
+              <a class="muted-link pccx-footer-icon" href="https://github.com/hkimw/pccx" aria-label="Docs repository — github.com/hkimw/pccx"><svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16" width="1em" height="1em" aria-hidden="true"><path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg><span class="pccx-footer-icon__label">Docs</span></a>
+              <a class="muted-link pccx-footer-icon" href="https://hkimw.github.io/hkimw/" aria-label="Author portfolio — hkimw.github.io/hkimw"><svg fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M4.5 20.5c1-3.5 4-5.5 7.5-5.5s6.5 2 7.5 5.5"/></svg><span class="pccx-footer-icon__label">Blog</span></a>
               
             </div>
           </div>
@@ -736,442 +803,6 @@ section once synthesis results come in.</p>
     <script src="https://wavedrom.com/skins/default.js"></script>
     <script src="https://wavedrom.com/wavedrom.min.js"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
-    <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
-    <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10.9.0/dist/mermaid.esm.min.mjs";
-
-
-
-
-
-const initStyles = () => {
-    const defaultStyle = document.createElement('style');
-    defaultStyle.textContent = `pre.mermaid {
-    /* Same as .mermaid-container > pre */
-    display: block;
-    width: 100%;
-}
-
-pre.mermaid > svg {
-    /* Same as .mermaid-container > pre > svg */
-    height: 500px;
-    width: 100%;
-    max-width: 100% !important;
-}`;
-    document.head.appendChild(defaultStyle);
-
-    const fullscreenStyle = document.createElement('style');
-    fullscreenStyle.textContent = `.mermaid-container {
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-}
-
-.mermaid-container > pre {
-    display: block;
-    width: 100%;
-}
-
-.mermaid-container > pre > svg {
-    height: 500px;
-    width: 100%;
-    max-width: 100% !important;
-}
-
-.mermaid-fullscreen-btn {
-    width: 28px;
-    height: 28px;
-    background: rgba(255, 255, 255, 0.95);
-    border: 1px solid rgba(0, 0, 0, 0.3);
-    border-radius: 4px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-    font-size: 14px;
-    line-height: 1;
-    padding: 0;
-    color: #333;
-}
-
-.mermaid-fullscreen-btn:hover {
-    opacity: 100% !important;
-    background: rgba(255, 255, 255, 1);
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
-    transform: scale(1.1);
-}
-
-.mermaid-fullscreen-btn.dark-theme {
-    background: rgba(50, 50, 50, 0.95);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    color: #e0e0e0;
-}
-
-.mermaid-fullscreen-btn.dark-theme:hover {
-    background: rgba(60, 60, 60, 1);
-    box-shadow: 0 3px 10px rgba(255, 255, 255, 0.2);
-}
-
-.mermaid-fullscreen-modal {
-    display: none;
-    position: fixed !important;
-    top: 0 !important;
-    left: 0 !important;
-    width: 95vw;
-    height: 100vh;
-    background: rgba(255, 255, 255, 0.98);
-    z-index: 9999;
-    padding: 20px;
-    overflow: auto;
-}
-
-.mermaid-fullscreen-modal.dark-theme {
-    background: rgba(0, 0, 0, 0.98);
-}
-
-.mermaid-fullscreen-modal.active {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.mermaid-container-fullscreen {
-    position: relative;
-    width: 95vw;
-    height: 90vh;
-    max-width: 95vw;
-    max-height: 90vh;
-    background: white;
-    border-radius: 8px;
-    padding: 20px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-    overflow: auto;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.mermaid-container-fullscreen.dark-theme {
-    background: #1a1a1a;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
-}
-
-.mermaid-container-fullscreen pre.mermaid {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.mermaid-container-fullscreen .mermaid svg {
-    height: 100% !important;
-    width: 100% !important;
-    cursor: grab;
-}
-
-.mermaid-fullscreen-close {
-    position: fixed !important;
-    top: 20px !important;
-    right: 20px !important;
-    width: 40px;
-    height: 40px;
-    background: rgba(255, 255, 255, 0.95);
-    border: 1px solid rgba(0, 0, 0, 0.2);
-    border-radius: 50%;
-    cursor: pointer;
-    z-index: 10000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    transition: all 0.2s;
-    font-size: 24px;
-    line-height: 1;
-    color: #333;
-}
-
-.mermaid-fullscreen-close:hover {
-    background: white;
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
-    transform: scale(1.1);
-}
-
-.mermaid-fullscreen-close.dark-theme {
-    background: rgba(50, 50, 50, 0.95);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    color: #e0e0e0;
-}
-
-.mermaid-fullscreen-close.dark-theme:hover {
-    background: rgba(60, 60, 60, 1);
-    box-shadow: 0 6px 16px rgba(255, 255, 255, 0.2);
-}
-
-.mermaid-fullscreen-modal .mermaid-fullscreen-btn {
-    display: none !important;
-}`;
-    document.head.appendChild(fullscreenStyle);
-}
-
-// Detect if page has dark background
-const isDarkTheme = () => {
-    // We use a set of heuristics:
-    // 1. Check for common dark mode classes or attributes
-    // 2. Check computed background color brightness
-    if (document.documentElement.classList.contains('dark') ||
-        document.documentElement.getAttribute('data-theme') === 'dark' ||
-        document.body.classList.contains('dark') ||
-        document.body.getAttribute('data-theme') === 'dark') {
-        // console.log("Dark theme detected via class/attribute");
-        return true;
-    }
-    if (document.documentElement.classList.contains('light') ||
-        document.documentElement.getAttribute('data-theme') === 'light' ||
-        document.body.classList.contains('light') ||
-        document.body.getAttribute('data-theme') === 'light') {
-        // console.log("Light theme detected via class/attribute");
-        return false;
-    }
-    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        // console.log("Dark theme detected via prefers-color-scheme");
-        return true;
-    }
-    const bgColor = window.getComputedStyle(document.body).backgroundColor;
-    const match = bgColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)/);
-    if (match) {
-        const r = parseInt(match[1]);
-        const g = parseInt(match[2]);
-        const b = parseInt(match[3]);
-        const brightness = (r * 299 + g * 587 + b * 114) / 1000;
-        // console.log("Background color brightness:", brightness);
-        return brightness < 128;
-    }
-    // console.log("No dark or light theme detected, defaulting to light theme");
-    return false;
-};
-
-let darkTheme = isDarkTheme();
-let modal = null;
-let modalContent = null;
-let previousScrollOffset = [window.scrollX, window.scrollY];
-
-const runMermaid = async (rerun) => {
-    console.log("Running mermaid diagrams, rerun =", rerun);
-    // clear all existing mermaid charts
-    let all_mermaids = document.querySelectorAll(".mermaid");
-
-    if (rerun) {
-        all_mermaids.forEach((el) => {
-            if(!el.hasAttribute("data-original-code")) {
-                // store original code
-                // console.log(`Storing original code for first run: `, el.innerHTML);
-                el.setAttribute('data-original-code', el.innerHTML);
-            }
-            if(el.getAttribute("data-processed") === "true") {
-                // remove and restore original
-                el.removeAttribute("data-processed");
-                // console.log(`Restoring original code for re-run: `, el.getAttribute('data-original-code'));
-                el.innerHTML = el.getAttribute('data-original-code');
-            } else {
-                // store original code
-                // console.log(`Storing original code for re-run: `, el.innerHTML);
-                el.setAttribute('data-original-code', el.innerHTML);
-            }
-        });
-        await mermaid.run();
-    }
-
-    all_mermaids = document.querySelectorAll(".mermaid");
-    const mermaids_processed = document.querySelectorAll(".mermaid[data-processed='true']");
-
-    if ("False" === "True") {
-        const mermaids_to_add_zoom = -1 === -1 ? all_mermaids.length : -1;
-        if(mermaids_to_add_zoom > 0) {
-            var svgs = d3.selectAll("");
-            if(all_mermaids.length !== mermaids_processed.length) {
-                setTimeout(() => runMermaid(false), 200);
-                return;
-            } else if(svgs.size() !== mermaids_to_add_zoom) {
-                setTimeout(() => runMermaid(false), 200);
-                return;
-            } else {
-                svgs.each(function() {
-                    var svg = d3.select(this);
-                    svg.html("<g class='wrapper'>" + svg.html() + "</g>");
-                    var inner = svg.select("g");
-                    var zoom = d3.zoom().on("zoom", function(event) {
-                        inner.attr("transform", event.transform);
-                    });
-                    svg.call(zoom);
-                });
-            }
-        }
-    } else if(all_mermaids.length !== mermaids_processed.length) {
-        // Wait for mermaid to process all diagrams
-        setTimeout(() => runMermaid(false), 200);
-        return;
-    }
-
-    // Stop here if not adding fullscreen capability
-    if ("True" !== "True") return;
-
-    if (modal !== null ) {
-        // Destroy existing modal
-        modal.remove();
-        modal = null;
-        modalContent = null;
-    }
-
-    modal = document.createElement('div');
-    modal.className = 'mermaid-fullscreen-modal' + (darkTheme ? ' dark-theme' : '');
-    modal.setAttribute('role', 'dialog');
-    modal.setAttribute('aria-modal', 'true');
-    modal.setAttribute('aria-label', 'Fullscreen diagram viewer');
-    modal.innerHTML = `
-        <button class="mermaid-fullscreen-close${darkTheme ? ' dark-theme' : ''}" aria-label="Close fullscreen">✕</button>
-        <div class="mermaid-container-fullscreen${darkTheme ? ' dark-theme' : ''}"></div>
-    `;
-    document.body.appendChild(modal);
-
-    modalContent = modal.querySelector('.mermaid-container-fullscreen');
-    const closeBtn = modal.querySelector('.mermaid-fullscreen-close');
-
-    const closeModal = () => {
-        modal.classList.remove('active');
-        modalContent.innerHTML = '';
-        document.body.style.overflow = ''
-        window.scrollTo({left: previousScrollOffset[0], top: previousScrollOffset[1], behavior: 'instant'});
-    };
-
-    closeBtn.addEventListener('click', closeModal);
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) closeModal();
-    });
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && modal.classList.contains('active')) {
-            closeModal();
-        }
-    });
-
-    document.querySelectorAll('.mermaid').forEach((mermaidDiv) => {
-        if (mermaidDiv.parentNode.classList.contains('mermaid-container') ||
-            mermaidDiv.closest('.mermaid-fullscreen-modal')) {
-            // Already processed, adjust button class if needed
-            const existingBtn = mermaidDiv.parentNode.querySelector('.mermaid-fullscreen-btn');
-            if (existingBtn) {
-                existingBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
-            }
-            return;
-        }
-
-        const container = document.createElement('div');
-        container.className = 'mermaid-container';
-        mermaidDiv.parentNode.insertBefore(container, mermaidDiv);
-        container.appendChild(mermaidDiv);
-
-        const fullscreenBtn = document.createElement('button');
-        fullscreenBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
-        fullscreenBtn.setAttribute('aria-label', 'View diagram in fullscreen');
-        fullscreenBtn.textContent = '⛶';
-        fullscreenBtn.style.opacity = '50%';
-
-        // Calculate dynamic position based on diagram's margin and padding
-        const diagramStyle = window.getComputedStyle(mermaidDiv);
-        const marginTop = parseFloat(diagramStyle.marginTop) || 0;
-        const marginRight = parseFloat(diagramStyle.marginRight) || 0;
-        const paddingTop = parseFloat(diagramStyle.paddingTop) || 0;
-        const paddingRight = parseFloat(diagramStyle.paddingRight) || 0;
-        fullscreenBtn.style.top = `${marginTop + paddingTop + 4}px`;
-        fullscreenBtn.style.right = `${marginRight + paddingRight + 4}px`;
-
-        fullscreenBtn.addEventListener('click', () => {
-            previousScrollOffset = [window.scroll, window.scrollY];
-            const clone = mermaidDiv.cloneNode(true);
-            modalContent.innerHTML = '';
-            modalContent.appendChild(clone);
-
-            const svg = clone.querySelector('svg');
-            if (svg) {
-                svg.removeAttribute('width');
-                svg.removeAttribute('height');
-                svg.style.width = '100%';
-                svg.style.height = 'auto';
-                svg.style.maxWidth = '100%';
-                svg.style.sdisplay = 'block';
-
-                if ("False" === "True") {
-                    setTimeout(() => {
-                        const g = svg.querySelector('g');
-                        if (g) {
-                            var svgD3 = d3.select(svg);
-                            svgD3.html("<g class='wrapper'>" + svgD3.html() + "</g>");
-                            var inner = svgD3.select("g");
-                            var zoom = d3.zoom().on("zoom", function(event) {
-                                inner.attr("transform", event.transform);
-                            });
-                            svgD3.call(zoom);
-                        }
-                    }, 100);
-                }
-            }
-
-            modal.classList.add('active');
-            document.body.style.overflow = 'hidden';
-        });
-        container.appendChild(fullscreenBtn);
-    });
-};
-
-const load = async () => {
-    initStyles();
-
-    await runMermaid(true);
-
-    const reRunIfThemeChanges = async () => {
-        const newDarkTheme = isDarkTheme();
-        if (newDarkTheme !== darkTheme) {
-            darkTheme = newDarkTheme;
-            console.log("Theme change detected, re-running mermaid with", darkTheme ? "dark" : "default", "theme");
-            await mermaid.initialize(
-                {...JSON.parse(
-                    `{"startOnLoad": false}`
-                ),
-                ...{ darkMode: darkTheme, theme: darkTheme ? 'dark' : 'default' },
-                }
-            );
-            await runMermaid(true);
-        }
-    };
-
-    // Update theme classes when theme changes
-    const themeObserver = new MutationObserver(reRunIfThemeChanges);
-    themeObserver.observe(document.documentElement, {
-        attributes: true,
-        attributeFilter: ['class', 'style', 'data-theme']
-    });
-    themeObserver.observe(document.body, {
-        attributes: true,
-        attributeFilter: ['class', 'style', 'data-theme']
-    });
-};
-
-
-
-
-
-console.log("Initializing mermaid with", darkTheme ? "dark" : "default", "theme");
-mermaid.initialize(
-    {...JSON.parse(
-        `{"startOnLoad": false}`
-    ),
-    ...{ darkMode: darkTheme, theme: darkTheme ? 'dark' : 'default' },
-    }
-);
-
-window.addEventListener("load", load);
-window.runMermaid = runMermaid;</script>
     <script src="../../../_static/image-lightbox.js?v=dec353f8"></script>
     <script src="../../../_static/language-switcher.js?v=118c9f35"></script>
     </body>

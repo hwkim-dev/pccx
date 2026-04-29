@@ -101,11 +101,11 @@ v001 레퍼런스 아키텍처는 :doc:`archive/experimental_v001/index` 에 보
    .. grid-item-card:: :octicon:`cpu;1.5em;sd-mr-2` RTL 구현체
       :columns: 12 12 8 8
       :class-card: pccx-hero-card
-      :link: https://github.com/hwkim-dev/pccx-FPGA-NPU-LLM-kv260
+      :link: https://github.com/hkimw/pccx-FPGA-NPU-LLM-kv260
       :link-type: url
       :link-alt: pccx-FPGA-NPU-LLM-kv260 저장소를 GitHub 에서 열기
 
-      **github.com/hwkim-dev/pccx-FPGA-NPU-LLM-kv260**
+      **github.com/hkimw/pccx-FPGA-NPU-LLM-kv260**
 
       활성 상태의 **v002** SystemVerilog 컴포넌트 — ISA 패키지, 제어 유닛,
       연산 파이프라인 (GEMM / GEMV / CVO), 및 메모리 스토리지 계층 구성을 관장한다.
@@ -121,18 +121,18 @@ v001 레퍼런스 아키텍처는 :doc:`archive/experimental_v001/index` 에 보
          :gutter: 3
 
          .. grid-item-card:: :octicon:`book;1em;sd-mr-1` 문서 소스
-            :link: https://github.com/hwkim-dev/pccx
+            :link: https://github.com/hkimw/pccx
             :link-type: url
             :link-alt: pccx 문서 저장소를 GitHub 에서 열기
 
-            **github.com/hwkim-dev/pccx** — 본 문서 사이트를 빌드하기 위한 Sphinx 프로젝트.
+            **github.com/hkimw/pccx** — 본 문서 사이트를 빌드하기 위한 Sphinx 프로젝트.
 
          .. grid-item-card:: :octicon:`person;1em;sd-mr-1` 저자 포트폴리오
-            :link: https://hwkim-dev.github.io/hwkim-dev/
+            :link: https://hkimw.github.io/hkimw/
             :link-type: url
-            :link-alt: hwkim-dev 포트폴리오 사이트 열기
+            :link-alt: hkimw 포트폴리오 사이트 열기
 
-            **hwkim-dev.github.io/hwkim-dev** — 블로그, 다른 프로젝트, 소개.
+            **hkimw.github.io/hkimw** — 블로그, 다른 프로젝트, 소개.
 
 .. |License| image:: https://img.shields.io/badge/License-Apache_2.0-blue.svg
 .. |Architecture| image:: https://img.shields.io/badge/Architecture-Scalable_NPU-purple

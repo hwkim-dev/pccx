@@ -52,6 +52,6 @@ mem_dispatcher)에 제어 μop을 발행한다.
 .. admonition:: 마지막 검증 대상
    :class: note
 
-   커밋 ``773bd82`` @ ``hwkim-dev/pccx-FPGA-NPU-LLM-kv260`` (2026-04-21).
+   커밋 ``773bd82`` @ ``hkimw/pccx-FPGA-NPU-LLM-kv260`` (2026-04-21).
 
 .. seealso:: :doc:`/docs/v002/ISA/dataflow` — 의존성·완료 추적.

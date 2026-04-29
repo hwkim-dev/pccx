@@ -5,17 +5,18 @@ pccx-lab Handbook
 NPU. It ingests ``.pccx`` binary traces emitted by the xsim testbench
 suite on the companion ``pccx-FPGA-NPU-LLM-kv260`` RTL repo and surfaces
 the timeline, roofline, bottleneck windows, waveform, Vivado synth
-reports, and AI-driven UVM strategies in a single Tauri v2 window.
+reports, and natural-language UVM-sequence strategies in a single
+Tauri v2 window.
 
 This section documents the tool's internal surface — the Phase 1
 plugin-registry primitive every crate hangs trait objects off, the
-current ``pccx-ai-copilot`` + ``pccx-lsp`` IntelliSense façade, the
+current ``pccx-ai-copilot`` + ``pccx-lsp`` LSP façade, the
 command-line binaries distributed across crates after the workspace
 split, and the research-lineage placeholder that will refresh once the
 citation registry lands in its new home.
 
 For the user-facing desktop app itself, see the separate
-`pccx-lab site <https://hwkim-dev.github.io/pccx/en/lab/>`_.
+`pccx-lab site <https://hkimw.github.io/pccx/en/lab/>`_.
 
 .. grid:: 1 1 2 2
    :gutter: 3 4 4 4
@@ -68,3 +69,11 @@ For the user-facing desktop app itself, see the separate
    analyzer_api
    copilot
    research
+   panels
+   ipc
+   verification-workflow
+   pccx-format
+   uvm-bridge
+   self-evolution
+   quickstart
+   core-modules

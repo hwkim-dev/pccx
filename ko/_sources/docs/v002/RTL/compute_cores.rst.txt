@@ -61,4 +61,4 @@ CORDIC + LUT 하이브리드 함수 유닛을 조율합니다.
 .. admonition:: 마지막 검증 대상
    :class: note
 
-   커밋 ``773bd82`` @ ``hwkim-dev/pccx-FPGA-NPU-LLM-kv260`` (2026-04-21).
+   커밋 ``773bd82`` @ ``hkimw/pccx-FPGA-NPU-LLM-kv260`` (2026-04-21).

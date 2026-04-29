@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 540 340" role="img">
+  <title>GEMV 32-lane Reduction Tree Architecture</title>
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#000000"/>
+    </marker>
+    <style><![CDATA[
+      text { fill: #000000; font: 400 11px ui-sans-serif, system-ui, sans-serif; }
+      .t-title { font-weight: 600; font-size: 13px; text-anchor: middle; }
+      .t-label { font-size: 9px; text-anchor: middle; fill: #666666; }
+      .block-comp { fill: #ffffff; stroke: #000000; stroke-width: 0.8; }
+      .block-add  { fill: #dae7f4; stroke: #000000; stroke-width: 0.8; }
+      .line       { stroke: #000000; stroke-width: 0.8; fill: none; }
+    ]]></style>
+  </defs>
+
+  <rect x="0" y="0" width="540" height="340" fill="#ffffff"/>
+  <text class="t-title" x="270" y="25">GEMV 32-lane Reduction Tree (5-stage)</text>
+
+  <!-- Inputs -->
+  <g id="inputs">
+    <rect class="block-comp" x="20" y="50" width="30" height="20"/>
+    <rect class="block-comp" x="60" y="50" width="30" height="20"/>
+    <text class="t-label" x="35" y="85">MAC 0</text>
+    <text class="t-label" x="75" y="85">MAC 1</text>
+    
+    <rect class="block-comp" x="120" y="50" width="30" height="20"/>
+    <rect class="block-comp" x="160" y="50" width="30" height="20"/>
+    <text class="t-label" x="135" y="85">MAC 2</text>
+    <text class="t-label" x="175" y="85">MAC 3</text>
+
+    <text class="t-title" x="270" y="65">...</text>
+
+    <rect class="block-comp" x="350" y="50" width="30" height="20"/>
+    <rect class="block-comp" x="390" y="50" width="30" height="20"/>
+    
+    <rect class="block-comp" x="450" y="50" width="30" height="20"/>
+    <rect class="block-comp" x="490" y="50" width="30" height="20"/>
+    <text class="t-label" x="505" y="85">MAC 31</text>
+  </g>
+
+  <!-- Stage 1 -->
+  <g id="st1">
+    <rect class="block-add" x="35" y="110" width="40" height="25"/>
+    <text class="t-label" x="55" y="126">+</text>
+    <line class="line" x1="35" y1="70" x2="45" y2="110"/>
+    <line class="line" x1="75" y1="70" x2="65" y2="110"/>
+
+    <rect class="block-add" x="135" y="110" width="40" height="25"/>
+    <text class="t-label" x="155" y="126">+</text>
+    <line class="line" x1="135" y1="70" x2="145" y2="110"/>
+    <line class="line" x1="175" y1="70" x2="165" y2="110"/>
+
+    <rect class="block-add" x="365" y="110" width="40" height="25"/>
+    <text class="t-label" x="385" y="126">+</text>
+    <rect class="block-add" x="465" y="110" width="40" height="25"/>
+    <text class="t-label" x="485" y="126">+</text>
+  </g>
+
+  <!-- Stage 2 -->
+  <g id="st2">
+    <rect class="block-add" x="85" y="170" width="50" height="25"/>
+    <text class="t-label" x="110" y="186">+</text>
+    <line class="line" x1="55" y1="135" x2="100" y2="170"/>
+    <line class="line" x1="155" y1="135" x2="120" y2="170"/>
+
+    <rect class="block-add" x="405" y="170" width="50" height="25"/>
+    <text class="t-label" x="430" y="186">+</text>
+    <line class="line" x1="385" y1="135" x2="415" y2="170"/>
+    <line class="line" x1="485" y1="135" x2="445" y2="170"/>
+  </g>
+
+  <!-- Stage 3 (Final Merge) -->
+  <line class="line" x1="110" y1="195" x2="250" y2="240"/>
+  <line class="line" x1="430" y1="195" x2="290" y2="240"/>
+  <rect class="block-add" x="245" y="240" width="50" height="30"/>
+  <text class="t-label" x="270" y="260">FINAL SUM</text>
+
+  <!-- Output -->
+  <line class="line" x1="270" y1="270" x2="270" y2="300" style="marker-end: url(#arr);"/>
+  <text class="t-title" x="270" y="320">Scalar Result (BF16/INT32)</text>
+
+</svg>

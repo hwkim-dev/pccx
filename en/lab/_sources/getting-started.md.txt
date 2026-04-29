@@ -10,7 +10,7 @@
 - A working pccx-lab build (`cargo tauri dev` or a release binary).
 - Sample trace `hw/sim/fixtures/smoke.pccx` produced by running
   `hw/sim/run_verification.sh` once inside the sibling
-  [pccx-FPGA](https://github.com/hwkim-dev/pccx-FPGA-NPU-LLM-kv260)
+  [pccx-FPGA](https://github.com/hkimw/pccx-FPGA-NPU-LLM-kv260)
   checkout. Run that first if you do not yet have a trace.
 
 ---

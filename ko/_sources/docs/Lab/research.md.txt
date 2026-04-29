@@ -42,9 +42,17 @@ free 함수 (`pccx_core::roofline::analyze`,
 
 pccx-lab 레포의 설계 문서 네 개
 (`docs/design/phase2_intellisense.md`, `phase3_remote_backend.md`,
-`phase4_insane_reports.md`, `phase5_alphaevolve.md`) 는 자신들의
-작업이 계승하는 논문을 명시한다. 온디스크 레지스트리가 돌아올
-때까지는 이 문서들이 가장 살아 있는 계보에 가장 가깝다.
+`phase4_insane_reports.md`, `phase5_alphaevolve.md`) 와
+`phase6_dev_docs_generation.md` 는 자신들의 작업이 계승하는 논문을
+명시한다. 온디스크 레지스트리가 돌아올 때까지는 이 문서들이 가장
+살아 있는 계보에 가장 가깝다.
+
+pccx-lab 내부 `knowledge/sail_language/` 코퍼스는 Cambridge Sail ISA
+사양 언어를 추적한다 — Phase 4 finale (M4.8–M4.10 "Sail finale") 와
+Phase 5 PRM gate 가 둘 다 RTL formal refinement 에 Sail 을 사용하기
+때문에 설계 문서가 이를 자주 인용한다. pccx-FPGA 레포도
+`formal/sail/` 하위에 Sail 모델을 출하한다 ([Formal 섹션](../v002/Formal/index.rst)
+참고).
 
 ## 이 페이지 재생성 시점
 
@@ -61,9 +69,9 @@ pccx-lab 레포의 설계 문서 네 개
 
 ## 로드맵 포인터
 
-- pccx-lab 레포: <https://github.com/hwkim-dev/pccx-lab>
+- pccx-lab 레포: <https://github.com/hkimw/pccx-lab>
 - Phase 1 변경 이력: `crates/*/CHANGELOG.md`
-- 페이즈별 설계 문서: `docs/design/phase{1,2,3,4,5}_*.md`
+- 페이즈별 설계 문서: `docs/design/phase{1,2,3,4,5,6}_*.md`
 
 ## 이 페이지 인용
 
@@ -72,8 +80,8 @@ pccx-lab 레포의 설계 문서 네 개
   title        = {pccx-lab research lineage (placeholder): registry rebuild underway after Phase 1 module exodus},
   author       = {Kim, Hyunwoo},
   year         = {2026},
-  howpublished = {\url{https://hwkim-dev.github.io/pccx/ko/docs/Lab/research.html}},
-  note         = {Part of pccx: \url{https://hwkim-dev.github.io/pccx/}}
+  howpublished = {\url{https://hkimw.github.io/pccx/ko/docs/Lab/research.html}},
+  note         = {Part of pccx: \url{https://hkimw.github.io/pccx/}}
 }
 ```
 

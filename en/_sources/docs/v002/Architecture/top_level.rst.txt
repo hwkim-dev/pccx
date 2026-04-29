@@ -18,11 +18,11 @@ Top-Level Architecture
 
    **Figure 2.** System context. The AXI-Lite command path (``CMD_IN``)
    carries 64-bit instructions from the host driver into the Control
-   Unit + Dispatcher; the dual-direction AXI-Lite ``STAT_OUT`` reports
-   async completion. Four 128-bit AXI-HP ports plus one ACP port move
-   the bulk data (weights, activations, KV cache) between external
-   DDR4 and the AXI Interconnect. Inside the PL, the Dispatcher fans
-   μops out over a single trunk to the GEMM, GEMV, SFU, and DMA
+   Unit and Dispatcher; the dual-direction AXI-Lite ``STAT_OUT`` reports
+   asynchronous completion. Four 128-bit AXI-HP ports plus one ACP port
+   move the bulk data (weights, activations, KV cache) between external
+   DDR4 and the AXI Interconnect. Inside the PL, the Dispatcher
+   broadcasts μops over a single trunk to the GEMM, GEMV, SFU, and DMA
    back-ends, which read and write through the L1 Weight Buffer and
    the L2 cache.
 
@@ -39,7 +39,7 @@ The top level is organized around four principles.
    stalls due to dispatch latency.
 3. **Separated weight and activation paths** — Weights stream directly
    from host DDR4 into the weight buffer, while activations flow from the
-   central L2 cache. The two streams never collide on the interconnect.
+   central L2 cache. The two streams do not contend on the interconnect.
 4. **Centralized L2 cache** — GEMM, GEMV, and SFU are placed physically
    close to L2, eliminating the cost of reshuffling activations between
    layers.

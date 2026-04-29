@@ -171,10 +171,10 @@ gate for now.
   title        = {pccx-lab command-line binaries after the Phase 1 workspace split: pccx\_cli, generator, from\_xsim\_log, pccx\_golden\_diff},
   author       = {Kim, Hyunwoo},
   year         = {2026},
-  howpublished = {\url{https://hwkim-dev.github.io/pccx/en/docs/Lab/cli.html}},
-  note         = {Part of pccx: \url{https://hwkim-dev.github.io/pccx/}}
+  howpublished = {\url{https://hkimw.github.io/pccx/en/docs/Lab/cli.html}},
+  note         = {Part of pccx: \url{https://hkimw.github.io/pccx/}}
 }
 ```
 
 Each binary's source lives under its owning crate at
-<https://github.com/hwkim-dev/pccx-lab>.
+<https://github.com/hkimw/pccx-lab>.

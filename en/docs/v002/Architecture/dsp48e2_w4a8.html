@@ -5,18 +5,18 @@
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta property="og:title" content="DSP48E2 W4A8 Bit Packing and Sign Recovery" />
 <meta property="og:type" content="website" />
-<meta property="og:url" content="https://hwkim-dev.github.io/pccx/docs/v002/Architecture/dsp48e2_w4a8.html" />
+<meta property="og:url" content="https://hkimw.github.io/pccx/docs/v002/Architecture/dsp48e2_w4a8.html" />
 <meta property="og:site_name" content="pccx — Parallel Compute Core eXecutor" />
 <meta property="og:description" content="pccx v002 executes two independent MACs per DSP48E2 slice by packing two weights into a 23-bit-shifted layout on Port A. This page documents the mathematical rationale, how negative lower-channel r..." />
 <meta property="og:image:width" content="1146" />
 <meta property="og:image:height" content="600" />
-<meta property="og:image" content="https://hwkim-dev.github.io/pccx/_images/social_previews/summary_docs_v002_Architecture_dsp48e2_w4a8_c58eb2db.png" />
+<meta property="og:image" content="https://hkimw.github.io/pccx/_images/social_previews/summary_docs_v002_Architecture_dsp48e2_w4a8_c58eb2db.png" />
 <meta property="og:image:alt" content="pccx v002 executes two independent MACs per DSP48E2 slice by packing two weights into a 23-bit-shifted layout on Port A. This page documents the mathematical rationale, how negative lower-channel r..." />
 <meta name="description" content="pccx v002 executes two independent MACs per DSP48E2 slice by packing two weights into a 23-bit-shifted layout on Port A. This page documents the mathematical rationale, how negative lower-channel r..." />
 <meta name="twitter:card" content="summary_large_image" />
 
-<script type="application/ld+json">[{"@context":"https://schema.org","@type":"WebSite","name":"pccx — Parallel Compute Core eXecutor","alternateName":"pccx","url":"https://hwkim-dev.github.io/pccx/","inLanguage":["en","en","ko"],"author":{"@type":"Person","name":"Hyunwoo Kim","url":"https://hwkim-dev.github.io/hwkim-dev/"},"publisher":{"@type":"Person","name":"Hyunwoo Kim","url":"https://hwkim-dev.github.io/hwkim-dev/"},"description":"pccx is an open-source scalable NPU architecture for edge LLM inference.  W4A8KV4 quantisation on the Xilinx Kria KV260; v002 reference implementation in SystemVerilog.","keywords":["NPU","FPGA","LLM inference","edge AI","W4A8","KV cache","systolic array","Kria KV260","ZU5EV","Transformer accelerator","speculative decoding","FlashAttention","QServe","Gemma 3N","Matryoshka","Sail ISA","Sail language","formal ISA specification","ISA semantics","RISC-V Sail","Arm Sail","CHERI","Morello","Isabelle/HOL","Coq"]},{"@context":"https://schema.org","@type":"TechArticle","headline":"DSP48E2 W4A8 Bit Packing and Sign Recovery","name":"DSP48E2 W4A8 Bit Packing and Sign Recovery","url":"https://hwkim-dev.github.io/pccx/en/docs/v002/Architecture/dsp48e2_w4a8.html","mainEntityOfPage":{"@type":"WebPage","@id":"https://hwkim-dev.github.io/pccx/en/docs/v002/Architecture/dsp48e2_w4a8.html"},"isPartOf":{"@type":"WebSite","name":"pccx — Parallel Compute Core eXecutor","url":"https://hwkim-dev.github.io/pccx/"},"author":{"@type":"Person","name":"Hyunwoo Kim","url":"https://hwkim-dev.github.io/hwkim-dev/"},"publisher":{"@type":"Organization","name":"pccx project","url":"https://hwkim-dev.github.io/pccx/"},"datePublished":"2026-04-24","dateModified":"2026-04-24","description":"pccx documentation page: DSP48E2 W4A8 Bit Packing and Sign Recovery. Open-source NPU architecture + pccx-lab profiler implementing research from QServe, FlashAttention, OpenPangu speculative decoding, and Matryoshka subnet swap.","inLanguage":"en","license":"https://www.apache.org/licenses/LICENSE-2.0","citation":{"@type":"CreativeWork","name":"pccx: Parallel Compute Core eXecutor","url":"https://hwkim-dev.github.io/pccx/","author":"Hyunwoo Kim","datePublished":"2026"}}]</script><link rel="index" title="Index" href="../../../genindex.html"><link rel="search" title="Search" href="../../../search.html"><link rel="next" title="Instruction Set Architecture (ISA)" href="../ISA/index.html"><link rel="prev" title="SFU Core (Complex Vector Operations)" href="sfu_core.html">
-        <link rel="canonical" href="https://hwkim-dev.github.io/pccx/docs/v002/Architecture/dsp48e2_w4a8.html">
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"WebSite","name":"pccx — Parallel Compute Core eXecutor","alternateName":"pccx","url":"https://hkimw.github.io/pccx/","inLanguage":["en","en","ko"],"author":{"@type":"Person","name":"Hyunwoo Kim","url":"https://hkimw.github.io/hkimw/"},"publisher":{"@type":"Person","name":"Hyunwoo Kim","url":"https://hkimw.github.io/hkimw/"},"description":"pccx is an open-source scalable NPU architecture for edge LLM inference.  W4A8KV4 quantisation on the Xilinx Kria KV260; v002 reference implementation in SystemVerilog.","keywords":["NPU","FPGA","LLM inference","edge AI","W4A8","KV cache","systolic array","Kria KV260","ZU5EV","Transformer accelerator","speculative decoding","FlashAttention","QServe","Gemma 3N","Matryoshka","Sail ISA","Sail language","formal ISA specification","ISA semantics","RISC-V Sail","Arm Sail","CHERI","Morello","Isabelle/HOL","Coq"]},{"@context":"https://schema.org","@type":"TechArticle","headline":"DSP48E2 W4A8 Bit Packing and Sign Recovery","name":"DSP48E2 W4A8 Bit Packing and Sign Recovery","url":"https://hkimw.github.io/pccx/en/docs/v002/Architecture/dsp48e2_w4a8.html","mainEntityOfPage":{"@type":"WebPage","@id":"https://hkimw.github.io/pccx/en/docs/v002/Architecture/dsp48e2_w4a8.html"},"isPartOf":{"@type":"WebSite","name":"pccx — Parallel Compute Core eXecutor","url":"https://hkimw.github.io/pccx/"},"author":{"@type":"Person","name":"Hyunwoo Kim","url":"https://hkimw.github.io/hkimw/"},"publisher":{"@type":"Organization","name":"pccx project","url":"https://hkimw.github.io/pccx/"},"datePublished":"2026-04-29","dateModified":"2026-04-29","description":"pccx documentation page: DSP48E2 W4A8 Bit Packing and Sign Recovery. Open-source NPU architecture + pccx-lab profiler implementing research from QServe, FlashAttention, OpenPangu speculative decoding, and Matryoshka subnet swap.","inLanguage":"en","license":"https://www.apache.org/licenses/LICENSE-2.0","citation":{"@type":"CreativeWork","name":"pccx: Parallel Compute Core eXecutor","url":"https://hkimw.github.io/pccx/","author":"Hyunwoo Kim","datePublished":"2026"}}]</script><link rel="index" title="Index" href="../../../genindex.html"><link rel="search" title="Search" href="../../../search.html"><link rel="next" title="Instruction Set Architecture (ISA)" href="../ISA/index.html"><link rel="prev" title="PREPROCESS Stage" href="preprocess.html">
+        <link rel="canonical" href="https://hkimw.github.io/pccx/docs/v002/Architecture/dsp48e2_w4a8.html">
 
     <!-- Generated with Sphinx 7.4.7 and Furo 2025.12.19 -->
         <title>DSP48E2 W4A8 Bit Packing and Sign Recovery - pccx</title>
@@ -33,7 +33,7 @@
     <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
     <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo-extensions.css?v=8dab3a3b" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=7b993dbb" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=4880187a" />
     <link rel="stylesheet" type="text/css" href="../../../_static/image-lightbox.css?v=884c9d5a" />
     <link rel="stylesheet" type="text/css" href="../../../_static/language-switcher.css?v=cc8629cf" />
     
@@ -240,7 +240,7 @@
 
 <nav class="pccx-repolinks" aria-label="Project repositories">
   <a class="pccx-repolinks__btn"
-     href="https://github.com/hwkim-dev/pccx-FPGA-NPU-LLM-kv260"
+     href="https://github.com/hkimw/pccx-FPGA-NPU-LLM-kv260"
      title="Active v002 RTL — pccx-FPGA-NPU-LLM-kv260"
      target="_blank" rel="noopener">
     <svg aria-hidden="true" viewBox="0 0 24 24" width="1em" height="1em"
@@ -267,8 +267,8 @@
     <span class="pccx-repolinks__label">Lab</span>
   </a>
   <a class="pccx-repolinks__btn"
-     href="https://github.com/hwkim-dev/pccx"
-     title="Docs source — github.com/hwkim-dev/pccx"
+     href="https://github.com/hkimw/pccx"
+     title="Docs source — github.com/hkimw/pccx"
      target="_blank" rel="noopener">
     <svg aria-hidden="true" viewBox="0 0 16 16" width="1em" height="1em"
          fill="currentColor">
@@ -277,8 +277,8 @@
     <span class="pccx-repolinks__label">Docs</span>
   </a>
   <a class="pccx-repolinks__btn"
-     href="https://hwkim-dev.github.io/hwkim-dev/"
-     title="Author portfolio — hwkim-dev.github.io"
+     href="https://hkimw.github.io/hkimw/"
+     title="Author portfolio — hkimw.github.io"
      target="_blank" rel="noopener">
     <svg aria-hidden="true" viewBox="0 0 24 24" width="1em" height="1em"
          fill="none" stroke="currentColor" stroke-width="1.6"
@@ -316,6 +316,7 @@
 <li class="toctree-l3"><a class="reference internal" href="gemm_core.html">GEMM Core (Systolic Array)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="gemv_core.html">GEMV Core</a></li>
 <li class="toctree-l3"><a class="reference internal" href="sfu_core.html">SFU Core (Complex Vector Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="preprocess.html">PREPROCESS Stage</a></li>
 <li class="toctree-l3 current current-page"><a class="current reference internal" href="#">DSP48E2 W4A8 Bit Packing and Sign Recovery</a></li>
 </ul>
 </li>
@@ -330,6 +331,7 @@
 </li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../Drivers/index.html">Software Stack</a><input aria-label="Toggle navigation of Software Stack" class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../Drivers/api.html">C API Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Drivers/hal.html">HAL — AXI-Lite MMIO Layer</a></li>
 </ul>
 </li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../Models/index.html">Target Models</a><input aria-label="Toggle navigation of Target Models" class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
@@ -346,39 +348,56 @@
 <li class="toctree-l3"><a class="reference internal" href="../RTL/npu_top.html">NPU Top-Level</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../RTL/compute_cores.html">Compute Core Modules</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../RTL/controller.html">NPU Controller Modules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../RTL/frontend.html">NPU Frontend Modules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../RTL/memory_l2.html">L2 Cache (URAM)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../RTL/memory_dispatch.html">Memory Dispatch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../RTL/preprocess.html">PREPROCESS RTL Reference</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../RTL/packages.html">Compile-Priority Packages</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../RTL/library.html">Shared Library</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../Verification/index.html">Verification</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../Build/index.html">Vivado Build</a><input aria-label="Toggle navigation of Vivado Build" class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="simple">
+</ul>
+</li>
 </ul>
 </li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Target Hardware</span></p>
 <ul>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../Devices/index.html">Devices</a><input aria-label="Toggle navigation of Devices" class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../Devices/index.html">Devices</a><input aria-label="Toggle navigation of Devices" class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" role="switch" type="checkbox"/><label for="toctree-checkbox-10"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../Devices/kv260.html">Target Hardware: Xilinx Kria KV260</a></li>
 </ul>
 </li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">pccx-lab Handbook</span></p>
 <ul>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../Lab/index.html">pccx-lab Handbook</a><input aria-label="Toggle navigation of pccx-lab Handbook" class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" role="switch" type="checkbox"/><label for="toctree-checkbox-10"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../Lab/index.html">pccx-lab Handbook</a><input aria-label="Toggle navigation of pccx-lab Handbook" class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" role="switch" type="checkbox"/><label for="toctree-checkbox-11"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../Lab/architecture.html">Architecture Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../Lab/cli.html">CLI Reference</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../Lab/analyzer_api.html">Analyzer API</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../Lab/copilot.html">Copilot API</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../Lab/research.html">pccx-lab research lineage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Lab/panels.html">UI Panel Catalogue</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Lab/ipc.html">Tauri IPC Contract</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Lab/verification-workflow.html">Verification Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Lab/pccx-format.html">.pccx Binary Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Lab/uvm-bridge.html">UVM Bridge</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Lab/self-evolution.html">Cycle Loop</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Lab/quickstart.html">pccx-lab Quickstart</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Lab/core-modules.html">pccx-core Module Reference</a></li>
 </ul>
 </li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Archive</span></p>
 <ul>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../archive/index.html">Archive</a><input aria-label="Toggle navigation of Archive" class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" role="switch" type="checkbox"/><label for="toctree-checkbox-11"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../archive/experimental_v001/index.html">Archive: v001 Experimental Architecture</a><input aria-label="Toggle navigation of Archive: v001 Experimental Architecture" class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" role="switch" type="checkbox"/><label for="toctree-checkbox-12"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../archive/index.html">Archive</a><input aria-label="Toggle navigation of Archive" class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" role="switch" type="checkbox"/><label for="toctree-checkbox-12"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../archive/experimental_v001/index.html">Archive: v001 Experimental Architecture</a><input aria-label="Toggle navigation of Archive: v001 Experimental Architecture" class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" role="switch" type="checkbox"/><label for="toctree-checkbox-13"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../archive/experimental_v001/Architecture/v001_architecture.html">pccx: Parallel Compute Core eXecutor</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../archive/experimental_v001/Drivers/ISA.html">pccx ISA Specification</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../archive/experimental_v001/Drivers/ISA_Spreadsheet.html">pccx ISA Spreadsheet View</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../archive/experimental_v001/Drivers/v001_API.html">Developer Reference for pccx v001 Host API</a></li>
-<li class="toctree-l3 has-children"><a class="reference internal" href="../../archive/experimental_v001/RTL/index.html">RTL Source Reference (v001)</a><input aria-label="Toggle navigation of RTL Source Reference (v001)" class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" role="switch" type="checkbox"/><label for="toctree-checkbox-13"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../archive/experimental_v001/RTL/index.html">RTL Source Reference (v001)</a><input aria-label="Toggle navigation of RTL Source Reference (v001)" class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" role="switch" type="checkbox"/><label for="toctree-checkbox-14"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../archive/experimental_v001/RTL/top.html">Top level</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../archive/experimental_v001/RTL/packages.html">Packages and Constants</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../archive/experimental_v001/RTL/controller.html">NPU Controller</a></li>
@@ -398,12 +417,13 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Toolchain Demos</span></p>
 <ul>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../samples/index.html">Toolchain Demos</a><input aria-label="Toggle navigation of Toolchain Demos" class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" role="switch" type="checkbox"/><label for="toctree-checkbox-14"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../samples/index.html">Toolchain Demos</a><input aria-label="Toggle navigation of Toolchain Demos" class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" role="switch" type="checkbox"/><label for="toctree-checkbox-15"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../samples/mermaid_blockdiagram.html">Mermaid — NPU block diagram</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../samples/wavedrom_axi_read.html">WaveDrom — AXI4 read transaction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../samples/test_diagrams.html">Test: Deterministic SVG Generation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../samples/svg_themed_demo.html">SVG — themed 4×4 PE array</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../samples/plot_bandwidth.html">scienceplots — bandwidth vs batch size</a></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../../auto_plots/index.html">Plot gallery</a><input aria-label="Toggle navigation of Plot gallery" class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" role="switch" type="checkbox"/><label for="toctree-checkbox-15"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../auto_plots/index.html">Plot gallery</a><input aria-label="Toggle navigation of Plot gallery" class="toctree-checkbox" id="toctree-checkbox-16" name="toctree-checkbox-16" role="switch" type="checkbox"/><label for="toctree-checkbox-16"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../auto_plots/plot_bandwidth.html">Batch size vs achieved HP-AXI bandwidth</a></li>
 </ul>
 </li>
@@ -412,7 +432,7 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Tools</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference external" href="https://hwkim-dev.github.io/pccx/en/lab/">pccx-lab — Simulator &amp; AI Profiler</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://hkimw.github.io/pccx/en/lab/">pccx-lab — Simulator &amp; AI Profiler</a></li>
 </ul>
 
 </div>
@@ -433,12 +453,12 @@
         </a>
         <div class="content-icon-container">
           <div class="view-this-page">
-  <a class="muted-link" href="https://github.com/hwkim-dev/pccx/blob/main/docs/docs/v002/Architecture/dsp48e2_w4a8.rst?plain=true" title="View this page">
+  <a class="muted-link" href="https://github.com/hkimw/pccx/blob/main/docs/docs/v002/Architecture/dsp48e2_w4a8.rst?plain=true" title="View this page">
     <svg><use href="#svg-eye"></use></svg>
     <span class="visually-hidden">View this page</span>
   </a>
 </div><div class="edit-this-page">
-  <a class="muted-link" href="https://github.com/hwkim-dev/pccx/edit/main/docs/docs/v002/Architecture/dsp48e2_w4a8.rst" rel="edit" title="Edit this page">
+  <a class="muted-link" href="https://github.com/hkimw/pccx/edit/main/docs/docs/v002/Architecture/dsp48e2_w4a8.rst" rel="edit" title="Edit this page">
     <svg><use href="#svg-pencil"></use></svg>
     <span class="visually-hidden">Edit this page</span>
   </a>
@@ -484,17 +504,102 @@ dual-channel packing.</p>
 </section>
 <section id="bit-packing-layout">
 <h2>2. Bit-Packing Layout<a class="headerlink" href="#bit-packing-layout" title="Link to this heading">¶</a></h2>
-<figure class="align-center" id="id1">
-<a class="reference internal image-reference" href="../../../_images/Processing_Elements_GEMM_4_v002.png"><img alt="DSP48E2 Port A / Port B W4A8 dual-channel packing layout" src="../../../_images/Processing_Elements_GEMM_4_v002.png" style="width: 95%;" />
-</a>
-<figcaption>
-<p><span class="caption-number">Figure 9 </span><span class="caption-text"><strong>Figure W4A8-Layout.</strong> Port A (27 bits) holds W₁ in the top 4 bits
-and W₂ in the bottom 4 bits, with 19 guard bits between them. Port B
-(18 bits) holds activation <code class="docutils literal notranslate"><span class="pre">A₁</span></code> in the bottom 8 bits and
-sign-extends it (<code class="docutils literal notranslate"><span class="pre">A₁[7]</span></code>) through the upper 10 bits.</span><a class="headerlink" href="#id1" title="Link to this image">¶</a></p>
-</figcaption>
-</figure>
-<section id="port-a-dual-weight-27-bits">
+<p>To achieve 2 MACs per DSP, we pack two 4-bit weights with a large
+separation gap to prevent overflow between channels during accumulation.</p>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 120" class="pccx-diagram">
+  <rect x="0" y="0" width="640" height="120" fill="#ffffff"/>
+  <style>
+    .bit-box { fill: #ffffff; stroke: #000000; stroke-width: 0.8; }
+    .bit-w1  { fill: #dae7f4; stroke: #000000; stroke-width: 0.8; }
+    .bit-w2  { fill: #e2efd8; stroke: #000000; stroke-width: 0.8; }
+    .bit-g   { fill: #ebebeb; stroke: #000000; stroke-width: 0.8; }
+    .text-idx { fill: #666666; font-family: ui-sans-serif, system-ui; font-size: 9px; text-anchor: middle; }
+    .text-label { fill: #000000; font-family: ui-sans-serif, system-ui; font-size: 11px; text-anchor: middle; }
+    .text-title { fill: #000000; font-family: ui-sans-serif, system-ui; font-size: 13px; font-weight: bold; text-anchor: middle; }
+  </style>
+  <text class="text-title" x="320.0" y="25">DSP48E2 Port A (27-bit) W4A8 Dual-Channel Packing</text>
+  <rect class="bit-w1" x="50" y="45" width="20" height="30"/>
+  <text class="text-idx" x="60.0" y="40">26</text>
+  <text class="text-label" x="60.0" y="90" transform="rotate(45 60.0 90)">W1[4]</text>
+  <rect class="bit-w1" x="70" y="45" width="20" height="30"/>
+  <text class="text-idx" x="80.0" y="40">25</text>
+  <text class="text-label" x="80.0" y="90" transform="rotate(45 80.0 90)">W1[3]</text>
+  <rect class="bit-w1" x="90" y="45" width="20" height="30"/>
+  <text class="text-idx" x="100.0" y="40">24</text>
+  <text class="text-label" x="100.0" y="90" transform="rotate(45 100.0 90)">W1[2]</text>
+  <rect class="bit-w1" x="110" y="45" width="20" height="30"/>
+  <text class="text-idx" x="120.0" y="40">23</text>
+  <text class="text-label" x="120.0" y="90" transform="rotate(45 120.0 90)">W1[1]</text>
+  <rect class="bit-w1" x="130" y="45" width="20" height="30"/>
+  <text class="text-idx" x="140.0" y="40">22</text>
+  <text class="text-label" x="140.0" y="90" transform="rotate(45 140.0 90)">W1[0]</text>
+  <rect class="bit-g" x="150" y="45" width="20" height="30"/>
+  <text class="text-idx" x="160.0" y="40">21</text>
+  <text class="text-label" x="160.0" y="90" transform="rotate(45 160.0 90)">G</text>
+  <rect class="bit-g" x="170" y="45" width="20" height="30"/>
+  <text class="text-idx" x="180.0" y="40">20</text>
+  <text class="text-label" x="180.0" y="90" transform="rotate(45 180.0 90)">G</text>
+  <rect class="bit-g" x="190" y="45" width="20" height="30"/>
+  <text class="text-idx" x="200.0" y="40">19</text>
+  <text class="text-label" x="200.0" y="90" transform="rotate(45 200.0 90)">G</text>
+  <rect class="bit-g" x="210" y="45" width="20" height="30"/>
+  <text class="text-idx" x="220.0" y="40">18</text>
+  <text class="text-label" x="220.0" y="90" transform="rotate(45 220.0 90)">G</text>
+  <rect class="bit-g" x="230" y="45" width="20" height="30"/>
+  <text class="text-idx" x="240.0" y="40">17</text>
+  <text class="text-label" x="240.0" y="90" transform="rotate(45 240.0 90)">G</text>
+  <rect class="bit-g" x="250" y="45" width="20" height="30"/>
+  <text class="text-idx" x="260.0" y="40">16</text>
+  <text class="text-label" x="260.0" y="90" transform="rotate(45 260.0 90)">G</text>
+  <rect class="bit-g" x="270" y="45" width="20" height="30"/>
+  <text class="text-idx" x="280.0" y="40">15</text>
+  <text class="text-label" x="280.0" y="90" transform="rotate(45 280.0 90)">G</text>
+  <rect class="bit-g" x="290" y="45" width="20" height="30"/>
+  <text class="text-idx" x="300.0" y="40">14</text>
+  <text class="text-label" x="300.0" y="90" transform="rotate(45 300.0 90)">G</text>
+  <rect class="bit-g" x="310" y="45" width="20" height="30"/>
+  <text class="text-idx" x="320.0" y="40">13</text>
+  <text class="text-label" x="320.0" y="90" transform="rotate(45 320.0 90)">G</text>
+  <rect class="bit-g" x="330" y="45" width="20" height="30"/>
+  <text class="text-idx" x="340.0" y="40">12</text>
+  <text class="text-label" x="340.0" y="90" transform="rotate(45 340.0 90)">G</text>
+  <rect class="bit-g" x="350" y="45" width="20" height="30"/>
+  <text class="text-idx" x="360.0" y="40">11</text>
+  <text class="text-label" x="360.0" y="90" transform="rotate(45 360.0 90)">G</text>
+  <rect class="bit-g" x="370" y="45" width="20" height="30"/>
+  <text class="text-idx" x="380.0" y="40">10</text>
+  <text class="text-label" x="380.0" y="90" transform="rotate(45 380.0 90)">G</text>
+  <rect class="bit-g" x="390" y="45" width="20" height="30"/>
+  <text class="text-idx" x="400.0" y="40">9</text>
+  <text class="text-label" x="400.0" y="90" transform="rotate(45 400.0 90)">G</text>
+  <rect class="bit-g" x="410" y="45" width="20" height="30"/>
+  <text class="text-idx" x="420.0" y="40">8</text>
+  <text class="text-label" x="420.0" y="90" transform="rotate(45 420.0 90)">G</text>
+  <rect class="bit-g" x="430" y="45" width="20" height="30"/>
+  <text class="text-idx" x="440.0" y="40">7</text>
+  <text class="text-label" x="440.0" y="90" transform="rotate(45 440.0 90)">G</text>
+  <rect class="bit-g" x="450" y="45" width="20" height="30"/>
+  <text class="text-idx" x="460.0" y="40">6</text>
+  <text class="text-label" x="460.0" y="90" transform="rotate(45 460.0 90)">G</text>
+  <rect class="bit-g" x="470" y="45" width="20" height="30"/>
+  <text class="text-idx" x="480.0" y="40">5</text>
+  <text class="text-label" x="480.0" y="90" transform="rotate(45 480.0 90)">G</text>
+  <rect class="bit-g" x="490" y="45" width="20" height="30"/>
+  <text class="text-idx" x="500.0" y="40">4</text>
+  <text class="text-label" x="500.0" y="90" transform="rotate(45 500.0 90)">G</text>
+  <rect class="bit-w2" x="510" y="45" width="20" height="30"/>
+  <text class="text-idx" x="520.0" y="40">3</text>
+  <text class="text-label" x="520.0" y="90" transform="rotate(45 520.0 90)">W2[3]</text>
+  <rect class="bit-w2" x="530" y="45" width="20" height="30"/>
+  <text class="text-idx" x="540.0" y="40">2</text>
+  <text class="text-label" x="540.0" y="90" transform="rotate(45 540.0 90)">W2[2]</text>
+  <rect class="bit-w2" x="550" y="45" width="20" height="30"/>
+  <text class="text-idx" x="560.0" y="40">1</text>
+  <text class="text-label" x="560.0" y="90" transform="rotate(45 560.0 90)">W2[1]</text>
+  <rect class="bit-w2" x="570" y="45" width="20" height="30"/>
+  <text class="text-idx" x="580.0" y="40">0</text>
+  <text class="text-label" x="580.0" y="90" transform="rotate(45 580.0 90)">W2[0]</text>
+</svg><section id="port-a-dual-weight-27-bits">
 <h3>2.1 Port A — Dual Weight (27 bits)<a class="headerlink" href="#port-a-dual-weight-27-bits" title="Link to this heading">¶</a></h3>
 <div class="table-wrapper colwidths-given docutils container">
 <table class="docutils align-default">
@@ -593,6 +698,16 @@ By the same argument, the upper 25-bit region safely accumulates
 accumulation sessions. The split unit is decided at the driver /
 compiler level.</p>
 </div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The companion RTL repo’s README quotes a tighter drain bound of
+<code class="docutils literal notranslate"><span class="pre">2¹⁰</span> <span class="pre">≈</span> <span class="pre">1024</span></code> cycles for <code class="docutils literal notranslate"><span class="pre">GEMM_accumulator</span></code> (post-synth guard-band
+limited). The 4,096 figure above is the upper bound from the
+23-bit lower-region budget; whether the deployed design uses the
+conservative 1,024 or the analytical 4,096 is tracked in the RTL
+repo’s <code class="docutils literal notranslate"><span class="pre">TODO.md</span></code> §1.2 and will be settled once post-synth timing
+margin is finalised.</p>
+</div>
 </section>
 <section id="negative-accumulation-and-the-borrow-effect">
 <h2>4. Negative Accumulation and the Borrow Effect<a class="headerlink" href="#negative-accumulation-and-the-borrow-effect" title="Link to this heading">¶</a></h2>
@@ -634,13 +749,13 @@ reversed in a single post-processing cycle.</p>
 </ul>
 <p>Recovery runs exactly once, in the <strong>final extraction cycle</strong> after all
 accumulation completes.</p>
-<figure class="align-center" id="id2">
+<figure class="align-center" id="id1">
 <a class="reference internal image-reference" href="../../../_images/Processing_Elements_GEMM_5_v002.png"><img alt="Sign-recovery Verilog" src="../../../_images/Processing_Elements_GEMM_5_v002.png" style="width: 75%;" />
 </a>
 <figcaption>
-<p><span class="caption-number">Figure 10 </span><span class="caption-text"><strong>Figure Sign-Recover.</strong> On the <code class="docutils literal notranslate"><span class="pre">accumulate_done</span></code> cycle the upper
+<p><span class="caption-number">Figure 11 </span><span class="caption-text"><strong>Figure Sign-Recover.</strong> On the <code class="docutils literal notranslate"><span class="pre">accumulate_done</span></code> cycle the upper
 channel adds <code class="docutils literal notranslate"><span class="pre">acc[22]</span></code> back in; the lower channel keeps its
-23-bit two’s-complement value as-is.</span><a class="headerlink" href="#id2" title="Link to this image">¶</a></p>
+23-bit two’s-complement value as-is.</span><a class="headerlink" href="#id1" title="Link to this image">¶</a></p>
 </figcaption>
 </figure>
 <div class="highlight-verilog notranslate"><div class="highlight"><pre><span></span><span class="c1">// Sign bit of the lower 23-bit accumulation (1: negative, 0: non-negative)</span>
@@ -743,14 +858,14 @@ speedup, see the “3.125×” analysis in <a class="reference internal" href="r
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
-          <a class="prev-page" href="sfu_core.html">
+          <a class="prev-page" href="preprocess.html">
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">SFU Core (Complex Vector Operations)</div>
+                <div class="title">PREPROCESS Stage</div>
                 
               </div>
             </a>
@@ -763,14 +878,14 @@ speedup, see the “3.125×” analysis in <a class="reference internal" href="r
             Made with 
             <a href="https://github.com/pradyunsg/furo">Furo</a>
             <div class="last-updated">
-              Last updated on 2026-04-24</div>
+              Last updated on 2026-04-29</div>
           </div>
           <div class="right-details">
             <div class="icons">
-              <a class="muted-link pccx-footer-icon" href="https://github.com/hwkim-dev/pccx-FPGA-NPU-LLM-kv260" aria-label="RTL implementation — github.com/hwkim-dev/pccx-FPGA-NPU-LLM-kv260"><svg fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="1.2"/><rect x="10" y="10" width="4" height="4" fill="currentColor" stroke="none"/><path d="M9 3v3M15 3v3M9 18v3M15 18v3M3 9h3M3 15h3M18 9h3M18 15h3"/></svg><span class="pccx-footer-icon__label">RTL</span></a>
-              <a class="muted-link pccx-footer-icon" href="https://hwkim-dev.github.io/pccx/en/lab/" aria-label="pccx-lab — simulator & AI profiler"><svg fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path d="M9 3h6"/><path d="M10 3v6.2L4.6 19a1 1 0 0 0 .86 1.5h13.08a1 1 0 0 0 .86-1.5L14 9.2V3"/><path d="M6.8 14h10.4"/></svg><span class="pccx-footer-icon__label">Lab</span></a>
-              <a class="muted-link pccx-footer-icon" href="https://github.com/hwkim-dev/pccx" aria-label="Docs repository — github.com/hwkim-dev/pccx"><svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16" width="1em" height="1em" aria-hidden="true"><path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg><span class="pccx-footer-icon__label">Docs</span></a>
-              <a class="muted-link pccx-footer-icon" href="https://hwkim-dev.github.io/hwkim-dev/" aria-label="Author portfolio — hwkim-dev.github.io/hwkim-dev"><svg fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M4.5 20.5c1-3.5 4-5.5 7.5-5.5s6.5 2 7.5 5.5"/></svg><span class="pccx-footer-icon__label">Blog</span></a>
+              <a class="muted-link pccx-footer-icon" href="https://github.com/hkimw/pccx-FPGA-NPU-LLM-kv260" aria-label="RTL implementation — github.com/hkimw/pccx-FPGA-NPU-LLM-kv260"><svg fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="1.2"/><rect x="10" y="10" width="4" height="4" fill="currentColor" stroke="none"/><path d="M9 3v3M15 3v3M9 18v3M15 18v3M3 9h3M3 15h3M18 9h3M18 15h3"/></svg><span class="pccx-footer-icon__label">RTL</span></a>
+              <a class="muted-link pccx-footer-icon" href="https://hkimw.github.io/pccx/en/lab/" aria-label="pccx-lab — simulator & AI profiler"><svg fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path d="M9 3h6"/><path d="M10 3v6.2L4.6 19a1 1 0 0 0 .86 1.5h13.08a1 1 0 0 0 .86-1.5L14 9.2V3"/><path d="M6.8 14h10.4"/></svg><span class="pccx-footer-icon__label">Lab</span></a>
+              <a class="muted-link pccx-footer-icon" href="https://github.com/hkimw/pccx" aria-label="Docs repository — github.com/hkimw/pccx"><svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16" width="1em" height="1em" aria-hidden="true"><path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg><span class="pccx-footer-icon__label">Docs</span></a>
+              <a class="muted-link pccx-footer-icon" href="https://hkimw.github.io/hkimw/" aria-label="Author portfolio — hkimw.github.io/hkimw"><svg fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M4.5 20.5c1-3.5 4-5.5 7.5-5.5s6.5 2 7.5 5.5"/></svg><span class="pccx-footer-icon__label">Blog</span></a>
               
             </div>
           </div>

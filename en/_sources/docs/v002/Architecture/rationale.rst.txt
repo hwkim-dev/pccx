@@ -2,69 +2,49 @@
 Design Rationale: v001 → v002
 ===================================================
 
-pccx v001 reached the brink of implementation before being moved to
-``docs/archive/experimental_v001/`` rather than taped out. This page
-documents which architectural weaknesses pushed us to that decision and
-how v002 resolves each of them.
+pccx v001 reached late-stage RTL implementation before being archived
+to ``docs/archive/experimental_v001/`` rather than taken through to
+tape-out. This page documents the architectural weaknesses that drove
+that decision and how v002 addresses each of them.
 
-1. Core Flaws in v001
-=====================
+1. Core Flaws in v001 & v002's Response
+=======================================
 
-.. list-table::
-   :header-rows: 1
-   :widths: 25 75
+The table below visualizes how each architectural weakness in v001 directly drove a specific design decision in v002.
 
-   * - Flaw
-     - Symptom
-   * - **Ambiguous core roles**
-     - The boundaries between Matrix, Vector, and CVO cores were fuzzy.
-       Some operations were redundantly supported across multiple cores,
-       and others fit none of them cleanly.
-   * - **Too many buses**
-     - Weights, activations, and intermediate results each had their own
-       bus, crossing the fabric in different directions. The result was
-       routing congestion and poor timing.
-   * - **L2 and Global Cache overlap**
-     - The two cache levels covered overlapping responsibilities, so the
-       same data ended up duplicated on both sides and coherence logic
-       added a constant tax.
-   * - **Inefficient HP port layout**
-     - A single systolic array was served by a single HP port. The
-       external 250 MHz limit capped the internal 400 MHz consumption rate.
-   * - **Under-utilized systolic array**
-     - The 1-DSP-per-1-MAC structure left most of DSP48E2's bit space
-       unused.
+.. mermaid::
 
-2. v002's Response
-===================
+   flowchart LR
+     subgraph v001 ["v001 Flaws"]
+       F1[Ambiguous core roles]
+       F2[Too many buses]
+       F3[L2 / Global Cache overlap]
+       F4[Inefficient HP port layout]
+       F5[Under-utilized systolic array]
+     end
 
-Each flaw maps to a specific design decision in v002.
+     subgraph v002 ["v002 Responses"]
+       R1[Three-core organization]
+       R2[Bus simplification]
+       R3[Centralized L2 Cache]
+       R4[Distributed HP ports]
+       R5[Dual-channel bit packing]
+     end
 
-.. list-table::
-   :header-rows: 1
-   :widths: 25 75
+     F1 -->|Fuzzy boundaries| R1
+     F2 -->|Routing congestion| R2
+     F3 -->|Duplicated data| R3
+     F4 -->|Bottlenecked weight supply| R4
+     F5 -->|1 MAC per DSP| R5
 
-   * - Response
-     - Description
-   * - **Three-core organization**
-     - **GEMV, GEMM, and SFU** are cleanly separated. Each core is wired
-       to the L2 cache, the weight buffer, and the pipeline registers /
-       FIFOs that suit its access pattern — no more overlapping roles.
-   * - **Bus simplification**
-     - Everything collapses onto two orthogonal axes: ``WEIGHT BUS`` and
-       ``ACTIVATION BUS``. The two buses are physically perpendicular to
-       avoid routing contention.
-   * - **Centralized L2**
-     - Global Cache responsibilities are folded into L2, and L2 is placed
-       in the middle of the floorplan. The upper and lower slices see it
-       symmetrically.
-   * - **Distributed HP ports**
-     - HP2 and HP3 are assigned to independent slices, eliminating the
-       weight-supply bottleneck.
-   * - **Dual-channel bit packing**
-     - 1 DSP = **2 MAC** (:doc:`dsp48e2_w4a8`). Across the whole systolic
-       array this works out to **2,048 multiplies + 2,048 accumulates per
-       clock cycle**.
+     style v001 fill:#f5edd5,stroke:#dbe1ea,stroke-width:2px,color:#000
+     style v002 fill:#dae7f4,stroke:#dbe1ea,stroke-width:2px,color:#000
+
+- **Three-core organization**: GEMV, GEMM, and SFU are cleanly separated. Each core is wired to the L2 cache and weight buffer that suits its access pattern.
+- **Bus simplification**: Everything collapses onto two orthogonal axes (WEIGHT BUS and ACTIVATION BUS) to avoid routing contention.
+- **Centralized L2**: Global Cache responsibilities are folded into L2, which is placed in the center of the floorplan.
+- **Distributed HP ports**: HP2 and HP3 are assigned to independent slices, eliminating the weight-supply bottleneck.
+- **Dual-channel bit packing**: 1 DSP = 2 MACs, yielding 2,048 MACs per clock cycle across the systolic array.
 
 3. Speedup Analysis — 3.125×
 =============================
@@ -97,16 +77,17 @@ Multiplying the three levers gives
 -------------------------
 
 v001: 250 MHz × 1 HP × 1 MAC/DSP = **250 units of throughput**.
-v002: HP2 + HP3 stack weights at 250 MHz into a buffer, which is then
-consumed by the internal 400 MHz domain at 2 MACs per DSP, giving
+v002: HP2 and HP3 stream weights at 250 MHz into a shared buffer that
+the internal 400 MHz domain drains at 2 MACs per DSP, yielding
 **800 units of internal consumption rate**.
 
 .. math::
 
    \frac{800}{250} \;=\; \mathbf{3.125\,\times}
 
-The external port rate didn't change. The win is structural: **buffer
-externally, drain quickly internally, and perform two MACs per cycle**.
+The external port rate is unchanged. The improvement is structural:
+weights are buffered externally at 250 MHz, drained at the higher
+internal 400 MHz clock, and each DSP executes two MACs per cycle.
 The effective throughput seen by the systolic array is 3.125× higher.
 
 3.2 Per-Cycle Internal Throughput
@@ -139,13 +120,14 @@ The speed gain is not free. v002 accepts the following constraints.
    * - Constraint
      - Description
    * - **Weight precision ceiling**
-     - Beyond W4, guard bits run out and ``N_max`` collapses. W5/W6
-       support would require a separate mode.
+     - Beyond W4, guard bits are exhausted and the maximum representable
+       accumulated value (``N_max``) drops sharply. W5/W6 support would
+       require a separate mode.
    * - **K-split required**
-     - Layers with K > 4,096 must be tiled by the driver / compiler.
+     - Layers with K > 4,096 must be tiled by the driver or compiler.
    * - **Sign-recovery post-processing**
-     - Each PE gains a 1-bit adder and 23-bit split logic. No throughput
-       impact, but extra area.
+     - Each PE adds a 1-bit adder and 23-bit split logic. No throughput
+       impact, but additional area cost.
    * - **CDC complexity**
      - Asynchronous 250 MHz ↔ 400 MHz FIFOs need careful design and
        verification.

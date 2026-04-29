@@ -8,6 +8,13 @@
  *   3. Custom tokens are prefixed ``--pccx-`` and are declared in conf_common.
  * ============================================================================= */
 
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap');
+
+:root {
+  --font-stack: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  --font-stack--monospace: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
 /* -- SVG: theme-aware text + lines ----------------------------------------- */
 article svg {
   color: var(--color-foreground-primary);

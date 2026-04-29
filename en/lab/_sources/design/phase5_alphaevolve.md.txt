@@ -45,7 +45,7 @@ Five lanes:
 
 1. **Surrogate** — GNN on RTL AST predicts area / power / delay / fmax without synthesis.  Trained on ~10 K historical Vivado runs from `pccx-FPGA-NPU-LLM-kv260`.  Target latency: < 10 ms / query.
 2. **Evolutionary loop** — population = RTL variants, fitness = surrogate prediction + Verilator pass + verible-lint pass + timing-sanity check.
-3. **PRM gate** — Claude Sonnet proposes RTL → Verilator elaborates → verible lints → timing-check sanity-tests → survivors go to the surrogate.
+3. **PRM gate** — deep cloud LLM proposes RTL → Verilator elaborates → verible lints → timing-check sanity-tests → survivors go to the surrogate.
 4. **Formal diff** — promoted variants must pass `pccx-verification::GoldenDiffGate` + Sail refinement check.
 
 Deliverable: "design an NPU for Gemma-3N E4B decoding at 20 tok/s on KV260" in < 1 day wall-clock.
@@ -85,7 +85,7 @@ Deliverable: pccx-NPU driver with signed Lean 4 correctness proof bundled.
 
 1. Parse the model's computation graph → tensor op sequence.
 2. Map each op to pccx ISA opcodes (Sail spec is the ground truth).
-3. Claude Sonnet generates Rust/C driver code that issues those opcodes in order.
+3. deep cloud LLM generates Rust/C driver code that issues those opcodes in order.
 4. Run pccx-lab simulator against PyTorch reference trace → bit-exact check (or `pccx-verification::GoldenDiffGate`).
 5. Emit the signed driver + a verification report.
 

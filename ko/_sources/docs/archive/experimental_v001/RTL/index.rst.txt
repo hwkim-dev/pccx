@@ -15,7 +15,7 @@ RTL 소스 레퍼런스 (v001)
       이 RTL 이 구현하는 64 bit VLIW 명령어 집합.
 
 v001 은 freeze 상태입니다. 활성 RTL 은
-`hwkim-dev/pccx-FPGA-NPU-LLM-kv260 <https://github.com/hwkim-dev/pccx-FPGA-NPU-LLM-kv260>`_
+`hkimw/pccx-FPGA-NPU-LLM-kv260 <https://github.com/hkimw/pccx-FPGA-NPU-LLM-kv260>`_
 에 있으며 :doc:`/docs/v002/RTL/index` 에 문서화됩니다.
 
 .. grid:: 2 2 3 3

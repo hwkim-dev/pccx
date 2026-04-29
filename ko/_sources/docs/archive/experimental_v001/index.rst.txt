@@ -32,7 +32,7 @@ KV260 플랫폼의 1,248 개 DSP48E2 슬라이스와 144 개 BRAM 을 기능적 
 활용하도록 세밀하게 설계되었습니다.
 
 -  **소프트웨어 기준선**:
-   `llm-lite <https://github.com/hwkim-dev/llm-lite>`__ (x64 CPU 참조 구현)
+   `llm-lite <https://github.com/hkimw/llm-lite>`__ (x64 CPU 참조 구현)
 -  **풀스택 공동 설계**: 하드웨어 가속기(SystemVerilog), 추적 기반 검증
    모델(Python), AXI DMA 메모리 파이프라인.
 

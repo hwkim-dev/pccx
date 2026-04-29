@@ -23,10 +23,29 @@ The package is organized in compilation order:
    :language: systemverilog
    :caption: hw/rtl/NPU_Controller/NPU_Control_Unit/ISA_PACKAGE/isa_pkg.sv
 
+Encoding-table headers
+----------------------
+
+Three companion ``.svh`` files sit next to ``isa_pkg.sv`` and define
+the bit-layout tables the host driver mirrors:
+
+- ``isa_x32.svh`` — 32-bit field layouts (legacy + control-plane opcodes).
+- ``isa_x64.svh`` — 64-bit VLIW field layouts (the active opcode set).
+- ``isa_memctrl.svh`` — memory-controller opcode bodies (MEMSET / LOAD /
+  STORE / CVO).
+
+The host C driver's ``uCA_v1_api.h`` claims its bit layout matches
+``isa_x64.svh`` opcode-by-opcode; whenever a field width changes the
+SV header and the driver header must move together.
+
+.. literalinclude:: ../../../codes/v002/hw/rtl/NPU_Controller/NPU_Control_Unit/ISA_PACKAGE/isa_x64.svh
+   :language: systemverilog
+   :caption: hw/rtl/NPU_Controller/NPU_Control_Unit/ISA_PACKAGE/isa_x64.svh
+
 .. admonition:: Last verified against
    :class: note
 
-   Commit ``773bd82`` @ ``hwkim-dev/pccx-FPGA-NPU-LLM-kv260`` (2026-04-21).
+   Commit ``8c09e5e`` @ ``hkimw/pccx-FPGA-NPU-LLM-kv260`` (2026-04-29).
 
 .. seealso::
 

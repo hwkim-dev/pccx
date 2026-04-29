@@ -55,7 +55,7 @@
 .. admonition:: 마지막 검증 대상
    :class: note
 
-   커밋 ``773bd82`` @ ``hwkim-dev/pccx-FPGA-NPU-LLM-kv260``
+   커밋 ``773bd82`` @ ``hkimw/pccx-FPGA-NPU-LLM-kv260``
    (2026-04-21). 6개 테스트벤치 PASS; ``tb_GEMM_fmap_staggered_delay`` 는
    park 상태 — 사유는 ``run_verification.sh`` 참고.
 

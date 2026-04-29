@@ -139,4 +139,4 @@ Gemma 3N 은 **모든 레이어에** KV 엔트리를 저장하지 않습니다. 
 
 - 전체 연산자 사양 (embedding → sampling): :doc:`gemma3n_pipeline`.
 - 명령어 수준 매핑 / 스케줄링: :doc:`gemma3n_execution`.
-- x64 CPU 레퍼런스: `llm-lite <https://github.com/hwkim-dev/llm-lite>`_.
+- x64 CPU 레퍼런스: `llm-lite <https://github.com/hkimw/llm-lite>`_.

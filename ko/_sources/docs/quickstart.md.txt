@@ -13,12 +13,26 @@ myst:
 이 페이지는 **재현기** 이다: `docker compose up` 한 번으로 샘플
 캡처가 로딩된 프로파일러가 실행 상태로 떠야 한다.
 
-```{contents}
-:local:
+```{contents} 이 페이지 목차
 :depth: 2
+:backlinks: none
 ```
 
 ## 0. 얻게 되는 산출물
+
+```{mermaid}
+flowchart LR
+    A[RTL Repository<br>Vivado Synth] -->|생성| B(16-토큰 .pccx 트레이스)
+    A -->|산출| C(Sail ISA 모델)
+    
+    B -.->|로딩| D{pccx-lab 프로파일러}
+    C -.->|타입체크| E[OCaml / opam]
+    
+    D --> F[CLI Analytics<br>roofline / report]
+    D --> G[Tauri Desktop 앱<br>Visual IDE]
+    
+    style D fill:#ff7a00,stroke:#fff,color:#fff
+```
 
 | 산출물 | 생성 주체 | 여는 도구 |
 |---|---|---|
@@ -47,9 +61,9 @@ pccx 는 **3-레포 연합** 이다 ({doc}`index` 의 에코시스템 섹션 참
 
 ```bash
 mkdir -p ~/pccx-ws && cd ~/pccx-ws
-git clone https://github.com/hwkim-dev/pccx.git                    # docs (이 사이트)
-git clone https://github.com/hwkim-dev/pccx-FPGA-NPU-LLM-kv260.git  # RTL + Sail 모델
-git clone https://github.com/hwkim-dev/pccx-lab.git                 # 프로파일러 + UVM Copilot
+git clone https://github.com/hkimw/pccx.git                    # docs (이 사이트)
+git clone https://github.com/hkimw/pccx-FPGA-NPU-LLM-kv260.git  # RTL + Sail 모델
+git clone https://github.com/hkimw/pccx-lab.git                 # 프로파일러 + UVM Copilot
 ```
 
 ## 3. 원-커맨드 재현기 (Docker)
@@ -84,7 +98,7 @@ npm ci && npm run tauri dev
 ```
 
 ``samples/`` 디렉토리는 두 개의 사전 캡처 트레이스를 제공한다 —
-[`samples/README.md`](https://github.com/hwkim-dev/pccx-lab/blob/main/samples/README.md) 참고:
+[`samples/README.md`](https://github.com/hkimw/pccx-lab/blob/main/samples/README.md) 참고:
 
 - ``gemma3n_16tok_smoke.pccx``   (101 KB, 2,568 events)  — CI smoke.
 - ``gemma3n_128tok_decode.pccx`` (797 KB, 20,488 events) — steady-state decode.
@@ -112,7 +126,7 @@ cd ~/pccx-ws/pccx-FPGA-NPU-LLM-kv260/scripts/board
   title        = {pccx Quickstart: one-command reproducer for the open NPU},
   author       = {Kim, Hyunwoo},
   year         = {2026},
-  howpublished = {\url{https://hwkim-dev.github.io/pccx/ko/docs/quickstart.html}},
-  note         = {Part of pccx: \url{https://hwkim-dev.github.io/pccx/}}
+  howpublished = {\url{https://hkimw.github.io/pccx/ko/docs/quickstart.html}},
+  note         = {Part of pccx: \url{https://hkimw.github.io/pccx/}}
 }
 ```

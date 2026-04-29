@@ -29,6 +29,7 @@ rationale and the microarchitecture of each piece.
    gemm_core
    gemv_core
    sfu_core
+   preprocess
 
 .. toctree::
    :maxdepth: 1

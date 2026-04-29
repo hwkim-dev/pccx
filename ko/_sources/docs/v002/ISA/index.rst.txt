@@ -33,7 +33,7 @@ pccx v002의 ISA는 **고정 길이 64-bit VLIW 스타일**\ 이며, 5개의 오
 
    ISA 타입 정의의 권위 있는 소스는 v002 RTL 리포의
    :file:`hw/rtl/NPU_Controller/NPU_Control_Unit/ISA_PACKAGE/isa_pkg.sv`
-   이다(외부: `hwkim-dev/pccx-FPGA-NPU-LLM-kv260
-   <https://github.com/hwkim-dev/pccx-FPGA-NPU-LLM-kv260>`_). 아래 페이지의
+   이다(외부: `hkimw/pccx-FPGA-NPU-LLM-kv260
+   <https://github.com/hkimw/pccx-FPGA-NPU-LLM-kv260>`_). 아래 페이지의
    인코딩 표는 해당 패키지와 1:1 일치해야 한다 — :doc:`../RTL/isa_pkg`
    참조.

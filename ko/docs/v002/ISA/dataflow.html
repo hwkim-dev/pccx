@@ -3,23 +3,23 @@
   <head><meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta property="og:title" content="명령어별 데이터플로우" />
+<meta property="og:title" content="Per-Instruction Dataflow" />
 <meta property="og:type" content="website" />
-<meta property="og:url" content="https://hwkim-dev.github.io/pccx/docs/v002/ISA/dataflow.html" />
+<meta property="og:url" content="https://hkimw.github.io/pccx/docs/v002/ISA/dataflow.html" />
 <meta property="og:site_name" content="pccx — Parallel Compute Core eXecutor" />
-<meta property="og:description" content="각 오피코드가 디스패치된 후 실제 하드웨어 상에서 데이터가 어떻게 이동하는지 도식화한다. 아래 그림들은 탑레벨 아키텍처 의 블록 다이어그램을 명령어 관점에서 재구성한 것이다. 1. GEMM: GEMM 명령어 데이터플로우 Figure 5. GEMM 명령어 디스패치 시의 데이터 경로. dest_addr / src_addr은 L2 Cache 주소공간을, s..." />
+<meta property="og:description" content="This page shows how data actually moves through the hardware once an instruction is dispatched. The figures below recast the block diagram from 탑레벨 아키텍처 through an instruction’s lens. 1. GEMM: GEMM..." />
 <meta property="og:image:width" content="1146" />
 <meta property="og:image:height" content="600" />
-<meta property="og:image" content="https://hwkim-dev.github.io/pccx/_images/social_previews/summary_docs_v002_ISA_dataflow_78c16e2c.png" />
-<meta property="og:image:alt" content="각 오피코드가 디스패치된 후 실제 하드웨어 상에서 데이터가 어떻게 이동하는지 도식화한다. 아래 그림들은 탑레벨 아키텍처 의 블록 다이어그램을 명령어 관점에서 재구성한 것이다. 1. GEMM: GEMM 명령어 데이터플로우 Figure 5. GEMM 명령어 디스패치 시의 데이터 경로. dest_addr / src_addr은 L2 Cache 주소공간을, s..." />
-<meta name="description" content="각 오피코드가 디스패치된 후 실제 하드웨어 상에서 데이터가 어떻게 이동하는지 도식화한다. 아래 그림들은 탑레벨 아키텍처 의 블록 다이어그램을 명령어 관점에서 재구성한 것이다. 1. GEMM: GEMM 명령어 데이터플로우 Figure 5. GEMM 명령어 디스패치 시의 데이터 경로. dest_addr / src_addr은 L2 Cache 주소공간을, s..." />
+<meta property="og:image" content="https://hkimw.github.io/pccx/_images/social_previews/summary_docs_v002_ISA_dataflow_e84f1510.png" />
+<meta property="og:image:alt" content="This page shows how data actually moves through the hardware once an instruction is dispatched. The figures below recast the block diagram from 탑레벨 아키텍처 through an instruction’s lens. 1. GEMM: GEMM..." />
+<meta name="description" content="This page shows how data actually moves through the hardware once an instruction is dispatched. The figures below recast the block diagram from 탑레벨 아키텍처 through an instruction’s lens. 1. GEMM: GEMM..." />
 <meta name="twitter:card" content="summary_large_image" />
 
-<script type="application/ld+json">[{"@context":"https://schema.org","@type":"WebSite","name":"pccx — Parallel Compute Core eXecutor","alternateName":"pccx","url":"https://hwkim-dev.github.io/pccx/","inLanguage":["ko","en","ko"],"author":{"@type":"Person","name":"Hyunwoo Kim","url":"https://hwkim-dev.github.io/hwkim-dev/"},"publisher":{"@type":"Person","name":"Hyunwoo Kim","url":"https://hwkim-dev.github.io/hwkim-dev/"},"description":"pccx is an open-source scalable NPU architecture for edge LLM inference.  W4A8KV4 quantisation on the Xilinx Kria KV260; v002 reference implementation in SystemVerilog.","keywords":["NPU","FPGA","LLM inference","edge AI","W4A8","KV cache","systolic array","Kria KV260","ZU5EV","Transformer accelerator","speculative decoding","FlashAttention","QServe","Gemma 3N","Matryoshka","Sail ISA","Sail language","formal ISA specification","ISA semantics","RISC-V Sail","Arm Sail","CHERI","Morello","Isabelle/HOL","Coq"]},{"@context":"https://schema.org","@type":"TechArticle","headline":"명령어별 데이터플로우","name":"명령어별 데이터플로우","url":"https://hwkim-dev.github.io/pccx/ko/docs/v002/ISA/dataflow.html","mainEntityOfPage":{"@type":"WebPage","@id":"https://hwkim-dev.github.io/pccx/ko/docs/v002/ISA/dataflow.html"},"isPartOf":{"@type":"WebSite","name":"pccx — Parallel Compute Core eXecutor","url":"https://hwkim-dev.github.io/pccx/"},"author":{"@type":"Person","name":"Hyunwoo Kim","url":"https://hwkim-dev.github.io/hwkim-dev/"},"publisher":{"@type":"Organization","name":"pccx project","url":"https://hwkim-dev.github.io/pccx/"},"datePublished":"2026-04-24","dateModified":"2026-04-24","description":"pccx documentation page: 명령어별 데이터플로우. Open-source NPU architecture + pccx-lab profiler implementing research from QServe, FlashAttention, OpenPangu speculative decoding, and Matryoshka subnet swap.","inLanguage":"ko","license":"https://www.apache.org/licenses/LICENSE-2.0","citation":{"@type":"CreativeWork","name":"pccx: Parallel Compute Core eXecutor","url":"https://hwkim-dev.github.io/pccx/","author":"Hyunwoo Kim","datePublished":"2026"}}]</script><link rel="index" title="색인" href="../../../genindex.html"><link rel="search" title="검색" href="../../../search.html"><link rel="next" title="형식 모델 — Sail" href="../Formal/index.html"><link rel="prev" title="명령어 상세 인코딩" href="instructions.html">
-        <link rel="canonical" href="https://hwkim-dev.github.io/pccx/docs/v002/ISA/dataflow.html">
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"WebSite","name":"pccx — Parallel Compute Core eXecutor","alternateName":"pccx","url":"https://hkimw.github.io/pccx/","inLanguage":["ko","en","ko"],"author":{"@type":"Person","name":"Hyunwoo Kim","url":"https://hkimw.github.io/hkimw/"},"publisher":{"@type":"Person","name":"Hyunwoo Kim","url":"https://hkimw.github.io/hkimw/"},"description":"pccx is an open-source scalable NPU architecture for edge LLM inference.  W4A8KV4 quantisation on the Xilinx Kria KV260; v002 reference implementation in SystemVerilog.","keywords":["NPU","FPGA","LLM inference","edge AI","W4A8","KV cache","systolic array","Kria KV260","ZU5EV","Transformer accelerator","speculative decoding","FlashAttention","QServe","Gemma 3N","Matryoshka","Sail ISA","Sail language","formal ISA specification","ISA semantics","RISC-V Sail","Arm Sail","CHERI","Morello","Isabelle/HOL","Coq"]},{"@context":"https://schema.org","@type":"TechArticle","headline":"Per-Instruction Dataflow","name":"Per-Instruction Dataflow","url":"https://hkimw.github.io/pccx/ko/docs/v002/ISA/dataflow.html","mainEntityOfPage":{"@type":"WebPage","@id":"https://hkimw.github.io/pccx/ko/docs/v002/ISA/dataflow.html"},"isPartOf":{"@type":"WebSite","name":"pccx — Parallel Compute Core eXecutor","url":"https://hkimw.github.io/pccx/"},"author":{"@type":"Person","name":"Hyunwoo Kim","url":"https://hkimw.github.io/hkimw/"},"publisher":{"@type":"Organization","name":"pccx project","url":"https://hkimw.github.io/pccx/"},"datePublished":"2026-04-29","dateModified":"2026-04-29","description":"pccx documentation page: Per-Instruction Dataflow. Open-source NPU architecture + pccx-lab profiler implementing research from QServe, FlashAttention, OpenPangu speculative decoding, and Matryoshka subnet swap.","inLanguage":"ko","license":"https://www.apache.org/licenses/LICENSE-2.0","citation":{"@type":"CreativeWork","name":"pccx: Parallel Compute Core eXecutor","url":"https://hkimw.github.io/pccx/","author":"Hyunwoo Kim","datePublished":"2026"}}]</script><link rel="index" title="색인" href="../../../genindex.html"><link rel="search" title="검색" href="../../../search.html"><link rel="next" title="형식 모델 — Sail" href="../Formal/index.html"><link rel="prev" title="명령어 상세 인코딩" href="instructions.html">
+        <link rel="canonical" href="https://hkimw.github.io/pccx/docs/v002/ISA/dataflow.html">
 
     <!-- Generated with Sphinx 7.4.7 and Furo 2025.12.19 -->
-        <title>명령어별 데이터플로우 - pccx 문서</title>
+        <title>Per-Instruction Dataflow - pccx 문서</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo.css?v=7bdb33bb" />
     <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=fd3f3429" />
@@ -33,7 +33,7 @@
     <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
     <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo-extensions.css?v=8dab3a3b" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=7b993dbb" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=4880187a" />
     <link rel="stylesheet" type="text/css" href="../../../_static/image-lightbox.css?v=884c9d5a" />
     <link rel="stylesheet" type="text/css" href="../../../_static/language-switcher.css?v=cc8629cf" />
     
@@ -240,7 +240,7 @@
 
 <nav class="pccx-repolinks" aria-label="Project repositories">
   <a class="pccx-repolinks__btn"
-     href="https://github.com/hwkim-dev/pccx-FPGA-NPU-LLM-kv260"
+     href="https://github.com/hkimw/pccx-FPGA-NPU-LLM-kv260"
      title="Active v002 RTL — pccx-FPGA-NPU-LLM-kv260"
      target="_blank" rel="noopener">
     <svg aria-hidden="true" viewBox="0 0 24 24" width="1em" height="1em"
@@ -267,8 +267,8 @@
     <span class="pccx-repolinks__label">Lab</span>
   </a>
   <a class="pccx-repolinks__btn"
-     href="https://github.com/hwkim-dev/pccx"
-     title="Docs source — github.com/hwkim-dev/pccx"
+     href="https://github.com/hkimw/pccx"
+     title="Docs source — github.com/hkimw/pccx"
      target="_blank" rel="noopener">
     <svg aria-hidden="true" viewBox="0 0 16 16" width="1em" height="1em"
          fill="currentColor">
@@ -277,8 +277,8 @@
     <span class="pccx-repolinks__label">Docs</span>
   </a>
   <a class="pccx-repolinks__btn"
-     href="https://hwkim-dev.github.io/hwkim-dev/"
-     title="Author portfolio — hwkim-dev.github.io"
+     href="https://hkimw.github.io/hkimw/"
+     title="Author portfolio — hkimw.github.io"
      target="_blank" rel="noopener">
     <svg aria-hidden="true" viewBox="0 0 24 24" width="1em" height="1em"
          fill="none" stroke="currentColor" stroke-width="1.6"
@@ -311,18 +311,19 @@
 <li class="toctree-l3"><a class="reference internal" href="../Architecture/rationale.html">v001 → v002 설계 근거</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../Architecture/top_level.html">탑레벨 아키텍처</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../Architecture/floorplan.html">물리 플로어플랜</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../Architecture/memory_hierarchy.html">메모리 계층</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Architecture/memory_hierarchy.html">Memory Hierarchy</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../Architecture/kv_cache.html">KV 캐시 최적화 전략</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../Architecture/gemm_core.html">GEMM 코어 (시스톨릭 어레이)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../Architecture/gemv_core.html">GEMV 코어</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../Architecture/sfu_core.html">SFU 코어 (Complex Vector Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Architecture/preprocess.html">PREPROCESS 스테이지</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../Architecture/dsp48e2_w4a8.html">DSP48E2 W4A8 비트 패킹과 부호 복원</a></li>
 </ul>
 </li>
 <li class="toctree-l2 current has-children"><a class="reference internal" href="index.html">명령어 세트 아키텍처 (ISA)</a><input aria-label="Toggle navigation of 명령어 세트 아키텍처 (ISA)" checked="" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="encoding.html">명령어 인코딩</a></li>
 <li class="toctree-l3"><a class="reference internal" href="instructions.html">명령어 상세 인코딩</a></li>
-<li class="toctree-l3 current current-page"><a class="current reference internal" href="#">명령어별 데이터플로우</a></li>
+<li class="toctree-l3 current current-page"><a class="current reference internal" href="#">Per-Instruction Dataflow</a></li>
 </ul>
 </li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../Formal/index.html">형식 모델 — Sail</a><input aria-label="Toggle navigation of 형식 모델 — Sail" class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="simple">
@@ -330,6 +331,7 @@
 </li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../Drivers/index.html">소프트웨어 스택</a><input aria-label="Toggle navigation of 소프트웨어 스택" class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../Drivers/api.html">C API 개요</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Drivers/hal.html">HAL — AXI-Lite MMIO 계층</a></li>
 </ul>
 </li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../Models/index.html">타깃 모델</a><input aria-label="Toggle navigation of 타깃 모델" class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
@@ -346,39 +348,56 @@
 <li class="toctree-l3"><a class="reference internal" href="../RTL/npu_top.html">NPU 최상위 모듈</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../RTL/compute_cores.html">컴퓨트 코어 모듈</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../RTL/controller.html">NPU 컨트롤러 모듈</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../RTL/frontend.html">NPU 프론트엔드 모듈</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../RTL/memory_l2.html">L2 캐시 (URAM)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../RTL/memory_dispatch.html">메모리 디스패치</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../RTL/preprocess.html">PREPROCESS RTL 레퍼런스</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../RTL/packages.html">컴파일 우선순위 패키지</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../RTL/library.html">공유 라이브러리</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../Verification/index.html">검증</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../Build/index.html">Vivado 빌드</a><input aria-label="Toggle navigation of Vivado 빌드" class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="simple">
+</ul>
+</li>
 </ul>
 </li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">타겟 하드웨어</span></p>
 <ul>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../Devices/index.html">지원 디바이스</a><input aria-label="Toggle navigation of 지원 디바이스" class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../Devices/index.html">지원 디바이스</a><input aria-label="Toggle navigation of 지원 디바이스" class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" role="switch" type="checkbox"/><label for="toctree-checkbox-10"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../Devices/kv260.html">타겟 하드웨어: Xilinx Kria KV260</a></li>
 </ul>
 </li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">pccx-lab 핸드북</span></p>
 <ul>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../Lab/index.html">pccx-lab 핸드북</a><input aria-label="Toggle navigation of pccx-lab 핸드북" class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" role="switch" type="checkbox"/><label for="toctree-checkbox-10"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../Lab/index.html">pccx-lab 핸드북</a><input aria-label="Toggle navigation of pccx-lab 핸드북" class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" role="switch" type="checkbox"/><label for="toctree-checkbox-11"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../Lab/architecture.html">아키텍처 개요</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../Lab/cli.html">CLI 레퍼런스</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../Lab/analyzer_api.html">분석기 API</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../Lab/copilot.html">Copilot API</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../Lab/research.html">pccx-lab 연구 계보</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Lab/panels.html">UI 패널 카탈로그</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Lab/ipc.html">Tauri IPC 계약</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Lab/verification-workflow.html">검증 워크플로</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Lab/pccx-format.html">.pccx 바이너리 포맷</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Lab/uvm-bridge.html">UVM 브리지</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Lab/self-evolution.html">사이클 루프</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Lab/quickstart.html">pccx-lab 퀵스타트</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Lab/core-modules.html">pccx-core 모듈 레퍼런스</a></li>
 </ul>
 </li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">아카이브</span></p>
 <ul>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../archive/index.html">아카이브</a><input aria-label="Toggle navigation of 아카이브" class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" role="switch" type="checkbox"/><label for="toctree-checkbox-11"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../archive/experimental_v001/index.html">아카이브: v001 실험적 아키텍처</a><input aria-label="Toggle navigation of 아카이브: v001 실험적 아키텍처" class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" role="switch" type="checkbox"/><label for="toctree-checkbox-12"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../archive/index.html">아카이브</a><input aria-label="Toggle navigation of 아카이브" class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" role="switch" type="checkbox"/><label for="toctree-checkbox-12"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../archive/experimental_v001/index.html">아카이브: v001 실험적 아키텍처</a><input aria-label="Toggle navigation of 아카이브: v001 실험적 아키텍처" class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" role="switch" type="checkbox"/><label for="toctree-checkbox-13"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../archive/experimental_v001/Architecture/v001_architecture.html">pccx: Parallel Compute Core eXecutor</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../archive/experimental_v001/Drivers/ISA.html">pccx ISA 사양</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../archive/experimental_v001/Drivers/ISA_Spreadsheet.html">pccx ISA 스프레드시트 뷰</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../archive/experimental_v001/Drivers/v001_API.html">pccx v001 호스트 API 개발자 레퍼런스</a></li>
-<li class="toctree-l3 has-children"><a class="reference internal" href="../../archive/experimental_v001/RTL/index.html">RTL 소스 레퍼런스 (v001)</a><input aria-label="Toggle navigation of RTL 소스 레퍼런스 (v001)" class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" role="switch" type="checkbox"/><label for="toctree-checkbox-13"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../archive/experimental_v001/RTL/index.html">RTL 소스 레퍼런스 (v001)</a><input aria-label="Toggle navigation of RTL 소스 레퍼런스 (v001)" class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" role="switch" type="checkbox"/><label for="toctree-checkbox-14"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../archive/experimental_v001/RTL/top.html">최상위</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../archive/experimental_v001/RTL/packages.html">패키지와 상수</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../archive/experimental_v001/RTL/controller.html">NPU 컨트롤러</a></li>
@@ -398,12 +417,12 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">툴체인 데모</span></p>
 <ul>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../samples/index.html">툴체인 데모</a><input aria-label="Toggle navigation of 툴체인 데모" class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" role="switch" type="checkbox"/><label for="toctree-checkbox-14"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../samples/index.html">툴체인 데모</a><input aria-label="Toggle navigation of 툴체인 데모" class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" role="switch" type="checkbox"/><label for="toctree-checkbox-15"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../samples/mermaid_blockdiagram.html">Mermaid — NPU 블록 다이어그램</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../samples/wavedrom_axi_read.html">WaveDrom — AXI4 read 트랜잭션</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../samples/svg_themed_demo.html">SVG — 테마 대응 4×4 PE 어레이</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../samples/plot_bandwidth.html">scienceplots — batch size 대비 대역폭</a></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../../auto_plots/index.html">Plot gallery</a><input aria-label="Toggle navigation of Plot gallery" class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" role="switch" type="checkbox"/><label for="toctree-checkbox-15"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../auto_plots/index.html">Plot gallery</a><input aria-label="Toggle navigation of Plot gallery" class="toctree-checkbox" id="toctree-checkbox-16" name="toctree-checkbox-16" role="switch" type="checkbox"/><label for="toctree-checkbox-16"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../auto_plots/plot_bandwidth.html">Batch size vs achieved HP-AXI bandwidth</a></li>
 </ul>
 </li>
@@ -412,7 +431,7 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">도구</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference external" href="https://hwkim-dev.github.io/pccx/ko/lab/">pccx-lab — 시뮬레이터 &amp; AI 프로파일러</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://hkimw.github.io/pccx/ko/lab/">pccx-lab — 시뮬레이터 &amp; AI 프로파일러</a></li>
 </ul>
 
 </div>
@@ -433,12 +452,12 @@
         </a>
         <div class="content-icon-container">
           <div class="view-this-page">
-  <a class="muted-link" href="https://github.com/hwkim-dev/pccx/blob/main/ko/docs/docs/v002/ISA/dataflow.rst?plain=true" title="View this page">
+  <a class="muted-link" href="https://github.com/hkimw/pccx/blob/main/ko/docs/docs/v002/ISA/dataflow.rst?plain=true" title="View this page">
     <svg><use href="#svg-eye"></use></svg>
     <span class="visually-hidden">View this page</span>
   </a>
 </div><div class="edit-this-page">
-  <a class="muted-link" href="https://github.com/hwkim-dev/pccx/edit/main/ko/docs/docs/v002/ISA/dataflow.rst" rel="edit" title="Edit this page">
+  <a class="muted-link" href="https://github.com/hkimw/pccx/edit/main/ko/docs/docs/v002/ISA/dataflow.rst" rel="edit" title="Edit this page">
     <svg><use href="#svg-pencil"></use></svg>
     <span class="visually-hidden">Edit this page</span>
   </a>
@@ -455,70 +474,69 @@
           </label>
         </div>
         <article role="main" id="furo-main-content">
-          <section id="id1">
-<h1>명령어별 데이터플로우<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h1>
-<p>각 오피코드가 디스패치된 후 실제 하드웨어 상에서 데이터가 어떻게
-이동하는지 도식화한다. 아래 그림들은
-<a class="reference internal" href="../Architecture/top_level.html"><span class="doc">탑레벨 아키텍처</span></a>의 블록 다이어그램을 명령어 관점에서
-재구성한 것이다.</p>
+          <section id="per-instruction-dataflow">
+<h1>Per-Instruction Dataflow<a class="headerlink" href="#per-instruction-dataflow" title="Link to this heading">¶</a></h1>
+<p>This page shows how data actually moves through the hardware once an
+instruction is dispatched. The figures below recast the block diagram
+from <a class="reference internal" href="../Architecture/top_level.html"><span class="doc">탑레벨 아키텍처</span></a> through an instruction’s lens.</p>
 <section id="gemm">
 <h2>1. GEMM<a class="headerlink" href="#gemm" title="Link to this heading">¶</a></h2>
-<figure class="align-center" id="id7">
-<a class="reference internal image-reference" href="../../../_images/DataFlow_GEMM_v002.png"><img alt="GEMM 명령어 데이터플로우" src="../../../_images/DataFlow_GEMM_v002.png" style="width: 85%;" />
+<figure class="align-center" id="id2">
+<a class="reference internal image-reference" href="../../../_images/DataFlow_GEMM_v002.png"><img alt="GEMM instruction dataflow" src="../../../_images/DataFlow_GEMM_v002.png" style="width: 85%;" />
 </a>
 <figcaption>
-<p><span class="caption-number">그림 11 </span><span class="caption-text"><strong>Figure 5.</strong> GEMM 명령어 디스패치 시의 데이터 경로.
-dest_addr / src_addr은 L2 Cache 주소공간을, shape/size pointer는
-Constant Cache 인덱스를 가리킨다.</span><a class="headerlink" href="#id7" title="Link to this image">¶</a></p>
+<p><span class="caption-number">그림 12 </span><span class="caption-text"><strong>Figure 5.</strong> Dataflow when a GEMM instruction dispatches.
+<code class="docutils literal notranslate"><span class="pre">dest_addr</span></code> and <code class="docutils literal notranslate"><span class="pre">src_addr</span></code> live in the L2 cache address space;
+shape / size pointers index the Constant Cache.</span><a class="headerlink" href="#id2" title="Link to this image">¶</a></p>
 </figcaption>
 </figure>
-<section id="id2">
-<h3>경로 요약<a class="headerlink" href="#id2" title="Link to this heading">¶</a></h3>
+<section id="path-summary">
+<h3>Path Summary<a class="headerlink" href="#path-summary" title="Link to this heading">¶</a></h3>
 <ol class="arabic simple">
-<li><p>Dispatcher 가 <code class="docutils literal notranslate"><span class="pre">shape_ptr_addr</span></code> / <code class="docutils literal notranslate"><span class="pre">size_ptr_addr</span></code> 로 Constant Cache
-조회 → 타일 파라미터 취득.</p></li>
-<li><p>Weight Buffer 가 HP 포트에서 <strong>가중치 행렬</strong> 을 타일 단위로 프리페치.</p></li>
-<li><p>L2 Cache <code class="docutils literal notranslate"><span class="pre">src_addr</span></code> → 시스톨릭 어레이로 <strong>액티베이션 스트리밍</strong>.</p></li>
-<li><p>시스톨릭 어레이가 Weight Stationary 로 누적 → Accumulator → Post-Process.</p></li>
-<li><p>결과가 L2 Cache <code class="docutils literal notranslate"><span class="pre">dest_reg</span></code>에 기록된다.</p></li>
+<li><p>Dispatcher reads <code class="docutils literal notranslate"><span class="pre">shape_ptr_addr</span></code> / <code class="docutils literal notranslate"><span class="pre">size_ptr_addr</span></code> from the
+Constant Cache to obtain the tile parameters.</p></li>
+<li><p>Weight Buffer prefetches a tile’s worth of <strong>weights</strong> from the HP
+ports.</p></li>
+<li><p>L2 cache <code class="docutils literal notranslate"><span class="pre">src_addr</span></code> streams <strong>activations</strong> into the systolic array.</p></li>
+<li><p>The array accumulates Weight Stationary → Accumulator → Post-Process.</p></li>
+<li><p>The result is written back to L2 cache at <code class="docutils literal notranslate"><span class="pre">dest_reg</span></code>.</p></li>
 </ol>
 </section>
 </section>
 <section id="gemv">
 <h2>2. GEMV<a class="headerlink" href="#gemv" title="Link to this heading">¶</a></h2>
-<figure class="align-center" id="id8">
-<a class="reference internal image-reference" href="../../../_images/DataFlow_GEMV_v002.png"><img alt="GEMV 명령어 데이터플로우" src="../../../_images/DataFlow_GEMV_v002.png" style="width: 85%;" />
+<figure class="align-center" id="id3">
+<a class="reference internal image-reference" href="../../../_images/DataFlow_GEMV_v002.png"><img alt="GEMV instruction dataflow" src="../../../_images/DataFlow_GEMV_v002.png" style="width: 85%;" />
 </a>
 <figcaption>
-<p><span class="caption-number">그림 12 </span><span class="caption-text"><strong>Figure 6.</strong> GEMV 명령어 데이터 경로.
-GEMM과 동일한 ISA 레이아웃이지만, 가중치는 <strong>Weight Streaming</strong>으로
-소비되며, 4개 GEMV 코어가 병렬 분배된다.</span><a class="headerlink" href="#id8" title="Link to this image">¶</a></p>
+<p><span class="caption-number">그림 13 </span><span class="caption-text"><strong>Figure 6.</strong> Dataflow for a GEMV instruction. Same ISA layout as
+GEMM, but weights are consumed in a <strong>Weight Streaming</strong> pattern,
+fanning out across 4 GEMV cores in parallel.</span><a class="headerlink" href="#id3" title="Link to this image">¶</a></p>
 </figcaption>
 </figure>
-<section id="id3">
-<h3>경로 요약<a class="headerlink" href="#id3" title="Link to this heading">¶</a></h3>
+<section id="id1">
+<h3>Path Summary<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h3>
 <ol class="arabic simple">
-<li><p>Dispatcher 가 포인터 조회 → GEMV 코어별 shape 분배.</p></li>
-<li><p>Weight Buffer → 4 개 GEMV 코어로 <strong>행 단위 분할</strong> 스트리밍.</p></li>
-<li><p>L2 Cache → GEMV 코어의 L1 Cache 로 액티베이션 프리로드.</p></li>
-<li><p>코어 내부 32 레인 LUT 기반 MAC + 5 단 reduction tree → 스칼라 결과.</p></li>
-<li><p>Post-Process (scale, bias) → L2 Cache 또는 SFU 직결.</p></li>
+<li><p>Dispatcher resolves pointers → per-core shape distribution.</p></li>
+<li><p>Weight Buffer → 4 GEMV cores, streaming <strong>by row partition</strong>.</p></li>
+<li><p>L2 cache → per-core L1 cache for activation preload.</p></li>
+<li><p>32-lane LUT-based MAC inside each core + 5-stage reduction tree → scalar result.</p></li>
+<li><p>Post-Process (scale, bias) → L2 cache or direct SFU FIFO.</p></li>
 </ol>
 </section>
 </section>
 <section id="memcpy">
 <h2>3. MEMCPY<a class="headerlink" href="#memcpy" title="Link to this heading">¶</a></h2>
-<figure class="align-center" id="id9">
-<a class="reference internal image-reference" href="../../../_images/DataFlow_MEMCPY_v002.png.png"><img alt="MEMCPY 명령어 데이터플로우" src="../../../_images/DataFlow_MEMCPY_v002.png.png" style="width: 70%;" />
+<figure class="align-center" id="id4">
+<a class="reference internal image-reference" href="../../../_images/DataFlow_MEMCPY_v002.png.png"><img alt="MEMCPY instruction dataflow" src="../../../_images/DataFlow_MEMCPY_v002.png.png" style="width: 70%;" />
 </a>
 <figcaption>
-<p><span class="caption-number">그림 13 </span><span class="caption-text"><strong>Figure 7.</strong> MEMCPY 명령어.
-<code class="docutils literal notranslate"><span class="pre">from_device</span></code> / <code class="docutils literal notranslate"><span class="pre">to_device</span></code> 비트 조합으로 호스트 ↔ NPU, NPU ↔ NPU
-전송을 모두 지원한다.</span><a class="headerlink" href="#id9" title="Link to this image">¶</a></p>
+<p><span class="caption-number">그림 14 </span><span class="caption-text"><strong>Figure 7.</strong> MEMCPY instruction. The <code class="docutils literal notranslate"><span class="pre">from_device</span></code> / <code class="docutils literal notranslate"><span class="pre">to_device</span></code>
+combination supports host ↔ NPU and NPU ↔ NPU transfers.</span><a class="headerlink" href="#id4" title="Link to this image">¶</a></p>
 </figcaption>
 </figure>
-<section id="id4">
-<h3>지원 조합<a class="headerlink" href="#id4" title="Link to this heading">¶</a></h3>
+<section id="supported-combinations">
+<h3>Supported Combinations<a class="headerlink" href="#supported-combinations" title="Link to this heading">¶</a></h3>
 <div class="table-wrapper colwidths-given docutils container">
 <table class="docutils align-default">
 <colgroup>
@@ -529,78 +547,79 @@ GEMM과 동일한 ISA 레이아웃이지만, 가중치는 <strong>Weight Streami
 <thead>
 <tr class="row-odd"><th class="head"><p>from_device</p></th>
 <th class="head"><p>to_device</p></th>
-<th class="head"><p>경로</p></th>
+<th class="head"><p>Path</p></th>
 </tr>
 </thead>
 <tbody>
 <tr class="row-even"><td><p>1 (Host)</p></td>
 <td><p>0 (NPU)</p></td>
-<td><p>ACP → L2 Cache 기록. 가중치/입력 로딩에 사용.</p></td>
+<td><p>ACP → L2 cache write. Used for weight / input loads.</p></td>
 </tr>
 <tr class="row-odd"><td><p>0 (NPU)</p></td>
 <td><p>1 (Host)</p></td>
-<td><p>L2 Cache → ACP. 결과 토큰 / KV 캐시 반환.</p></td>
+<td><p>L2 cache → ACP. Returns output tokens / KV entries.</p></td>
 </tr>
 <tr class="row-even"><td><p>0 (NPU)</p></td>
 <td><p>0 (NPU)</p></td>
-<td><p>L2 내부 블록 간 이동 (디바이스 내 재배치).</p></td>
+<td><p>Intra-L2 block move (on-device rearrangement).</p></td>
 </tr>
 </tbody>
 </table>
 </div>
-<p><code class="docutils literal notranslate"><span class="pre">async</span></code> 비트가 1이면 디스패치 후 즉시 다음 명령어로 진행한다.
-Global Scheduler가 완료 fence를 추적한다.</p>
+<p>When <code class="docutils literal notranslate"><span class="pre">async</span> <span class="pre">=</span> <span class="pre">1</span></code>, execution continues to the next instruction
+immediately. The Global Scheduler tracks the completion fence.</p>
 </section>
 </section>
 <section id="memset">
 <h2>4. MEMSET<a class="headerlink" href="#memset" title="Link to this heading">¶</a></h2>
-<figure class="align-center" id="id10">
-<a class="reference internal image-reference" href="../../../_images/DataFlow_MEMSET_v002.png"><img alt="MEMSET 명령어 데이터플로우" src="../../../_images/DataFlow_MEMSET_v002.png" style="width: 70%;" />
+<figure class="align-center" id="id5">
+<a class="reference internal image-reference" href="../../../_images/DataFlow_MEMSET_v002.png"><img alt="MEMSET instruction dataflow" src="../../../_images/DataFlow_MEMSET_v002.png" style="width: 70%;" />
 </a>
 <figcaption>
-<p><span class="caption-number">그림 14 </span><span class="caption-text"><strong>Figure 8.</strong> MEMSET은 Dispatcher에서 직접 Constant Cache로 값을
-기록한다. L2 Cache를 경유하지 않는 유일한 명령어이다.</span><a class="headerlink" href="#id10" title="Link to this image">¶</a></p>
+<p><span class="caption-number">그림 15 </span><span class="caption-text"><strong>Figure 8.</strong> MEMSET writes directly from the Dispatcher into the
+Constant Cache — the only instruction that bypasses the L2 cache.</span><a class="headerlink" href="#id5" title="Link to this image">¶</a></p>
 </figcaption>
 </figure>
-<section id="id5">
-<h3>특징<a class="headerlink" href="#id5" title="Link to this heading">¶</a></h3>
+<section id="characteristics">
+<h3>Characteristics<a class="headerlink" href="#characteristics" title="Link to this heading">¶</a></h3>
 <ul class="simple">
-<li><p>한 명령어로 최대 3 개의 16-bit 값(<code class="docutils literal notranslate"><span class="pre">a</span></code>, <code class="docutils literal notranslate"><span class="pre">b</span></code>, <code class="docutils literal notranslate"><span class="pre">c</span></code>) 을 동시 기록.</p></li>
-<li><p>컨텍스트: 레이어 시작 시 (M, N, K) 튜플 초기화, weight/activation
-scale factor 주입.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">dest_cache</span></code> 필드가 대상 캐시 뱅크를 선택 (fmap_shape vs weight_shape).</p></li>
+<li><p>A single instruction can write up to three 16-bit values (<code class="docutils literal notranslate"><span class="pre">a</span></code>,
+<code class="docutils literal notranslate"><span class="pre">b</span></code>, <code class="docutils literal notranslate"><span class="pre">c</span></code>) at once.</p></li>
+<li><p>Typical use: initialize the (M, N, K) tuple at the start of a layer,
+or inject weight / activation scale factors.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">dest_cache</span></code> selects which cache bank is targeted (fmap_shape vs.
+weight_shape).</p></li>
 </ul>
 </section>
 </section>
 <section id="cvo-sfu">
 <h2>5. CVO (SFU)<a class="headerlink" href="#cvo-sfu" title="Link to this heading">¶</a></h2>
-<p>CVO는 별도 데이터플로우 다이어그램이 없으나, 아래 경로를 따른다.</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Dispatcher
-    │
-    ▼
-cvo_control_uop_t → SFU (단일 BF16 스칼라 파이프라인)
-                       ▲
-                       │ L2 Cache ``src_addr``  ─── 입력 벡터
-                       │
-                       ▼
-                    함수 파이프라인 (CORDIC / LUT)
-                       │
-                       └─► L2 Cache ``dst_addr`` / GEMV 직결 FIFO
-</pre></div>
-</div>
-<p><strong>Fast Path</strong>: 직전 GEMV 결과를 SFU가 즉시 소비하는 경우,
-<code class="docutils literal notranslate"><span class="pre">src_addr</span></code>를 <strong>special tag</strong>로 지정하여 L2 왕복을 생략한다.
-이 최적화는 Dispatcher의 의존성 추적 로직이 자동 판단한다.</p>
+<p>The Special Function Unit (SFU, or CVO) operates on BF16 scalar pipelines
+to execute non-linear operations.</p>
+<figure class="align-center" id="fig-dataflow-sfu">
+<a class="reference internal image-reference" href="../../../_images/v002_dataflow_sfu.svg"><img alt="../../../_images/v002_dataflow_sfu.svg" src="../../../_images/v002_dataflow_sfu.svg" style="width: 70%;" />
+</a>
+<figcaption>
+<p><span class="caption-number">그림 16 </span><span class="caption-text"><strong>Figure 9.</strong> SFU (CVO) instruction dataflow. Supports both L2 cache
+streaming and a direct fast-path from the GEMV cores.</span><a class="headerlink" href="#fig-dataflow-sfu" title="Link to this image">¶</a></p>
+</figcaption>
+</figure>
+<p><strong>Fast Path</strong>: if the SFU consumes the output of the preceding GEMV
+immediately, <code class="docutils literal notranslate"><span class="pre">src_addr</span></code> is set to a <strong>special tag</strong> and the L2 round
+trip is skipped. The Dispatcher’s dependency-tracking logic decides this
+automatically.</p>
 </section>
-<section id="id6">
-<h2>6. 의존성과 완료 통지<a class="headerlink" href="#id6" title="Link to this heading">¶</a></h2>
-<p>명령어 간 의존성은 Global Scheduler가 다음 두 정보로 해소한다.</p>
+<section id="dependencies-and-completion">
+<h2>6. Dependencies and Completion<a class="headerlink" href="#dependencies-and-completion" title="Link to this heading">¶</a></h2>
+<p>Inter-instruction dependencies are resolved in the Global Scheduler via
+two checks.</p>
 <ul class="simple">
-<li><p><strong>Address Hazard</strong>: dest / src L2 주소의 read-after-write 검사.</p></li>
-<li><p><strong>Resource Hazard</strong>: GEMM·GEMV·SFU 자원의 점유 상태.</p></li>
+<li><p><strong>Address hazard</strong>: read-after-write on dest / src L2 addresses.</p></li>
+<li><p><strong>Resource hazard</strong>: occupancy of the GEMM / GEMV / SFU resources.</p></li>
 </ul>
-<p>비동기 명령어(<code class="docutils literal notranslate"><span class="pre">async</span> <span class="pre">=</span> <span class="pre">1</span></code>)의 완료는 <code class="docutils literal notranslate"><span class="pre">fsmout_npu_stat_collector</span></code>
-블록이 수집하여 AXI-Lite STAT_OUT 레지스터로 호스트에 통지한다.</p>
+<p>Completion of an asynchronous instruction (<code class="docutils literal notranslate"><span class="pre">async</span> <span class="pre">=</span> <span class="pre">1</span></code>) is collected
+by the <code class="docutils literal notranslate"><span class="pre">fsmout_npu_stat_collector</span></code> block and reported to the host via
+the AXI-Lite STAT_OUT register.</p>
 </section>
 </section>
 
@@ -644,14 +663,14 @@ cvo_control_uop_t → SFU (단일 BF16 스칼라 파이프라인)
             Made with 
             <a href="https://github.com/pradyunsg/furo">Furo</a>
             <div class="last-updated">
-              Last updated on 2026-04-24</div>
+              Last updated on 2026-04-29</div>
           </div>
           <div class="right-details">
             <div class="icons">
-              <a class="muted-link pccx-footer-icon" href="https://github.com/hwkim-dev/pccx-FPGA-NPU-LLM-kv260" aria-label="RTL implementation — github.com/hwkim-dev/pccx-FPGA-NPU-LLM-kv260"><svg fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="1.2"/><rect x="10" y="10" width="4" height="4" fill="currentColor" stroke="none"/><path d="M9 3v3M15 3v3M9 18v3M15 18v3M3 9h3M3 15h3M18 9h3M18 15h3"/></svg><span class="pccx-footer-icon__label">RTL</span></a>
-              <a class="muted-link pccx-footer-icon" href="https://hwkim-dev.github.io/pccx/ko/lab/" aria-label="pccx-lab — simulator & AI profiler"><svg fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path d="M9 3h6"/><path d="M10 3v6.2L4.6 19a1 1 0 0 0 .86 1.5h13.08a1 1 0 0 0 .86-1.5L14 9.2V3"/><path d="M6.8 14h10.4"/></svg><span class="pccx-footer-icon__label">Lab</span></a>
-              <a class="muted-link pccx-footer-icon" href="https://github.com/hwkim-dev/pccx" aria-label="Docs repository — github.com/hwkim-dev/pccx"><svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16" width="1em" height="1em" aria-hidden="true"><path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg><span class="pccx-footer-icon__label">Docs</span></a>
-              <a class="muted-link pccx-footer-icon" href="https://hwkim-dev.github.io/hwkim-dev/" aria-label="Author portfolio — hwkim-dev.github.io/hwkim-dev"><svg fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M4.5 20.5c1-3.5 4-5.5 7.5-5.5s6.5 2 7.5 5.5"/></svg><span class="pccx-footer-icon__label">Blog</span></a>
+              <a class="muted-link pccx-footer-icon" href="https://github.com/hkimw/pccx-FPGA-NPU-LLM-kv260" aria-label="RTL implementation — github.com/hkimw/pccx-FPGA-NPU-LLM-kv260"><svg fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="1.2"/><rect x="10" y="10" width="4" height="4" fill="currentColor" stroke="none"/><path d="M9 3v3M15 3v3M9 18v3M15 18v3M3 9h3M3 15h3M18 9h3M18 15h3"/></svg><span class="pccx-footer-icon__label">RTL</span></a>
+              <a class="muted-link pccx-footer-icon" href="https://hkimw.github.io/pccx/ko/lab/" aria-label="pccx-lab — simulator & AI profiler"><svg fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path d="M9 3h6"/><path d="M10 3v6.2L4.6 19a1 1 0 0 0 .86 1.5h13.08a1 1 0 0 0 .86-1.5L14 9.2V3"/><path d="M6.8 14h10.4"/></svg><span class="pccx-footer-icon__label">Lab</span></a>
+              <a class="muted-link pccx-footer-icon" href="https://github.com/hkimw/pccx" aria-label="Docs repository — github.com/hkimw/pccx"><svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16" width="1em" height="1em" aria-hidden="true"><path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg><span class="pccx-footer-icon__label">Docs</span></a>
+              <a class="muted-link pccx-footer-icon" href="https://hkimw.github.io/hkimw/" aria-label="Author portfolio — hkimw.github.io/hkimw"><svg fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M4.5 20.5c1-3.5 4-5.5 7.5-5.5s6.5 2 7.5 5.5"/></svg><span class="pccx-footer-icon__label">Blog</span></a>
               
             </div>
           </div>
@@ -671,25 +690,25 @@ cvo_control_uop_t → SFU (단일 BF16 스칼라 파이프라인)
         <div class="toc-tree-container">
           <div class="toc-tree">
             <ul>
-<li><a class="reference internal" href="#">명령어별 데이터플로우</a><ul>
+<li><a class="reference internal" href="#">Per-Instruction Dataflow</a><ul>
 <li><a class="reference internal" href="#gemm">1. GEMM</a><ul>
-<li><a class="reference internal" href="#id2">경로 요약</a></li>
+<li><a class="reference internal" href="#path-summary">Path Summary</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#gemv">2. GEMV</a><ul>
-<li><a class="reference internal" href="#id3">경로 요약</a></li>
+<li><a class="reference internal" href="#id1">Path Summary</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#memcpy">3. MEMCPY</a><ul>
-<li><a class="reference internal" href="#id4">지원 조합</a></li>
+<li><a class="reference internal" href="#supported-combinations">Supported Combinations</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#memset">4. MEMSET</a><ul>
-<li><a class="reference internal" href="#id5">특징</a></li>
+<li><a class="reference internal" href="#characteristics">Characteristics</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#cvo-sfu">5. CVO (SFU)</a></li>
-<li><a class="reference internal" href="#id6">6. 의존성과 완료 통지</a></li>
+<li><a class="reference internal" href="#dependencies-and-completion">6. Dependencies and Completion</a></li>
 </ul>
 </li>
 </ul>

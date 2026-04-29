@@ -35,7 +35,7 @@ the absolute physical constraints of the KV260 platform, exploiting its
 1,248 DSP48E2 slices and 144 BRAMs to their functional ceiling.
 
 -  **Software Baseline**:
-   `llm-lite <https://github.com/hwkim-dev/llm-lite>`__ (x64 CPU
+   `llm-lite <https://github.com/hkimw/llm-lite>`__ (x64 CPU
    reference implementation)
 -  **Full-Stack Co-Design**: Hardware accelerator (SystemVerilog),
    Trace-Driven validation model (Python), and an AXI DMA memory

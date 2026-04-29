@@ -5,18 +5,18 @@
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta property="og:title" content="Gemma 3N — Attention 및 RoPE 제약" />
 <meta property="og:type" content="website" />
-<meta property="og:url" content="https://hwkim-dev.github.io/pccx/docs/v002/Models/gemma3n_attention_rope.html" />
+<meta property="og:url" content="https://hkimw.github.io/pccx/docs/v002/Models/gemma3n_attention_rope.html" />
 <meta property="og:site_name" content="pccx — Parallel Compute Core eXecutor" />
 <meta property="og:description" content="Gemma 3N 은 어텐션 블록에서 두 가지 선택을 표준 Transformer 와 다르게 합니다. 두 결정 모두 pccx v002 명령어 스트림을 단순화시키므로 명시해 둘 가치가 있습니다. 1. Attention Scaling 과 Softcap 완전 제거: 표준 어텐션에서는 Q · Kᵀ 결과를\sqrt{d_{head}} 로 나눕니다. 이전 Gemma ..." />
 <meta property="og:image:width" content="1146" />
 <meta property="og:image:height" content="600" />
-<meta property="og:image" content="https://hwkim-dev.github.io/pccx/_images/social_previews/summary_docs_v002_Models_gemma3n_attention_rope_973e48c6.png" />
+<meta property="og:image" content="https://hkimw.github.io/pccx/_images/social_previews/summary_docs_v002_Models_gemma3n_attention_rope_973e48c6.png" />
 <meta property="og:image:alt" content="Gemma 3N 은 어텐션 블록에서 두 가지 선택을 표준 Transformer 와 다르게 합니다. 두 결정 모두 pccx v002 명령어 스트림을 단순화시키므로 명시해 둘 가치가 있습니다. 1. Attention Scaling 과 Softcap 완전 제거: 표준 어텐션에서는 Q · Kᵀ 결과를\sqrt{d_{head}} 로 나눕니다. 이전 Gemma ..." />
 <meta name="description" content="Gemma 3N 은 어텐션 블록에서 두 가지 선택을 표준 Transformer 와 다르게 합니다. 두 결정 모두 pccx v002 명령어 스트림을 단순화시키므로 명시해 둘 가치가 있습니다. 1. Attention Scaling 과 Softcap 완전 제거: 표준 어텐션에서는 Q · Kᵀ 결과를\sqrt{d_{head}} 로 나눕니다. 이전 Gemma ..." />
 <meta name="twitter:card" content="summary_large_image" />
 
-<script type="application/ld+json">[{"@context":"https://schema.org","@type":"WebSite","name":"pccx — Parallel Compute Core eXecutor","alternateName":"pccx","url":"https://hwkim-dev.github.io/pccx/","inLanguage":["ko","en","ko"],"author":{"@type":"Person","name":"Hyunwoo Kim","url":"https://hwkim-dev.github.io/hwkim-dev/"},"publisher":{"@type":"Person","name":"Hyunwoo Kim","url":"https://hwkim-dev.github.io/hwkim-dev/"},"description":"pccx is an open-source scalable NPU architecture for edge LLM inference.  W4A8KV4 quantisation on the Xilinx Kria KV260; v002 reference implementation in SystemVerilog.","keywords":["NPU","FPGA","LLM inference","edge AI","W4A8","KV cache","systolic array","Kria KV260","ZU5EV","Transformer accelerator","speculative decoding","FlashAttention","QServe","Gemma 3N","Matryoshka","Sail ISA","Sail language","formal ISA specification","ISA semantics","RISC-V Sail","Arm Sail","CHERI","Morello","Isabelle/HOL","Coq"]},{"@context":"https://schema.org","@type":"TechArticle","headline":"Gemma 3N — Attention 및 RoPE 제약","name":"Gemma 3N — Attention 및 RoPE 제약","url":"https://hwkim-dev.github.io/pccx/ko/docs/v002/Models/gemma3n_attention_rope.html","mainEntityOfPage":{"@type":"WebPage","@id":"https://hwkim-dev.github.io/pccx/ko/docs/v002/Models/gemma3n_attention_rope.html"},"isPartOf":{"@type":"WebSite","name":"pccx — Parallel Compute Core eXecutor","url":"https://hwkim-dev.github.io/pccx/"},"author":{"@type":"Person","name":"Hyunwoo Kim","url":"https://hwkim-dev.github.io/hwkim-dev/"},"publisher":{"@type":"Organization","name":"pccx project","url":"https://hwkim-dev.github.io/pccx/"},"datePublished":"2026-04-24","dateModified":"2026-04-24","description":"pccx documentation page: Gemma 3N — Attention 및 RoPE 제약. Open-source NPU architecture + pccx-lab profiler implementing research from QServe, FlashAttention, OpenPangu speculative decoding, and Matryoshka subnet swap.","inLanguage":"ko","license":"https://www.apache.org/licenses/LICENSE-2.0","citation":{"@type":"CreativeWork","name":"pccx: Parallel Compute Core eXecutor","url":"https://hwkim-dev.github.io/pccx/","author":"Hyunwoo Kim","datePublished":"2026"}}]</script><link rel="index" title="색인" href="../../../genindex.html"><link rel="search" title="검색" href="../../../search.html"><link rel="next" title="Gemma 3N — LAuReL 과 PLE Calibration 모듈" href="gemma3n_ple_laurel.html"><link rel="prev" title="Gemma 3N E4B — 연산자 수준 파이프라인" href="gemma3n_pipeline.html">
-        <link rel="canonical" href="https://hwkim-dev.github.io/pccx/docs/v002/Models/gemma3n_attention_rope.html">
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"WebSite","name":"pccx — Parallel Compute Core eXecutor","alternateName":"pccx","url":"https://hkimw.github.io/pccx/","inLanguage":["ko","en","ko"],"author":{"@type":"Person","name":"Hyunwoo Kim","url":"https://hkimw.github.io/hkimw/"},"publisher":{"@type":"Person","name":"Hyunwoo Kim","url":"https://hkimw.github.io/hkimw/"},"description":"pccx is an open-source scalable NPU architecture for edge LLM inference.  W4A8KV4 quantisation on the Xilinx Kria KV260; v002 reference implementation in SystemVerilog.","keywords":["NPU","FPGA","LLM inference","edge AI","W4A8","KV cache","systolic array","Kria KV260","ZU5EV","Transformer accelerator","speculative decoding","FlashAttention","QServe","Gemma 3N","Matryoshka","Sail ISA","Sail language","formal ISA specification","ISA semantics","RISC-V Sail","Arm Sail","CHERI","Morello","Isabelle/HOL","Coq"]},{"@context":"https://schema.org","@type":"TechArticle","headline":"Gemma 3N — Attention 및 RoPE 제약","name":"Gemma 3N — Attention 및 RoPE 제약","url":"https://hkimw.github.io/pccx/ko/docs/v002/Models/gemma3n_attention_rope.html","mainEntityOfPage":{"@type":"WebPage","@id":"https://hkimw.github.io/pccx/ko/docs/v002/Models/gemma3n_attention_rope.html"},"isPartOf":{"@type":"WebSite","name":"pccx — Parallel Compute Core eXecutor","url":"https://hkimw.github.io/pccx/"},"author":{"@type":"Person","name":"Hyunwoo Kim","url":"https://hkimw.github.io/hkimw/"},"publisher":{"@type":"Organization","name":"pccx project","url":"https://hkimw.github.io/pccx/"},"datePublished":"2026-04-29","dateModified":"2026-04-29","description":"pccx documentation page: Gemma 3N — Attention 및 RoPE 제약. Open-source NPU architecture + pccx-lab profiler implementing research from QServe, FlashAttention, OpenPangu speculative decoding, and Matryoshka subnet swap.","inLanguage":"ko","license":"https://www.apache.org/licenses/LICENSE-2.0","citation":{"@type":"CreativeWork","name":"pccx: Parallel Compute Core eXecutor","url":"https://hkimw.github.io/pccx/","author":"Hyunwoo Kim","datePublished":"2026"}}]</script><link rel="index" title="색인" href="../../../genindex.html"><link rel="search" title="검색" href="../../../search.html"><link rel="next" title="Gemma 3N — LAuReL 과 PLE Calibration 모듈" href="gemma3n_ple_laurel.html"><link rel="prev" title="Gemma 3N E4B — 연산자 수준 파이프라인" href="gemma3n_pipeline.html">
+        <link rel="canonical" href="https://hkimw.github.io/pccx/docs/v002/Models/gemma3n_attention_rope.html">
 
     <!-- Generated with Sphinx 7.4.7 and Furo 2025.12.19 -->
         <title>Gemma 3N — Attention 및 RoPE 제약 - pccx 문서</title>
@@ -33,7 +33,7 @@
     <link rel="stylesheet" type="text/css" href="../../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
     <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo-extensions.css?v=8dab3a3b" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=7b993dbb" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=4880187a" />
     <link rel="stylesheet" type="text/css" href="../../../_static/image-lightbox.css?v=884c9d5a" />
     <link rel="stylesheet" type="text/css" href="../../../_static/language-switcher.css?v=cc8629cf" />
     
@@ -240,7 +240,7 @@
 
 <nav class="pccx-repolinks" aria-label="Project repositories">
   <a class="pccx-repolinks__btn"
-     href="https://github.com/hwkim-dev/pccx-FPGA-NPU-LLM-kv260"
+     href="https://github.com/hkimw/pccx-FPGA-NPU-LLM-kv260"
      title="Active v002 RTL — pccx-FPGA-NPU-LLM-kv260"
      target="_blank" rel="noopener">
     <svg aria-hidden="true" viewBox="0 0 24 24" width="1em" height="1em"
@@ -267,8 +267,8 @@
     <span class="pccx-repolinks__label">Lab</span>
   </a>
   <a class="pccx-repolinks__btn"
-     href="https://github.com/hwkim-dev/pccx"
-     title="Docs source — github.com/hwkim-dev/pccx"
+     href="https://github.com/hkimw/pccx"
+     title="Docs source — github.com/hkimw/pccx"
      target="_blank" rel="noopener">
     <svg aria-hidden="true" viewBox="0 0 16 16" width="1em" height="1em"
          fill="currentColor">
@@ -277,8 +277,8 @@
     <span class="pccx-repolinks__label">Docs</span>
   </a>
   <a class="pccx-repolinks__btn"
-     href="https://hwkim-dev.github.io/hwkim-dev/"
-     title="Author portfolio — hwkim-dev.github.io"
+     href="https://hkimw.github.io/hkimw/"
+     title="Author portfolio — hkimw.github.io"
      target="_blank" rel="noopener">
     <svg aria-hidden="true" viewBox="0 0 24 24" width="1em" height="1em"
          fill="none" stroke="currentColor" stroke-width="1.6"
@@ -311,18 +311,19 @@
 <li class="toctree-l3"><a class="reference internal" href="../Architecture/rationale.html">v001 → v002 설계 근거</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../Architecture/top_level.html">탑레벨 아키텍처</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../Architecture/floorplan.html">물리 플로어플랜</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../Architecture/memory_hierarchy.html">메모리 계층</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Architecture/memory_hierarchy.html">Memory Hierarchy</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../Architecture/kv_cache.html">KV 캐시 최적화 전략</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../Architecture/gemm_core.html">GEMM 코어 (시스톨릭 어레이)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../Architecture/gemv_core.html">GEMV 코어</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../Architecture/sfu_core.html">SFU 코어 (Complex Vector Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Architecture/preprocess.html">PREPROCESS 스테이지</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../Architecture/dsp48e2_w4a8.html">DSP48E2 W4A8 비트 패킹과 부호 복원</a></li>
 </ul>
 </li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../ISA/index.html">명령어 세트 아키텍처 (ISA)</a><input aria-label="Toggle navigation of 명령어 세트 아키텍처 (ISA)" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../ISA/encoding.html">명령어 인코딩</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../ISA/instructions.html">명령어 상세 인코딩</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../ISA/dataflow.html">명령어별 데이터플로우</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../ISA/dataflow.html">Per-Instruction Dataflow</a></li>
 </ul>
 </li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../Formal/index.html">형식 모델 — Sail</a><input aria-label="Toggle navigation of 형식 모델 — Sail" class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="simple">
@@ -330,6 +331,7 @@
 </li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../Drivers/index.html">소프트웨어 스택</a><input aria-label="Toggle navigation of 소프트웨어 스택" class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../Drivers/api.html">C API 개요</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../Drivers/hal.html">HAL — AXI-Lite MMIO 계층</a></li>
 </ul>
 </li>
 <li class="toctree-l2 current has-children"><a class="reference internal" href="index.html">타깃 모델</a><input aria-label="Toggle navigation of 타깃 모델" checked="" class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="current">
@@ -346,39 +348,56 @@
 <li class="toctree-l3"><a class="reference internal" href="../RTL/npu_top.html">NPU 최상위 모듈</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../RTL/compute_cores.html">컴퓨트 코어 모듈</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../RTL/controller.html">NPU 컨트롤러 모듈</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../RTL/frontend.html">NPU 프론트엔드 모듈</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../RTL/memory_l2.html">L2 캐시 (URAM)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../RTL/memory_dispatch.html">메모리 디스패치</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../RTL/preprocess.html">PREPROCESS RTL 레퍼런스</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../RTL/packages.html">컴파일 우선순위 패키지</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../RTL/library.html">공유 라이브러리</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../Verification/index.html">검증</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../Build/index.html">Vivado 빌드</a><input aria-label="Toggle navigation of Vivado 빌드" class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="simple">
+</ul>
+</li>
 </ul>
 </li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">타겟 하드웨어</span></p>
 <ul>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../Devices/index.html">지원 디바이스</a><input aria-label="Toggle navigation of 지원 디바이스" class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../Devices/index.html">지원 디바이스</a><input aria-label="Toggle navigation of 지원 디바이스" class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" role="switch" type="checkbox"/><label for="toctree-checkbox-10"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../Devices/kv260.html">타겟 하드웨어: Xilinx Kria KV260</a></li>
 </ul>
 </li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">pccx-lab 핸드북</span></p>
 <ul>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../Lab/index.html">pccx-lab 핸드북</a><input aria-label="Toggle navigation of pccx-lab 핸드북" class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" role="switch" type="checkbox"/><label for="toctree-checkbox-10"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../Lab/index.html">pccx-lab 핸드북</a><input aria-label="Toggle navigation of pccx-lab 핸드북" class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" role="switch" type="checkbox"/><label for="toctree-checkbox-11"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../Lab/architecture.html">아키텍처 개요</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../Lab/cli.html">CLI 레퍼런스</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../Lab/analyzer_api.html">분석기 API</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../Lab/copilot.html">Copilot API</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../Lab/research.html">pccx-lab 연구 계보</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Lab/panels.html">UI 패널 카탈로그</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Lab/ipc.html">Tauri IPC 계약</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Lab/verification-workflow.html">검증 워크플로</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Lab/pccx-format.html">.pccx 바이너리 포맷</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Lab/uvm-bridge.html">UVM 브리지</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Lab/self-evolution.html">사이클 루프</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Lab/quickstart.html">pccx-lab 퀵스타트</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Lab/core-modules.html">pccx-core 모듈 레퍼런스</a></li>
 </ul>
 </li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">아카이브</span></p>
 <ul>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../archive/index.html">아카이브</a><input aria-label="Toggle navigation of 아카이브" class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" role="switch" type="checkbox"/><label for="toctree-checkbox-11"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../archive/experimental_v001/index.html">아카이브: v001 실험적 아키텍처</a><input aria-label="Toggle navigation of 아카이브: v001 실험적 아키텍처" class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" role="switch" type="checkbox"/><label for="toctree-checkbox-12"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../archive/index.html">아카이브</a><input aria-label="Toggle navigation of 아카이브" class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" role="switch" type="checkbox"/><label for="toctree-checkbox-12"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../archive/experimental_v001/index.html">아카이브: v001 실험적 아키텍처</a><input aria-label="Toggle navigation of 아카이브: v001 실험적 아키텍처" class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" role="switch" type="checkbox"/><label for="toctree-checkbox-13"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../archive/experimental_v001/Architecture/v001_architecture.html">pccx: Parallel Compute Core eXecutor</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../archive/experimental_v001/Drivers/ISA.html">pccx ISA 사양</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../archive/experimental_v001/Drivers/ISA_Spreadsheet.html">pccx ISA 스프레드시트 뷰</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../archive/experimental_v001/Drivers/v001_API.html">pccx v001 호스트 API 개발자 레퍼런스</a></li>
-<li class="toctree-l3 has-children"><a class="reference internal" href="../../archive/experimental_v001/RTL/index.html">RTL 소스 레퍼런스 (v001)</a><input aria-label="Toggle navigation of RTL 소스 레퍼런스 (v001)" class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" role="switch" type="checkbox"/><label for="toctree-checkbox-13"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../../archive/experimental_v001/RTL/index.html">RTL 소스 레퍼런스 (v001)</a><input aria-label="Toggle navigation of RTL 소스 레퍼런스 (v001)" class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" role="switch" type="checkbox"/><label for="toctree-checkbox-14"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../archive/experimental_v001/RTL/top.html">최상위</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../archive/experimental_v001/RTL/packages.html">패키지와 상수</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../archive/experimental_v001/RTL/controller.html">NPU 컨트롤러</a></li>
@@ -398,12 +417,12 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">툴체인 데모</span></p>
 <ul>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../samples/index.html">툴체인 데모</a><input aria-label="Toggle navigation of 툴체인 데모" class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" role="switch" type="checkbox"/><label for="toctree-checkbox-14"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../samples/index.html">툴체인 데모</a><input aria-label="Toggle navigation of 툴체인 데모" class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" role="switch" type="checkbox"/><label for="toctree-checkbox-15"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../samples/mermaid_blockdiagram.html">Mermaid — NPU 블록 다이어그램</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../samples/wavedrom_axi_read.html">WaveDrom — AXI4 read 트랜잭션</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../samples/svg_themed_demo.html">SVG — 테마 대응 4×4 PE 어레이</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../samples/plot_bandwidth.html">scienceplots — batch size 대비 대역폭</a></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../../auto_plots/index.html">Plot gallery</a><input aria-label="Toggle navigation of Plot gallery" class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" role="switch" type="checkbox"/><label for="toctree-checkbox-15"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../auto_plots/index.html">Plot gallery</a><input aria-label="Toggle navigation of Plot gallery" class="toctree-checkbox" id="toctree-checkbox-16" name="toctree-checkbox-16" role="switch" type="checkbox"/><label for="toctree-checkbox-16"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../auto_plots/plot_bandwidth.html">Batch size vs achieved HP-AXI bandwidth</a></li>
 </ul>
 </li>
@@ -412,7 +431,7 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">도구</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference external" href="https://hwkim-dev.github.io/pccx/ko/lab/">pccx-lab — 시뮬레이터 &amp; AI 프로파일러</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://hkimw.github.io/pccx/ko/lab/">pccx-lab — 시뮬레이터 &amp; AI 프로파일러</a></li>
 </ul>
 
 </div>
@@ -433,12 +452,12 @@
         </a>
         <div class="content-icon-container">
           <div class="view-this-page">
-  <a class="muted-link" href="https://github.com/hwkim-dev/pccx/blob/main/ko/docs/docs/v002/Models/gemma3n_attention_rope.rst?plain=true" title="View this page">
+  <a class="muted-link" href="https://github.com/hkimw/pccx/blob/main/ko/docs/docs/v002/Models/gemma3n_attention_rope.rst?plain=true" title="View this page">
     <svg><use href="#svg-eye"></use></svg>
     <span class="visually-hidden">View this page</span>
   </a>
 </div><div class="edit-this-page">
-  <a class="muted-link" href="https://github.com/hwkim-dev/pccx/edit/main/ko/docs/docs/v002/Models/gemma3n_attention_rope.rst" rel="edit" title="Edit this page">
+  <a class="muted-link" href="https://github.com/hkimw/pccx/edit/main/ko/docs/docs/v002/Models/gemma3n_attention_rope.rst" rel="edit" title="Edit this page">
     <svg><use href="#svg-pencil"></use></svg>
     <span class="visually-hidden">Edit this page</span>
   </a>
@@ -645,14 +664,14 @@ CVO 호출 절감. 20 tok/s 목표에서 SFU 예산 기준 약 2–3 % 의 시�
             Made with 
             <a href="https://github.com/pradyunsg/furo">Furo</a>
             <div class="last-updated">
-              Last updated on 2026-04-24</div>
+              Last updated on 2026-04-29</div>
           </div>
           <div class="right-details">
             <div class="icons">
-              <a class="muted-link pccx-footer-icon" href="https://github.com/hwkim-dev/pccx-FPGA-NPU-LLM-kv260" aria-label="RTL implementation — github.com/hwkim-dev/pccx-FPGA-NPU-LLM-kv260"><svg fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="1.2"/><rect x="10" y="10" width="4" height="4" fill="currentColor" stroke="none"/><path d="M9 3v3M15 3v3M9 18v3M15 18v3M3 9h3M3 15h3M18 9h3M18 15h3"/></svg><span class="pccx-footer-icon__label">RTL</span></a>
-              <a class="muted-link pccx-footer-icon" href="https://hwkim-dev.github.io/pccx/ko/lab/" aria-label="pccx-lab — simulator & AI profiler"><svg fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path d="M9 3h6"/><path d="M10 3v6.2L4.6 19a1 1 0 0 0 .86 1.5h13.08a1 1 0 0 0 .86-1.5L14 9.2V3"/><path d="M6.8 14h10.4"/></svg><span class="pccx-footer-icon__label">Lab</span></a>
-              <a class="muted-link pccx-footer-icon" href="https://github.com/hwkim-dev/pccx" aria-label="Docs repository — github.com/hwkim-dev/pccx"><svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16" width="1em" height="1em" aria-hidden="true"><path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg><span class="pccx-footer-icon__label">Docs</span></a>
-              <a class="muted-link pccx-footer-icon" href="https://hwkim-dev.github.io/hwkim-dev/" aria-label="Author portfolio — hwkim-dev.github.io/hwkim-dev"><svg fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M4.5 20.5c1-3.5 4-5.5 7.5-5.5s6.5 2 7.5 5.5"/></svg><span class="pccx-footer-icon__label">Blog</span></a>
+              <a class="muted-link pccx-footer-icon" href="https://github.com/hkimw/pccx-FPGA-NPU-LLM-kv260" aria-label="RTL implementation — github.com/hkimw/pccx-FPGA-NPU-LLM-kv260"><svg fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="1.2"/><rect x="10" y="10" width="4" height="4" fill="currentColor" stroke="none"/><path d="M9 3v3M15 3v3M9 18v3M15 18v3M3 9h3M3 15h3M18 9h3M18 15h3"/></svg><span class="pccx-footer-icon__label">RTL</span></a>
+              <a class="muted-link pccx-footer-icon" href="https://hkimw.github.io/pccx/ko/lab/" aria-label="pccx-lab — simulator & AI profiler"><svg fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path d="M9 3h6"/><path d="M10 3v6.2L4.6 19a1 1 0 0 0 .86 1.5h13.08a1 1 0 0 0 .86-1.5L14 9.2V3"/><path d="M6.8 14h10.4"/></svg><span class="pccx-footer-icon__label">Lab</span></a>
+              <a class="muted-link pccx-footer-icon" href="https://github.com/hkimw/pccx" aria-label="Docs repository — github.com/hkimw/pccx"><svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16" width="1em" height="1em" aria-hidden="true"><path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg><span class="pccx-footer-icon__label">Docs</span></a>
+              <a class="muted-link pccx-footer-icon" href="https://hkimw.github.io/hkimw/" aria-label="Author portfolio — hkimw.github.io/hkimw"><svg fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M4.5 20.5c1-3.5 4-5.5 7.5-5.5s6.5 2 7.5 5.5"/></svg><span class="pccx-footer-icon__label">Blog</span></a>
               
             </div>
           </div>

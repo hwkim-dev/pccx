@@ -260,7 +260,7 @@
 synth + verification result), NOT copy-pasted.</p></li>
 <li><p><strong>Interactive</strong> — waveforms, heatmaps, proof trees respond to user
 input (zoom, filter, replay counter-example).</p></li>
-<li><p><strong>AI-annotated</strong> — Claude narrates glitches, hotspots, what-ifs
+<li><p><strong>AI-annotated</strong> — the LLM narrates glitches, hotspots, what-ifs
 at <em>just</em> enough length to matter.</p></li>
 <li><p><strong>Comparable</strong> — every report links its numbers to the benchmark
 database so a reviewer sees “17% faster than Llama-2 at same area”
@@ -296,7 +296,7 @@ emits its target bytes.</p>
 <span class="p">}</span>
 
 <span class="k">enum</span><span class="w"> </span><span class="nc">Section</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">Summary</span><span class="p">(</span><span class="n">AiNarration</span><span class="p">),</span><span class="w">                    </span><span class="c1">// Claude-written exec summary</span>
+<span class="w">    </span><span class="n">Summary</span><span class="p">(</span><span class="n">AiNarration</span><span class="p">),</span><span class="w">                    </span><span class="c1">// LLM-written exec summary</span>
 <span class="w">    </span><span class="n">Waveform</span><span class="p">(</span><span class="n">WaveformRef</span><span class="p">),</span><span class="w">                    </span><span class="c1">// M4.2</span>
 <span class="w">    </span><span class="n">Heatmap</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">kind</span><span class="p">:</span><span class="w"> </span><span class="nc">HeatmapKind</span><span class="p">,</span><span class="w"> </span><span class="n">data</span><span class="p">:</span><span class="w"> </span><span class="err">…</span><span class="w"> </span><span class="p">},</span><span class="w">   </span><span class="c1">// M4.3</span>
 <span class="w">    </span><span class="n">FormalProof</span><span class="p">(</span><span class="n">ProofTreeRef</span><span class="p">),</span><span class="w">                </span><span class="c1">// M4.4</span>
@@ -338,7 +338,7 @@ so they’re first-class, not ephemeral.</p></li>
 <h3>M4.3 — Power / area / timing heatmaps (Week 15)<a class="headerlink" href="#m4-3-power-area-timing-heatmaps-week-15" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Vivado / OpenROAD report ingestion via pccx-core::synth_report.</p></li>
-<li><p>D3.js heatmap in pccx-ide; hover a tile for Claude hotspot narration
+<li><p>D3.js heatmap in pccx-ide; hover a tile for LLM hotspot narration
 (“DSP48E2 cluster 3,7 is 92% utilised — consider dual-pumping”).</p></li>
 <li><p>Export: SVG (static) + JSON (interactive source).</p></li>
 </ul>
@@ -367,7 +367,7 @@ to 450 MHz?” or “what if we halved URAM?”.</p></li>
 <ul class="simple">
 <li><p>User types natural-language spec (“I want a 16-lane INT8 GEMV that
 fits in a KV260”).</p></li>
-<li><p>Agent team (research-scout + doc-drafter subagents) proposes an
+<li><p>Agent team (research + doc drafting subagents) proposes an
 architecture.</p></li>
 <li><p>pccx-authoring emits a first-pass ISA + RTL skeleton.</p></li>
 <li><p>User reviews, tweaks, rebuilds.</p></li>

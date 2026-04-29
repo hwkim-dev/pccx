@@ -112,11 +112,11 @@ risks, keeping the ecosystem safe for open-source hardware development.
    .. grid-item-card:: :octicon:`cpu;1.5em;sd-mr-2` RTL Implementation
       :columns: 12 12 8 8
       :class-card: pccx-hero-card
-      :link: https://github.com/hwkim-dev/pccx-FPGA-NPU-LLM-kv260
+      :link: https://github.com/hkimw/pccx-FPGA-NPU-LLM-kv260
       :link-type: url
       :link-alt: Open the pccx-FPGA-NPU-LLM-kv260 repository on GitHub
 
-      **github.com/hwkim-dev/pccx-FPGA-NPU-LLM-kv260**
+      **github.com/hkimw/pccx-FPGA-NPU-LLM-kv260**
 
       The active **v002** SystemVerilog sources — ISA package, controller,
       compute cores (GEMM / GEMV / CVO), memory hierarchy. Target device
@@ -132,28 +132,28 @@ risks, keeping the ecosystem safe for open-source hardware development.
          :gutter: 3
 
          .. grid-item-card:: :octicon:`book;1em;sd-mr-1` Documentation source
-            :link: https://github.com/hwkim-dev/pccx
+            :link: https://github.com/hkimw/pccx
             :link-type: url
             :link-alt: Open the pccx documentation repository on GitHub
 
-            **github.com/hwkim-dev/pccx** — the Sphinx project powering this site.
+            **github.com/hkimw/pccx** — the Sphinx project powering this site.
 
          .. grid-item-card:: :octicon:`telescope;1em;sd-mr-1` pccx-lab (verify / profile)
-            :link: https://hwkim-dev.github.io/pccx/en/lab/
+            :link: https://hkimw.github.io/pccx/en/lab/
             :link-type: url
             :link-alt: Open the pccx-lab verification + profiling hub
 
             **pccx-lab** — Tauri 2 IDE. ``.pccx`` trace loader,
             ``run_verification`` runner, Roofline / Bottleneck cards,
             Vivado synth report view. See the
-            `verification workflow guide <https://hwkim-dev.github.io/pccx/en/lab/verification-workflow.html>`_.
+            `verification workflow guide <https://hkimw.github.io/pccx/en/lab/verification-workflow.html>`_.
 
          .. grid-item-card:: :octicon:`person;1em;sd-mr-1` Author portfolio
-            :link: https://hwkim-dev.github.io/hwkim-dev/
+            :link: https://hkimw.github.io/hkimw/
             :link-type: url
-            :link-alt: Open the hwkim-dev portfolio site
+            :link-alt: Open the hkimw portfolio site
 
-            **hwkim-dev.github.io/hwkim-dev** — blog, other projects, about.
+            **hkimw.github.io/hkimw** — blog, other projects, about.
 
 .. |License| image:: https://img.shields.io/badge/License-Apache_2.0-blue.svg
 .. |Architecture| image:: https://img.shields.io/badge/Architecture-Scalable_NPU-purple

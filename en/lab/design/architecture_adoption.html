@@ -1,0 +1,567 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="../">
+  <head><meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html">
+        <link rel="canonical" href="https://hwkim-dev.github.io/pccx/en/lab/design/architecture_adoption.html">
+
+    <!-- Generated with Sphinx 7.4.7 and Furo 2025.12.19 -->
+        <title>Architecture Adoption Record — 2026-04-25 - pccx-lab documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d111a655" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=7bdb33bb" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=8dab3a3b" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f2f2f2;
+  --color-code-foreground: #1e1e1e;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle site navigation sidebar">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc" aria-label="Toggle table of contents sidebar">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+<div class="announcement">
+  <aside class="announcement-content">
+     Part of the pccx ecosystem — <a href='https://hwkim-dev.github.io/pccx/en/'>pccx main docs</a> 
+  </aside>
+</div>
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <span class="icon"><svg><use href="#svg-menu"></use></svg></span>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">pccx-lab  documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
+  
+  <span class="sidebar-brand-text">pccx-lab  documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul>
+<li class="toctree-l1"><a class="reference internal" href="../getting-started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/overview.html">Module Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules/node-editor.html">Node Editor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rationale.html">Design Rationale</a></li>
+<li class="toctree-l1"><a class="reference internal" href="phase1_crate_split.html">Phase 1 — Workspace / Crate Split Proposal</a></li>
+<li class="toctree-l1"><a class="reference internal" href="phase2_intellisense.html">Phase 2 — IntelliSense-Level Intelligence</a></li>
+<li class="toctree-l1"><a class="reference internal" href="phase3_remote_backend.html">Phase 3 — Secure Remote Backend</a></li>
+<li class="toctree-l1"><a class="reference internal" href="phase4_insane_reports.html">Phase 4 — Insane-Level Reports &amp; Concept-to-RTL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="phase5_alphaevolve.html">Phase 5 — AlphaEvolve → OpenEvolve</a></li>
+<li class="toctree-l1"><a class="reference internal" href="phase6_dev_docs_generation.html">Phase 6 — Development-phase Documentation Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pccx-format.html">.pccx File Format Specification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../verification-workflow.html">Verification Workflow</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="view-this-page">
+  <a class="muted-link" href="../_sources/design/architecture_adoption.md.txt" title="View this page">
+    <svg><use href="#svg-eye"></use></svg>
+    <span class="visually-hidden">View this page</span>
+  </a>
+</div>
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <section id="architecture-adoption-record-2026-04-25">
+<h1>Architecture Adoption Record — 2026-04-25<a class="headerlink" href="#architecture-adoption-record-2026-04-25" title="Link to this heading">¶</a></h1>
+<section id="id1">
+<h2>1. 배경<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h2>
+<p>외부 다중-AI 협의 문서(2026-04-25)가 5개 모델의 교차 검토를 통해 12개의 아키텍처 권고안을 제시하였다.
+본 문서는 각 권고안을 프로젝트 현황과 대조하여 ACCEPT / ADAPT / REJECT / 이미 완료 중 하나로
+판정하고, 우선순위와 근거를 기록한다. 이 기록은 이후 모든 에이전트 및 기여자의 의사결정 기준으로 사용된다.</p>
+</section>
+<hr class="docutils" />
+<section id="id2">
+<h2>2. 판정 테이블<a class="headerlink" href="#id2" title="Link to this heading">¶</a></h2>
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>#</p></th>
+<th class="head"><p>항목</p></th>
+<th class="head"><p>판정</p></th>
+<th class="head"><p>우선순위</p></th>
+<th class="head"><p>현재 상태</p></th>
+<th class="head"><p>근거</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>Svelte 5 마이그레이션</p></td>
+<td><p><strong>REJECT</strong></p></td>
+<td><p>—</p></td>
+<td><p>React 19, 20+ 컴포넌트</p></td>
+<td><p>주석 1</p></td>
+</tr>
+<tr class="row-odd"><td><p>2</p></td>
+<td><p>CLI/GUI 분리</p></td>
+<td><p><strong>이미 완료</strong></p></td>
+<td><p>—</p></td>
+<td><p>10-crate 워크스페이스 완료</p></td>
+<td><p>주석 2</p></td>
+</tr>
+<tr class="row-even"><td><p>3</p></td>
+<td><p>pccx-cli 바이너리</p></td>
+<td><p><strong>ACCEPT</strong></p></td>
+<td><p>P2</p></td>
+<td><p>해당 crate 없음</p></td>
+<td><p>주석 3</p></td>
+</tr>
+<tr class="row-odd"><td><p>4</p></td>
+<td><p>Typed newtypes</p></td>
+<td><p><strong>ACCEPT</strong></p></td>
+<td><p>P1</p></td>
+<td><p>CycleCount, CoreId, EventTypeId, MemAddr, TraceId 도입 완료 (typed.rs). trace.rs/step_snapshot.rs 이식 진행 중</p></td>
+<td><p>주석 4</p></td>
+</tr>
+<tr class="row-even"><td><p>5</p></td>
+<td><p>IPC 경계 안전성 (u64)</p></td>
+<td><p><strong>ADAPT</strong></p></td>
+<td><p>P1</p></td>
+<td><p>generation_id: u32 RegisterSnapshot에 추가 완료. useCycleCursor.ts에서 generation 기반 stale 응답 폐기 구현</p></td>
+<td><p>주석 5</p></td>
+</tr>
+<tr class="row-odd"><td><p>6</p></td>
+<td><p>ts-rs 타입 생성</p></td>
+<td><p><strong>ACCEPT</strong></p></td>
+<td><p>P2</p></td>
+<td><p>수동 유지 중</p></td>
+<td><p>주석 6</p></td>
+</tr>
+<tr class="row-even"><td><p>7</p></td>
+<td><p>MMAP + viewport 스트리밍</p></td>
+<td><p><strong>ACCEPT</strong></p></td>
+<td><p>P2</p></td>
+<td><p>개념 참조만 존재</p></td>
+<td><p>주석 7</p></td>
+</tr>
+<tr class="row-odd"><td><p>8</p></td>
+<td><p>pccx-schema DTO crate</p></td>
+<td><p><strong>ACCEPT</strong></p></td>
+<td><p>P2</p></td>
+<td><p>없음</p></td>
+<td><p>주석 8</p></td>
+</tr>
+<tr class="row-even"><td><p>9</p></td>
+<td><p>Dioxus 장기 옵션</p></td>
+<td><p><strong>NOTED</strong></p></td>
+<td><p>P3</p></td>
+<td><p>해당 없음</p></td>
+<td><p>주석 9</p></td>
+</tr>
+<tr class="row-odd"><td><p>10</p></td>
+<td><p>macOS 배포 안전성</p></td>
+<td><p><strong>ADAPT</strong></p></td>
+<td><p>P3</p></td>
+<td><p>미검증 플랫폼</p></td>
+<td><p>주석 10</p></td>
+</tr>
+<tr class="row-even"><td><p>11</p></td>
+<td><p>Object pooling / $state.raw</p></td>
+<td><p><strong>REJECT</strong></p></td>
+<td><p>—</p></td>
+<td><p>Svelte 전용 패턴</p></td>
+<td><p>주석 11</p></td>
+</tr>
+<tr class="row-odd"><td><p>12</p></td>
+<td><p>ArrayBuffer 바이너리 IPC</p></td>
+<td><p><strong>이미 완료</strong></p></td>
+<td><p>—</p></td>
+<td><p>fetch_trace_payload 패턴</p></td>
+<td><p>주석 12</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<section id="id3">
+<h3>근거 주석<a class="headerlink" href="#id3" title="Link to this heading">¶</a></h3>
+<p><strong>주석 1 — Svelte 5 마이그레이션 REJECT</strong>
+React 19 코드베이스는 20개 이상의 프로덕션 컴포넌트, 12개의 lazy-loaded 경로로 구성된다.
+<code class="docutils literal notranslate"><span class="pre">&#64;monaco-editor/react</span></code>, Three.js, React Flow, ECharts 연동이 모두 React 생태계에 기반하며,
+동등한 Svelte 바인딩이 존재하지 않는다. 마이그레이션 비용이 기술적 이득을 초과한다.</p>
+<p><strong>주석 2 — CLI/GUI 분리 이미 완료</strong>
+Phase 1에서 10-crate 워크스페이스 분리가 완료되었다. 외부 문서의 용어는 이 구조에
+직접 매핑된다: 외부 문서의 <code class="docutils literal notranslate"><span class="pre">pccx-core</span></code> = <code class="docutils literal notranslate"><span class="pre">crates/core/</span></code>, <code class="docutils literal notranslate"><span class="pre">pccx-tauri</span></code> = <code class="docutils literal notranslate"><span class="pre">ui/src-tauri/</span></code>.
+<code class="docutils literal notranslate"><span class="pre">pccx-core</span></code>는 UI 의존성을 일절 가지지 않으며, 어떤 crate도 <code class="docutils literal notranslate"><span class="pre">pccx-ide</span></code>에 의존하지 않는다.</p>
+<p><strong>주석 3 — pccx-cli ACCEPT (P2)</strong>
+CI 환경 및 헤드리스 트레이스 분석에 유용하다. GUI가 1차 인터페이스이므로 긴급하지 않다.
+필요 시 <code class="docutils literal notranslate"><span class="pre">crates/cli/</span></code>로 추가한다.</p>
+<p><strong>주석 4 — Typed newtypes ACCEPT (P1)</strong>
+<code class="docutils literal notranslate"><span class="pre">CycleCount(u64)</span></code>, <code class="docutils literal notranslate"><span class="pre">MemAddr(u64)</span></code>, <code class="docutils literal notranslate"><span class="pre">TraceId(u64)</span></code> 를 <code class="docutils literal notranslate"><span class="pre">crates/core/</span></code>에 도입하고
+checked arithmetic을 적용한다. 기존 코드에 단계적으로 이식한다.</p>
+<p><strong>주석 5 — IPC 경계 안전성 ADAPT</strong>
+2^53을 초과할 가능성이 있는 u64 필드(절대 메모리 주소 등)는 String으로 직렬화한다.
+NPU 트레이스의 일반적 사이클 카운트처럼 안전 정수 범위 내에 머무는 값은 number를 유지하여
+단순성을 보존한다. 모든 비동기 viewport 응답에 <code class="docutils literal notranslate"><span class="pre">generation_id:</span> <span class="pre">u32</span></code>를 추가한다.</p>
+<p><strong>주석 6 — ts-rs ACCEPT (P2)</strong>
+<code class="docutils literal notranslate"><span class="pre">pccx-schema</span></code> crate 도입 시 함께 채택한다. 현재 규모에서는 수동 타입 유지가 가능하다.</p>
+<p><strong>주석 7 — MMAP + viewport 스트리밍 ACCEPT (P2)</strong>
+100 MB 이상의 프로덕션 규모 트레이스에 필수적이다. 현재 데모 트레이스는 소규모이나,
+트레이스 크기가 증가하는 시점에 맞춰 구현한다. <code class="docutils literal notranslate"><span class="pre">live_window.rs</span></code>의 개념적 참조를 출발점으로 삼는다.</p>
+<p><strong>주석 8 — pccx-schema DTO crate ACCEPT (P2)</strong>
+ts-rs 채택과 묶어 진행한다. Rust DTO 정의를 한 곳에서 관리하고 TypeScript 타입을 자동 생성한다.</p>
+<p><strong>주석 9 — Dioxus 장기 옵션 NOTED</strong>
+<code class="docutils literal notranslate"><span class="pre">pccx-core</span></code>가 UI 의존성을 전혀 가지지 않으므로 프론트엔드 교체는 구조적으로 지원된다.
+Blitz 렌더러가 성숙하는 시점에 재평가한다. 현재 조치 없음.</p>
+<p><strong>주석 10 — macOS 배포 ADAPT</strong>
+1차 타깃은 Linux(Ubuntu 24.04)이다. macOS 지원이 활성화될 때 overlay titlebar 설정을 적용한다.</p>
+<p><strong>주석 11 — Object pooling / $state.raw REJECT</strong>
+Svelte 5 전용 패턴이다. React 동등물(<code class="docutils literal notranslate"><span class="pre">useMemo</span></code>, <code class="docutils literal notranslate"><span class="pre">useCallback</span></code>, <code class="docutils literal notranslate"><span class="pre">React.lazy</span></code>)은 이미 적용되어 있다.</p>
+<p><strong>주석 12 — ArrayBuffer 바이너리 IPC 이미 완료</strong>
+<code class="docutils literal notranslate"><span class="pre">fetch_trace_payload</span></code> 패턴이 <code class="docutils literal notranslate"><span class="pre">Vec&lt;u8&gt;</span></code> → TypedArray 변환을 구현하고 있다.
+원시 트레이스 데이터는 IPC 경계를 직접 통과하지 않으며, 집계된 viewport 타일만 전달된다.</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="id4">
+<h2>3. 우선순위 로드맵<a class="headerlink" href="#id4" title="Link to this heading">¶</a></h2>
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>단계</p></th>
+<th class="head"><p>항목</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>P0</strong> (즉시)</p></td>
+<td><p>없음 — 현재 아키텍처는 정상 상태이다</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>P1</strong> (다음 스프린트)</p></td>
+<td><p>✓ 완료 (Sprint 1): Typed newtypes (<code class="docutils literal notranslate"><span class="pre">CycleCount</span></code>, <code class="docutils literal notranslate"><span class="pre">CoreId</span></code>, <code class="docutils literal notranslate"><span class="pre">EventTypeId</span></code>, <code class="docutils literal notranslate"><span class="pre">MemAddr</span></code>, <code class="docutils literal notranslate"><span class="pre">TraceId</span></code>), viewport IPC에 <code class="docutils literal notranslate"><span class="pre">generation_id</span></code> 추가</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>P1</strong> (완료)</p></td>
+<td><p>✓ 완료 (Sprint 4): trace.rs/step_snapshot.rs/roofline.rs/bottleneck.rs/chrome_trace.rs/api_ring.rs/vcd_writer.rs/live_window.rs 타입 이식</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>P2</strong> (중기)</p></td>
+<td><p>✓ 완료 (Sprint 6) — MmapTrace viewport + tile, <code class="docutils literal notranslate"><span class="pre">pccx-cli</span></code> crate, <code class="docutils literal notranslate"><span class="pre">pccx-schema</span></code> + ts-rs 채택</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>P3</strong> (장기)</p></td>
+<td><p>Dioxus 재평가 (Blitz 성숙 후), macOS 배포 강화</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<hr class="docutils" />
+<section id="ipc">
+<h2>4. 채택된 IPC 경계 규칙<a class="headerlink" href="#ipc" title="Link to this heading">¶</a></h2>
+<p>다음 규칙은 외부 협의 문서의 권고를 수용하여 프로젝트 표준으로 확정한다.</p>
+<ol class="arabic simple">
+<li><p><strong>u64/u128 직렬화</strong>: 2^53을 초과할 수 있는 필드는 JSON String으로 직렬화한다.</p></li>
+<li><p><strong>generation_id</strong>: 모든 비동기 viewport 응답 DTO에 <code class="docutils literal notranslate"><span class="pre">generation_id:</span> <span class="pre">u32</span></code>를 포함한다.
+클라이언트는 자신이 발행한 세대보다 오래된 응답을 폐기한다.</p></li>
+<li><p><strong>대용량 바이너리</strong>: <code class="docutils literal notranslate"><span class="pre">Vec&lt;u8&gt;</span></code> / ArrayBuffer 채널을 사용하며 JSON 경로를 거치지 않는다.</p></li>
+<li><p><strong>IPC 데이터 최소화</strong>: 원시 트레이스 데이터는 IPC 경계를 넘지 않는다. viewport 타일만 전달된다.</p></li>
+<li><p><strong>타입 대응 강제</strong>: Rust DTO와 TypeScript 타입의 대응 관계를 문서화한다.
+현재는 수동 유지, P2 이후 ts-rs로 자동화한다.</p></li>
+</ol>
+</section>
+<hr class="docutils" />
+<section id="id5">
+<h2>5. 변경하지 않는 것<a class="headerlink" href="#id5" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>프론트엔드 프레임워크: React 19 + TypeScript + Vite 7 유지</p></li>
+<li><p>워크스페이스 구조: 10개 crate + <code class="docutils literal notranslate"><span class="pre">ui/</span></code> 레이아웃 유지</p></li>
+<li><p>Svelte 컴포넌트 및 Svelte 스토어 도입 없음</p></li>
+<li><p>현재 10개 crate 외 조기 분리 없음</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="id6">
+<h2>6. 구현 이력<a class="headerlink" href="#id6" title="Link to this heading">¶</a></h2>
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>스프린트</p></th>
+<th class="head"><p>날짜</p></th>
+<th class="head"><p>완료 항목</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Sprint 1</p></td>
+<td><p>2026-04-25</p></td>
+<td><p>typed.rs newtypes (CycleCount, CoreId, EventTypeId, MemAddr, TraceId), RegisterSnapshot.generation_id, CanvasView DataTexture 최적화, CX lexer UTF-8 테스트 (28 pass), SV parser M6.1 완성 + 버그 수정 (29 pass)</p></td>
+</tr>
+<tr class="row-odd"><td><p>Sprint 2</p></td>
+<td><p>2026-04-25</p></td>
+<td><p>WaveformViewer RAF 통합 + 양방향 커서 동기화, &#64;tanstack/react-virtual 리스트 가상화, FlameGraph RAF 마이그레이션, MemoryDump 전면 최적화 (HEX_LUT + O(N) canvas + 가상 스크롤)</p></td>
+</tr>
+<tr class="row-even"><td><p>Sprint 3</p></td>
+<td><p>2026-04-26</p></td>
+<td><p>LSP M2.2 SV hover + diagnostics (65 tests), Roofline ECharts 최적화 + useLiveWindow 공유 폴링, ReactFlow 13개 커스텀 노드 React.memo, BottomPanel useLiveWindow 통합 + 가상 스크롤 로그</p></td>
+</tr>
+<tr class="row-odd"><td><p>Sprint 4</p></td>
+<td><p>2026-04-26</p></td>
+<td><p>Core typed newtype 이식 완료 (trace/step_snapshot/roofline/chrome_trace/api_ring), Verification golden_diff abs_tolerance + robust_reader 복구 휴리스틱 (49 tests), Evolve speculative TreeMask + SpeculativeVerifier (25 tests), CodeEditor/CxPlayground useMemo 최적화, FileTree 가상 트리 + CommandPalette fuzzy 검색 40+ 명령, Dashboard 카드 React.memo + theme 통일</p></td>
+</tr>
+<tr class="row-even"><td><p>Sprint 5</p></td>
+<td><p>2026-04-26</p></td>
+<td><p>Remote daemon (ConnectionConfig, TraceStreamProtocol, HealthCheck — 20 tests), i18n 30+ KO 번역 키 + StatusBar FPS 카운터 + TitleBar/MainToolbar theme 통일, Core roofline/bottleneck/coverage 테스트 34개 추가</p></td>
+</tr>
+<tr class="row-odd"><td><p>Sprint 6</p></td>
+<td><p>2026-04-26</p></td>
+<td><p>Phase 2 M2.3 MonacoBridge JSON-RPC 프로토콜 (14 tests), M2.4 ISA TOML completion provider (10 tests), Monaco LSP 클라이언트 통합 (hover/completion/diagnostics), MMAP 트레이스 리더 memmap2 viewport (9 tests), CycleCount Add/Sub/Mul/Div arithmetic traits (19 tests)</p></td>
+</tr>
+<tr class="row-even"><td><p>Sprint 7</p></td>
+<td><p>2026-04-26</p></td>
+<td><p>M6.3 FSM state extraction + Mermaid stateDiagram-v2 (13 tests), M4.1 report engine document tree + HTML renderer (13 tests), DiffView LCS diff + virtual scroll 재작성, Verification golden-diff/sanitize Tauri IPC + VerificationRunner/Suite 프론트엔드 통합</p></td>
+</tr>
+<tr class="row-odd"><td><p>Sprint 8</p></td>
+<td><p>2026-04-26</p></td>
+<td><p>CX LSP cx_provider hover/completion/diagnostics (30 tests), FSM + block diagram Tauri IPC 명령, ScenarioFlow diagram 탭 (Block/FSM), ReportBuilder HTML/Markdown 백엔드 연결 + iframe 렌더 + export, CxPlayground Monaco LSP 통합</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          
+          
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2026, hwkim
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Architecture Adoption Record — 2026-04-25</a><ul>
+<li><a class="reference internal" href="#id1">1. 배경</a></li>
+<li><a class="reference internal" href="#id2">2. 판정 테이블</a><ul>
+<li><a class="reference internal" href="#id3">근거 주석</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id4">3. 우선순위 로드맵</a></li>
+<li><a class="reference internal" href="#ipc">4. 채택된 IPC 경계 규칙</a></li>
+<li><a class="reference internal" href="#id5">5. 변경하지 않는 것</a></li>
+<li><a class="reference internal" href="#id6">6. 구현 이력</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/scripts/furo.js?v=46bd48cc"></script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    </body>
+</html>

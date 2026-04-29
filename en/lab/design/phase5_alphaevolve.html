@@ -320,7 +320,7 @@ User spec ──▶│  ┌──────────┐   ┌────�
 <ol class="arabic simple">
 <li><p><strong>Surrogate</strong> — GNN on RTL AST predicts area / power / delay / fmax without synthesis.  Trained on ~10 K historical Vivado runs from <code class="docutils literal notranslate"><span class="pre">pccx-FPGA-NPU-LLM-kv260</span></code>.  Target latency: &lt; 10 ms / query.</p></li>
 <li><p><strong>Evolutionary loop</strong> — population = RTL variants, fitness = surrogate prediction + Verilator pass + verible-lint pass + timing-sanity check.</p></li>
-<li><p><strong>PRM gate</strong> — Claude Sonnet proposes RTL → Verilator elaborates → verible lints → timing-check sanity-tests → survivors go to the surrogate.</p></li>
+<li><p><strong>PRM gate</strong> — deep cloud LLM proposes RTL → Verilator elaborates → verible lints → timing-check sanity-tests → survivors go to the surrogate.</p></li>
 <li><p><strong>Formal diff</strong> — promoted variants must pass <code class="docutils literal notranslate"><span class="pre">pccx-verification::GoldenDiffGate</span></code> + Sail refinement check.</p></li>
 </ol>
 <p>Deliverable: “design an NPU for Gemma-3N E4B decoding at 20 tok/s on KV260” in &lt; 1 day wall-clock.</p>
@@ -356,7 +356,7 @@ User spec ──▶│  ┌──────────┐   ┌────�
 <ol class="arabic simple">
 <li><p>Parse the model’s computation graph → tensor op sequence.</p></li>
 <li><p>Map each op to pccx ISA opcodes (Sail spec is the ground truth).</p></li>
-<li><p>Claude Sonnet generates Rust/C driver code that issues those opcodes in order.</p></li>
+<li><p>deep cloud LLM generates Rust/C driver code that issues those opcodes in order.</p></li>
 <li><p>Run pccx-lab simulator against PyTorch reference trace → bit-exact check (or <code class="docutils literal notranslate"><span class="pre">pccx-verification::GoldenDiffGate</span></code>).</p></li>
 <li><p>Emit the signed driver + a verification report.</p></li>
 </ol>

@@ -55,7 +55,7 @@ end along with the path of each emitted ``.pccx`` trace.
 .. admonition:: Last verified against
    :class: note
 
-   Commit ``773bd82`` @ ``hwkim-dev/pccx-FPGA-NPU-LLM-kv260``
+   Commit ``773bd82`` @ ``hkimw/pccx-FPGA-NPU-LLM-kv260``
    (2026-04-21). Six testbenches PASS; ``tb_GEMM_fmap_staggered_delay``
    is parked — see ``run_verification.sh`` for the reason.
 

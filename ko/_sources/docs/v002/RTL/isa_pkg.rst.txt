@@ -23,10 +23,29 @@ ISA 타입 패키지
    :language: systemverilog
    :caption: hw/rtl/NPU_Controller/NPU_Control_Unit/ISA_PACKAGE/isa_pkg.sv
 
+인코딩 테이블 헤더
+------------------
+
+``isa_pkg.sv`` 옆에 동반하는 세 개의 ``.svh`` 헤더가 호스트 드라이버가
+미러링하는 비트 레이아웃 테이블을 정의한다.
+
+- ``isa_x32.svh`` — 32-bit 필드 레이아웃 (레거시 + control-plane 오피코드).
+- ``isa_x64.svh`` — 64-bit VLIW 필드 레이아웃 (현재 활성 오피코드 집합).
+- ``isa_memctrl.svh`` — 메모리 컨트롤러 오피코드 본문 (MEMSET / LOAD /
+  STORE / CVO).
+
+호스트 C 드라이버의 ``uCA_v1_api.h`` 는 자신의 비트 레이아웃이
+``isa_x64.svh`` 의 오피코드와 1:1 일치한다고 명시하므로, 필드 폭이
+바뀔 때마다 SV 헤더와 드라이버 헤더가 함께 이동한다.
+
+.. literalinclude:: ../../../../codes/v002/hw/rtl/NPU_Controller/NPU_Control_Unit/ISA_PACKAGE/isa_x64.svh
+   :language: systemverilog
+   :caption: hw/rtl/NPU_Controller/NPU_Control_Unit/ISA_PACKAGE/isa_x64.svh
+
 .. admonition:: 마지막 검증 대상
    :class: note
 
-   커밋 ``773bd82`` @ ``hwkim-dev/pccx-FPGA-NPU-LLM-kv260`` (2026-04-21).
+   커밋 ``8c09e5e`` @ ``hkimw/pccx-FPGA-NPU-LLM-kv260`` (2026-04-29).
 
 .. seealso::
 

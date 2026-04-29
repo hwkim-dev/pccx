@@ -16,7 +16,7 @@ required.
       64-bit VLIW instruction set backing this RTL.
 
 v001 is frozen. Active RTL is in
-`hwkim-dev/pccx-FPGA-NPU-LLM-kv260 <https://github.com/hwkim-dev/pccx-FPGA-NPU-LLM-kv260>`_
+`hkimw/pccx-FPGA-NPU-LLM-kv260 <https://github.com/hkimw/pccx-FPGA-NPU-LLM-kv260>`_
 and documented under :doc:`/docs/v002/RTL/index`.
 
 .. grid:: 2 2 3 3

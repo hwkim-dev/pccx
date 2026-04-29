@@ -22,3 +22,11 @@ function list.
    gemma3n_ple_laurel
    gemma3n_ffn_sparsity
    gemma3n_execution
+
+.. note::
+
+   The host-side application that drives this pipeline lives in the
+   FPGA repo as a submodule, ``sw/gemma3NE4B/`` →
+   `hkimw/llm-lite <https://github.com/hkimw/llm-lite>`_. It serves
+   both as the golden CPU reference for verification and as the
+   stimulus generator for the xsim testbench suite.

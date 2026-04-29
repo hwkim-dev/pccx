@@ -37,7 +37,7 @@ pccx-lab/  (Cargo workspace — 7 members)
 │   ├── pccx-reports/       Markdown / PDF / HTML report generator
 │   ├── pccx-verification/  golden_diff + robust_reader + step_snapshot reference logic
 │   ├── pccx-authoring/     isa_spec + api_spec (ISA / API TOML compilers)
-│   ├── pccx-agents/        Claude orchestration (was ai_copilot)
+│   ├── pccx-agents/        cloud LLM orchestration (was ai_copilot)
 │   ├── pccx-uvm-bridge/    UVM scoreboard hooks (unchanged)
 │   ├── pccx-remote/        NEW — backend daemon (Phase 3 scaffold)
 │   ├── pccx-evolve/        NEW — DSE + surrogate + PRM loop (Phase 5 scaffold)

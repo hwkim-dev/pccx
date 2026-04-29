@@ -1,0 +1,1001 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="../../">
+  <head><meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta property="og:title" content="UI Panel Catalogue" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://hkimw.github.io/pccx/docs/Lab/panels.html" />
+<meta property="og:site_name" content="pccx — Parallel Compute Core eXecutor" />
+<meta property="og:description" content="Refreshed 2026-04-29 to match pccx-lab HEAD. Panel files under ui/src/. The pccx-lab UI ( ui/src/) mounts purpose-specific panel components on a flexlayout-react tab shell. Each panel is lazy-impor..." />
+<meta property="og:image:width" content="1146" />
+<meta property="og:image:height" content="600" />
+<meta property="og:image" content="https://hkimw.github.io/pccx/_images/social_previews/summary_docs_Lab_panels_77b68887.png" />
+<meta property="og:image:alt" content="Refreshed 2026-04-29 to match pccx-lab HEAD. Panel files under ui/src/. The pccx-lab UI ( ui/src/) mounts purpose-specific panel components on a flexlayout-react tab shell. Each panel is lazy-impor..." />
+<meta name="description" content="Refreshed 2026-04-29 to match pccx-lab HEAD. Panel files under ui/src/. The pccx-lab UI ( ui/src/) mounts purpose-specific panel components on a flexlayout-react tab shell. Each panel is lazy-impor..." />
+<meta name="twitter:card" content="summary_large_image" />
+
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"WebSite","name":"pccx — Parallel Compute Core eXecutor","alternateName":"pccx","url":"https://hkimw.github.io/pccx/","inLanguage":["en","en","ko"],"author":{"@type":"Person","name":"Hyunwoo Kim","url":"https://hkimw.github.io/hkimw/"},"publisher":{"@type":"Person","name":"Hyunwoo Kim","url":"https://hkimw.github.io/hkimw/"},"description":"pccx is an open-source scalable NPU architecture for edge LLM inference.  W4A8KV4 quantisation on the Xilinx Kria KV260; v002 reference implementation in SystemVerilog.","keywords":["NPU","FPGA","LLM inference","edge AI","W4A8","KV cache","systolic array","Kria KV260","ZU5EV","Transformer accelerator","speculative decoding","FlashAttention","QServe","Gemma 3N","Matryoshka","Sail ISA","Sail language","formal ISA specification","ISA semantics","RISC-V Sail","Arm Sail","CHERI","Morello","Isabelle/HOL","Coq"]},{"@context":"https://schema.org","@type":"TechArticle","headline":"UI Panel Catalogue","name":"UI Panel Catalogue","url":"https://hkimw.github.io/pccx/en/docs/Lab/panels.html","mainEntityOfPage":{"@type":"WebPage","@id":"https://hkimw.github.io/pccx/en/docs/Lab/panels.html"},"isPartOf":{"@type":"WebSite","name":"pccx — Parallel Compute Core eXecutor","url":"https://hkimw.github.io/pccx/"},"author":{"@type":"Person","name":"Hyunwoo Kim","url":"https://hkimw.github.io/hkimw/"},"publisher":{"@type":"Organization","name":"pccx project","url":"https://hkimw.github.io/pccx/"},"datePublished":"2026-04-29","dateModified":"2026-04-29","description":"pccx documentation page: UI Panel Catalogue. Open-source NPU architecture + pccx-lab profiler implementing research from QServe, FlashAttention, OpenPangu speculative decoding, and Matryoshka subnet swap.","inLanguage":"en","license":"https://www.apache.org/licenses/LICENSE-2.0","citation":{"@type":"CreativeWork","name":"pccx: Parallel Compute Core eXecutor","url":"https://hkimw.github.io/pccx/","author":"Hyunwoo Kim","datePublished":"2026"}}]</script><link rel="index" title="Index" href="../../genindex.html"><link rel="search" title="Search" href="../../search.html"><link rel="next" title="Tauri IPC Contract" href="ipc.html"><link rel="prev" title="pccx-lab research lineage" href="research.html">
+        <link rel="canonical" href="https://hkimw.github.io/pccx/docs/Lab/panels.html">
+
+    <!-- Generated with Sphinx 7.4.7 and Furo 2025.12.19 -->
+        <title>UI Panel Catalogue - pccx</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=d111a655" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=7bdb33bb" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=fd3f3429" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=fd6457a4" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?v=8dab3a3b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=4880187a" />
+    <link rel="stylesheet" type="text/css" href="../../_static/image-lightbox.css?v=884c9d5a" />
+    <link rel="stylesheet" type="text/css" href="../../_static/language-switcher.css?v=cc8629cf" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f2f2f2;
+  --color-code-foreground: #1e1e1e;
+  --color-brand-primary: #0b5fff;
+  --color-brand-content: #0b5fff;
+  --color-announcement-background: #fff5cf;
+  --color-announcement-text: #6b5900;
+  --pccx-accent: #ff7a00;
+  --pccx-muted-border: #dbe1ea;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  --color-brand-primary: #7aa8ff;
+  --color-brand-content: #7aa8ff;
+  --color-announcement-background: #332a00;
+  --color-announcement-text: #f9e58b;
+  --pccx-accent: #ffb470;
+  --pccx-muted-border: #3a4049;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  --color-brand-primary: #7aa8ff;
+  --color-brand-content: #7aa8ff;
+  --color-announcement-background: #332a00;
+  --color-announcement-text: #f9e58b;
+  --pccx-accent: #ffb470;
+  --pccx-muted-border: #3a4049;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle site navigation sidebar">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc" aria-label="Toggle table of contents sidebar">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <span class="icon"><svg><use href="#svg-menu"></use></svg></span>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../../index.html"><div class="brand">pccx</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky">
+
+<a class="sidebar-brand" href="../../index.html">
+      <span class="sidebar-brand-text">pccx</span>
+</a>
+
+
+<div class="pccx-langswitch" role="group" aria-label="Language">
+  <a class="pccx-langswitch__btn" href="/pccx/en/"  data-pccx-lang="en">EN</a>
+  <span class="pccx-langswitch__sep" aria-hidden="true">·</span>
+  <a class="pccx-langswitch__btn" href="/pccx/ko/"  data-pccx-lang="ko">한국어</a>
+</div>
+
+
+<nav class="pccx-repolinks" aria-label="Project repositories">
+  <a class="pccx-repolinks__btn"
+     href="https://github.com/hkimw/pccx-FPGA-NPU-LLM-kv260"
+     title="Active v002 RTL — pccx-FPGA-NPU-LLM-kv260"
+     target="_blank" rel="noopener">
+    <svg aria-hidden="true" viewBox="0 0 24 24" width="1em" height="1em"
+         fill="none" stroke="currentColor" stroke-width="1.6"
+         stroke-linecap="round" stroke-linejoin="round">
+      <rect x="6" y="6" width="12" height="12" rx="1.2"/>
+      <rect x="10" y="10" width="4" height="4" fill="currentColor" stroke="none"/>
+      <path d="M9 3v3M15 3v3M9 18v3M15 18v3M3 9h3M3 15h3M18 9h3M18 15h3"/>
+    </svg>
+    <span class="pccx-repolinks__label">RTL</span>
+  </a>
+  
+  <a class="pccx-repolinks__btn"
+     href="/pccx/en/lab/"
+     title="pccx-lab — simulator & AI profiler"
+     rel="noopener">
+    <svg aria-hidden="true" viewBox="0 0 24 24" width="1em" height="1em"
+         fill="none" stroke="currentColor" stroke-width="1.6"
+         stroke-linecap="round" stroke-linejoin="round">
+      <path d="M9 3h6"/>
+      <path d="M10 3v6.2L4.6 19a1 1 0 0 0 .86 1.5h13.08a1 1 0 0 0 .86-1.5L14 9.2V3"/>
+      <path d="M6.8 14h10.4"/>
+    </svg>
+    <span class="pccx-repolinks__label">Lab</span>
+  </a>
+  <a class="pccx-repolinks__btn"
+     href="https://github.com/hkimw/pccx"
+     title="Docs source — github.com/hkimw/pccx"
+     target="_blank" rel="noopener">
+    <svg aria-hidden="true" viewBox="0 0 16 16" width="1em" height="1em"
+         fill="currentColor">
+      <path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/>
+    </svg>
+    <span class="pccx-repolinks__label">Docs</span>
+  </a>
+  <a class="pccx-repolinks__btn"
+     href="https://hkimw.github.io/hkimw/"
+     title="Author portfolio — hkimw.github.io"
+     target="_blank" rel="noopener">
+    <svg aria-hidden="true" viewBox="0 0 24 24" width="1em" height="1em"
+         fill="none" stroke="currentColor" stroke-width="1.6"
+         stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="8" r="3.5"/>
+      <path d="M4.5 20.5c1-3.5 4-5.5 7.5-5.5s6.5 2 7.5 5.5"/>
+    </svg>
+    <span class="pccx-repolinks__label">Blog</span>
+  </a>
+</nav><form class="sidebar-search-container" method="get" action="../../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">pccx: Parallel Compute Core eXecutor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quickstart</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../Evidence/index.html">Evidence</a><input aria-label="Toggle navigation of Evidence" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../roadmap.html">Roadmap (Two-Track)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">v002 Architecture</span></p>
+<ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../v002/index.html">pccx v002 Architecture</a><input aria-label="Toggle navigation of pccx v002 Architecture" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../v002/overview.html">Overview</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../v002/Architecture/index.html">Hardware Architecture</a><input aria-label="Toggle navigation of Hardware Architecture" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../v002/Architecture/rationale.html">Design Rationale: v001 → v002</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../v002/Architecture/top_level.html">Top-Level Architecture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../v002/Architecture/floorplan.html">Physical Floorplan</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../v002/Architecture/memory_hierarchy.html">Memory Hierarchy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../v002/Architecture/kv_cache.html">KV Cache Optimization Strategy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../v002/Architecture/gemm_core.html">GEMM Core (Systolic Array)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../v002/Architecture/gemv_core.html">GEMV Core</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../v002/Architecture/sfu_core.html">SFU Core (Complex Vector Operations)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../v002/Architecture/preprocess.html">PREPROCESS Stage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../v002/Architecture/dsp48e2_w4a8.html">DSP48E2 W4A8 Bit Packing and Sign Recovery</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../v002/ISA/index.html">Instruction Set Architecture (ISA)</a><input aria-label="Toggle navigation of Instruction Set Architecture (ISA)" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../v002/ISA/encoding.html">Instruction Encoding</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../v002/ISA/instructions.html">Per-Instruction Encoding</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../v002/ISA/dataflow.html">Per-Instruction Dataflow</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../v002/Formal/index.html">Formal Model — Sail</a><input aria-label="Toggle navigation of Formal Model — Sail" class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../v002/Drivers/index.html">Software Stack</a><input aria-label="Toggle navigation of Software Stack" class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../v002/Drivers/api.html">C API Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../v002/Drivers/hal.html">HAL — AXI-Lite MMIO Layer</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../v002/Models/index.html">Target Models</a><input aria-label="Toggle navigation of Target Models" class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../v002/Models/gemma3n_overview.html">Gemma 3N E4B — Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../v002/Models/gemma3n_pipeline.html">Gemma 3N E4B — Operator-Level Pipeline</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../v002/Models/gemma3n_attention_rope.html">Gemma 3N — Attention and RoPE Constraints</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../v002/Models/gemma3n_ple_laurel.html">Gemma 3N — LAuReL and PLE Calibration Modules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../v002/Models/gemma3n_ffn_sparsity.html">Gemma 3N — FFN Gaussian Top-K Sparsity</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../v002/Models/gemma3n_execution.html">Gemma 3N E4B on pccx v002 — Execution and Scheduling</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../v002/RTL/index.html">RTL Source Reference (v002)</a><input aria-label="Toggle navigation of RTL Source Reference (v002)" class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../v002/RTL/isa_pkg.html">ISA Type Package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../v002/RTL/npu_top.html">NPU Top-Level</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../v002/RTL/compute_cores.html">Compute Core Modules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../v002/RTL/controller.html">NPU Controller Modules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../v002/RTL/frontend.html">NPU Frontend Modules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../v002/RTL/memory_l2.html">L2 Cache (URAM)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../v002/RTL/memory_dispatch.html">Memory Dispatch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../v002/RTL/preprocess.html">PREPROCESS RTL Reference</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../v002/RTL/packages.html">Compile-Priority Packages</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../v002/RTL/library.html">Shared Library</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../v002/Verification/index.html">Verification</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../v002/Build/index.html">Vivado Build</a><input aria-label="Toggle navigation of Vivado Build" class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="simple">
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Target Hardware</span></p>
+<ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../Devices/index.html">Devices</a><input aria-label="Toggle navigation of Devices" class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" role="switch" type="checkbox"/><label for="toctree-checkbox-10"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../Devices/kv260.html">Target Hardware: Xilinx Kria KV260</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">pccx-lab Handbook</span></p>
+<ul class="current">
+<li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">pccx-lab Handbook</a><input aria-label="Toggle navigation of pccx-lab Handbook" checked="" class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" role="switch" type="checkbox"/><label for="toctree-checkbox-11"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="architecture.html">Architecture Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli.html">CLI Reference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="analyzer_api.html">Analyzer API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="copilot.html">Copilot API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="research.html">pccx-lab research lineage</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">UI Panel Catalogue</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ipc.html">Tauri IPC Contract</a></li>
+<li class="toctree-l2"><a class="reference internal" href="verification-workflow.html">Verification Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pccx-format.html">.pccx Binary Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="uvm-bridge.html">UVM Bridge</a></li>
+<li class="toctree-l2"><a class="reference internal" href="self-evolution.html">Cycle Loop</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html">pccx-lab Quickstart</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core-modules.html">pccx-core Module Reference</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Archive</span></p>
+<ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../archive/index.html">Archive</a><input aria-label="Toggle navigation of Archive" class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" role="switch" type="checkbox"/><label for="toctree-checkbox-12"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../archive/experimental_v001/index.html">Archive: v001 Experimental Architecture</a><input aria-label="Toggle navigation of Archive: v001 Experimental Architecture" class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" role="switch" type="checkbox"/><label for="toctree-checkbox-13"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../archive/experimental_v001/Architecture/v001_architecture.html">pccx: Parallel Compute Core eXecutor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../archive/experimental_v001/Drivers/ISA.html">pccx ISA Specification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../archive/experimental_v001/Drivers/ISA_Spreadsheet.html">pccx ISA Spreadsheet View</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../archive/experimental_v001/Drivers/v001_API.html">Developer Reference for pccx v001 Host API</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../archive/experimental_v001/RTL/index.html">RTL Source Reference (v001)</a><input aria-label="Toggle navigation of RTL Source Reference (v001)" class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" role="switch" type="checkbox"/><label for="toctree-checkbox-14"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l4"><a class="reference internal" href="../archive/experimental_v001/RTL/top.html">Top level</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../archive/experimental_v001/RTL/packages.html">Packages and Constants</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../archive/experimental_v001/RTL/controller.html">NPU Controller</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../archive/experimental_v001/RTL/mat_core.html">Matrix Core (GEMM)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../archive/experimental_v001/RTL/vec_core.html">Vector Core (GEMV)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../archive/experimental_v001/RTL/cvo_core.html">CVO Core (SFU)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../archive/experimental_v001/RTL/mem_control.html">Memory Control</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../archive/experimental_v001/RTL/preprocess.html">Preprocess</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../archive/experimental_v001/RTL/library.html">Library</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../archive/experimental_v001/RTL/host_api.html">Host API (C driver)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Toolchain Demos</span></p>
+<ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../samples/index.html">Toolchain Demos</a><input aria-label="Toggle navigation of Toolchain Demos" class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" role="switch" type="checkbox"/><label for="toctree-checkbox-15"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../samples/mermaid_blockdiagram.html">Mermaid — NPU block diagram</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../samples/wavedrom_axi_read.html">WaveDrom — AXI4 read transaction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../samples/test_diagrams.html">Test: Deterministic SVG Generation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../samples/svg_themed_demo.html">SVG — themed 4×4 PE array</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../samples/plot_bandwidth.html">scienceplots — bandwidth vs batch size</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../auto_plots/index.html">Plot gallery</a><input aria-label="Toggle navigation of Plot gallery" class="toctree-checkbox" id="toctree-checkbox-16" name="toctree-checkbox-16" role="switch" type="checkbox"/><label for="toctree-checkbox-16"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../auto_plots/plot_bandwidth.html">Batch size vs achieved HP-AXI bandwidth</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tools</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://hkimw.github.io/pccx/en/lab/">pccx-lab — Simulator &amp; AI Profiler</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="view-this-page">
+  <a class="muted-link" href="https://github.com/hkimw/pccx/blob/main/docs/docs/Lab/panels.md?plain=true" title="View this page">
+    <svg><use href="#svg-eye"></use></svg>
+    <span class="visually-hidden">View this page</span>
+  </a>
+</div><div class="edit-this-page">
+  <a class="muted-link" href="https://github.com/hkimw/pccx/edit/main/docs/docs/Lab/panels.md" rel="edit" title="Edit this page">
+    <svg><use href="#svg-pencil"></use></svg>
+    <span class="visually-hidden">Edit this page</span>
+  </a>
+</div><div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <section class="tex2jax_ignore mathjax_ignore" id="ui-panel-catalogue">
+<h1>UI Panel Catalogue<a class="headerlink" href="#ui-panel-catalogue" title="Link to this heading">¶</a></h1>
+<p><em>Refreshed 2026-04-29 to match pccx-lab HEAD. Panel files under <code class="docutils literal notranslate"><span class="pre">ui/src/</span></code>.</em></p>
+<p>The pccx-lab UI (<code class="docutils literal notranslate"><span class="pre">ui/src/</span></code>) mounts purpose-specific panel components on
+a flexlayout-react tab shell.  Each panel is lazy-imported from
+<code class="docutils literal notranslate"><span class="pre">App.tsx</span></code> and communicates with the backend via <code class="docutils literal notranslate"><span class="pre">invoke(...)</span></code> calls or
+Tauri events.</p>
+<hr class="docutils" />
+<section id="trace-visualisation">
+<h2>Trace visualisation<a class="headerlink" href="#trace-visualisation" title="Link to this heading">¶</a></h2>
+<section id="timeline-tsx-timeline">
+<h3><code class="docutils literal notranslate"><span class="pre">Timeline.tsx</span></code> — <code class="docutils literal notranslate"><span class="pre">Timeline</span></code><a class="headerlink" href="#timeline-tsx-timeline" title="Link to this heading">¶</a></h3>
+<p>Receives the <code class="docutils literal notranslate"><span class="pre">trace-loaded</span></code> event and renders the <code class="docutils literal notranslate"><span class="pre">.pccx</span></code> flat buffer
+onto a canvas.  When the event count exceeds <code class="docutils literal notranslate"><span class="pre">MMAP_EVENT_THRESHOLD</span></code>
+(50,000) the panel automatically switches to the mmap streaming path
+(<code class="docutils literal notranslate"><span class="pre">mmap_open_trace</span></code> → <code class="docutils literal notranslate"><span class="pre">mmap_viewport</span></code>), allowing large traces to render
+without exhausting memory.  Viewport fetch calls during pan/zoom are
+coalesced behind a 100 ms debounce and the <code class="docutils literal notranslate"><span class="pre">useRafScheduler</span></code> hook.
+Rows are keyed by core ID; the horizontal axis is clock cycles.
+<code class="docutils literal notranslate"><span class="pre">useCycleCursor</span></code> synchronises the cursor position across panels.</p>
+<ul class="simple">
+<li><p>Feed commands: <code class="docutils literal notranslate"><span class="pre">fetch_trace_payload</span></code>, <code class="docutils literal notranslate"><span class="pre">mmap_open_trace</span></code>, <code class="docutils literal notranslate"><span class="pre">mmap_viewport</span></code></p></li>
+<li><p>Event: <code class="docutils literal notranslate"><span class="pre">trace-loaded</span></code> (Tauri emit)</p></li>
+</ul>
+</section>
+<section id="flamegraph-tsx-flamegraph">
+<h3><code class="docutils literal notranslate"><span class="pre">FlameGraph.tsx</span></code> — <code class="docutils literal notranslate"><span class="pre">FlameGraph</span></code><a class="headerlink" href="#flamegraph-tsx-flamegraph" title="Link to this heading">¶</a></h3>
+<p>Bins the flat buffer into canonical layers (Fetch / Decode / MAC / DMA /
+Retire) and renders them as a flame graph.  In compare mode the second
+trace loaded via <code class="docutils literal notranslate"><span class="pre">load_pccx_alt</span></code> (the <code class="docutils literal notranslate"><span class="pre">trace_b</span></code> slot) is fetched with
+<code class="docutils literal notranslate"><span class="pre">fetch_trace_payload_b</span></code> and rendered as a differential flame graph
+following the Gregg 2018 IEEE SW §III-D contract.  The RAF scheduler
+reduces 120 Hz mouse-move events to one paint per vsync.</p>
+<ul class="simple">
+<li><p>Feed commands: <code class="docutils literal notranslate"><span class="pre">fetch_trace_payload</span></code>, <code class="docutils literal notranslate"><span class="pre">fetch_trace_payload_b</span></code></p></li>
+<li><p>Compare path: <code class="docutils literal notranslate"><span class="pre">load_pccx_alt</span></code></p></li>
+</ul>
+</section>
+<section id="waveformviewer-tsx-waveformviewer">
+<h3><code class="docutils literal notranslate"><span class="pre">WaveformViewer.tsx</span></code> — <code class="docutils literal notranslate"><span class="pre">WaveformViewer</span></code><a class="headerlink" href="#waveformviewer-tsx-waveformviewer" title="Link to this heading">¶</a></h3>
+<p>Multi-channel waveform viewer for IEEE 1364-2005 VCD files.  Consumes
+the <code class="docutils literal notranslate"><span class="pre">WaveformDump</span></code> returned by <code class="docutils literal notranslate"><span class="pre">parse_vcd_file</span></code>; binary-search per
+signal provides O(log n) value-at-tick lookup.  Radix display switches
+between <code class="docutils literal notranslate"><span class="pre">bin</span></code> / <code class="docutils literal notranslate"><span class="pre">oct</span></code> / <code class="docutils literal notranslate"><span class="pre">hex</span></code> / <code class="docutils literal notranslate"><span class="pre">dec</span></code> / <code class="docutils literal notranslate"><span class="pre">ascii</span></code>.  The <code class="docutils literal notranslate"><span class="pre">useLiveWindow</span></code>
+hook overlays live-window samples.  Cursor is synchronised with
+Timeline via <code class="docutils literal notranslate"><span class="pre">useCycleCursor</span></code>.  The <code class="docutils literal notranslate"><span class="pre">export_vcd</span></code> command converts the
+currently-cached <code class="docutils literal notranslate"><span class="pre">.pccx</span></code> trace into a VCD file.</p>
+<ul class="simple">
+<li><p>Feed commands: <code class="docutils literal notranslate"><span class="pre">parse_vcd_file</span></code>, <code class="docutils literal notranslate"><span class="pre">export_vcd</span></code></p></li>
+</ul>
+</section>
+<section id="memorydump-tsx-memorydump">
+<h3><code class="docutils literal notranslate"><span class="pre">MemoryDump.tsx</span></code> — <code class="docutils literal notranslate"><span class="pre">MemoryDump</span></code><a class="headerlink" href="#memorydump-tsx-memorydump" title="Link to this heading">¶</a></h3>
+<p>Renders pccx v002 KV260 memory-map access patterns (BRM, weight SRAM,
+AXI HP ports) as a hex grid and access heatmap.  A precomputed 256-entry
+HEX LUT (<code class="docutils literal notranslate"><span class="pre">HEX_LUT</span></code>) minimises per-cell string work.  <code class="docutils literal notranslate"><span class="pre">useCycleCursor</span></code>
+highlights read/write accesses at the current cycle.  Access records are
+parsed from the flat buffer rather than fetched via a dedicated command.</p>
+<ul class="simple">
+<li><p>Feed commands: <code class="docutils literal notranslate"><span class="pre">fetch_trace_payload</span></code> (indirect)</p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="analysis">
+<h2>Analysis<a class="headerlink" href="#analysis" title="Link to this heading">¶</a></h2>
+<section id="roofline-tsx-roofline">
+<h3><code class="docutils literal notranslate"><span class="pre">Roofline.tsx</span></code> — <code class="docutils literal notranslate"><span class="pre">Roofline</span></code><a class="headerlink" href="#roofline-tsx-roofline" title="Link to this heading">¶</a></h3>
+<p>ECharts-based roofline chart.  Renders both the single-tier
+<code class="docutils literal notranslate"><span class="pre">RooflinePoint</span></code> from <code class="docutils literal notranslate"><span class="pre">analyze_roofline</span></code> and the multi-tier
+<code class="docutils literal notranslate"><span class="pre">RooflineBand</span></code> list from <code class="docutils literal notranslate"><span class="pre">analyze_roofline_hierarchical</span></code> (Cache-Aware
+Roofline — Ilic 2014 DOI 10.1109/L-CA.2013.6, Yang 2020
+arXiv:2009.02449).  Each memory tier is drawn as a dashed ceiling plus
+a trajectory segment showing where the workload dwells across the pccx
+memory hierarchy.  <code class="docutils literal notranslate"><span class="pre">useVisibilityGate</span></code> + <code class="docutils literal notranslate"><span class="pre">useRafScheduler</span></code> pause the
+ECharts instance when the tab is hidden.</p>
+<ul class="simple">
+<li><p>Feed commands: <code class="docutils literal notranslate"><span class="pre">analyze_roofline</span></code>, <code class="docutils literal notranslate"><span class="pre">analyze_roofline_hierarchical</span></code></p></li>
+</ul>
+</section>
+<section id="rooflinecard-tsx-rooflinecard">
+<h3><code class="docutils literal notranslate"><span class="pre">RooflineCard.tsx</span></code> — <code class="docutils literal notranslate"><span class="pre">RooflineCard</span></code><a class="headerlink" href="#rooflinecard-tsx-rooflinecard" title="Link to this heading">¶</a></h3>
+<p>Compact roofline summary card embedded inside <code class="docutils literal notranslate"><span class="pre">VerificationSuite.tsx</span></code>.
+Consumes the <code class="docutils literal notranslate"><span class="pre">RooflinePoint</span></code> from <code class="docutils literal notranslate"><span class="pre">analyze_roofline</span></code> and displays
+arithmetic intensity, achieved GOPS, and the compute/memory-bound
+verdict as single-line badges.  Degrades gracefully to a warning banner
+in browser-only builds where the Tauri IPC bridge is absent.</p>
+<ul class="simple">
+<li><p>Feed commands: <code class="docutils literal notranslate"><span class="pre">analyze_roofline</span></code></p></li>
+</ul>
+</section>
+<section id="bottleneckcard-tsx-bottleneckcard">
+<h3><code class="docutils literal notranslate"><span class="pre">BottleneckCard.tsx</span></code> — <code class="docutils literal notranslate"><span class="pre">BottleneckCard</span></code><a class="headerlink" href="#bottleneckcard-tsx-bottleneckcard" title="Link to this heading">¶</a></h3>
+<p>Bottleneck summary card embedded inside <code class="docutils literal notranslate"><span class="pre">VerificationSuite.tsx</span></code>.
+Consumes the <code class="docutils literal notranslate"><span class="pre">BottleneckInterval</span></code> array from <code class="docutils literal notranslate"><span class="pre">detect_bottlenecks</span></code>
+and renders DMA read / write / systolic stall / barrier-sync intervals
+as proportion bars.</p>
+<ul class="simple">
+<li><p>Feed commands: <code class="docutils literal notranslate"><span class="pre">detect_bottlenecks</span></code></p></li>
+</ul>
+</section>
+<section id="occupancycalculator-tsx-occupancycalculator">
+<h3><code class="docutils literal notranslate"><span class="pre">OccupancyCalculator.tsx</span></code> — <code class="docutils literal notranslate"><span class="pre">OccupancyCalculator</span></code><a class="headerlink" href="#occupancycalculator-tsx-occupancycalculator" title="Link to this heading">¶</a></h3>
+<p>Takes MAC array size (N×N, range 4–16), activation SRAM, weight SRAM,
+pipeline depth, and DMA channel count as parameters and computes
+occupancy (%), INT4 TOPS throughput, and required memory bandwidth in
+real time against the KV260 PL fabric at 300 MHz.  Entirely frontend
+arithmetic; no Tauri commands.</p>
+<ul class="simple">
+<li><p>Feed commands: none (independent calculator)</p></li>
+</ul>
+</section>
+<section id="pipelinediagram-tsx-pipelinediagram">
+<h3><code class="docutils literal notranslate"><span class="pre">PipelineDiagram.tsx</span></code> — <code class="docutils literal notranslate"><span class="pre">PipelineDiagram</span></code><a class="headerlink" href="#pipelinediagram-tsx-pipelinediagram" title="Link to this heading">¶</a></h3>
+<p>Renders the nine-stage pccx pipeline (Fetch → Decode → Dispatch → MAC →
+Accumulate → Activation → DMA_Write / DMA_Read_Weights / DMA_Read_Acts)
+as an SVG flow diagram.  Each stage visualises <code class="docutils literal notranslate"><span class="pre">utilization</span></code> (0.0–1.0)
+by colour and <code class="docutils literal notranslate"><span class="pre">stalled</span></code> state with a red border.  Clicking a stage opens
+a side panel of detailed metrics.  The <code class="docutils literal notranslate"><span class="pre">useLiveWindow</span></code> hook drives
+live stall-state updates.</p>
+<ul class="simple">
+<li><p>Feed commands: <code class="docutils literal notranslate"><span class="pre">fetch_live_window</span></code> (via hook)</p></li>
+</ul>
+</section>
+<section id="metrictree-tsx-metrictree">
+<h3><code class="docutils literal notranslate"><span class="pre">MetricTree.tsx</span></code> — <code class="docutils literal notranslate"><span class="pre">MetricTree</span></code><a class="headerlink" href="#metrictree-tsx-metrictree" title="Link to this heading">¶</a></h3>
+<p>Hierarchical metric-tree inspector with collapsible root groups
+(throughput, memory, pipeline, verification).  Leaf nodes carry unit,
+range, and warn/error thresholds; badge colour flips when the value
+crosses a threshold.  Does not consume trace data directly; metric
+values are injected via props from the parent (VerificationSuite or
+App).</p>
+<ul class="simple">
+<li><p>Feed commands: none (props injection)</p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="hardware-view">
+<h2>Hardware view<a class="headerlink" href="#hardware-view" title="Link to this heading">¶</a></h2>
+<section id="hardwarevisualizer-tsx-hardwarevisualizer">
+<h3><code class="docutils literal notranslate"><span class="pre">HardwareVisualizer.tsx</span></code> — <code class="docutils literal notranslate"><span class="pre">HardwareVisualizer</span></code><a class="headerlink" href="#hardwarevisualizer-tsx-hardwarevisualizer" title="Link to this heading">¶</a></h3>
+<p>ELK.js auto-layout block diagram of the pccx v002 KV260 module hierarchy
+(reflecting <code class="docutils literal notranslate"><span class="pre">hw/rtl/</span></code> structure).  Modules are colour-coded by kind
+(<code class="docutils literal notranslate"><span class="pre">ctrl</span></code> / <code class="docutils literal notranslate"><span class="pre">mat</span></code> / <code class="docutils literal notranslate"><span class="pre">vec</span></code> / <code class="docutils literal notranslate"><span class="pre">sfu</span></code> / <code class="docutils literal notranslate"><span class="pre">mem</span></code> / <code class="docutils literal notranslate"><span class="pre">bus</span></code> / <code class="docutils literal notranslate"><span class="pre">io</span></code>); clicking a
+module shows its port list and RTL path.  <code class="docutils literal notranslate"><span class="pre">step_to_cycle</span></code> supplies the
+register and MAC-array state at the cursor cycle so active modules are
+highlighted.  An ECharts mini-chart overlays per-module utilisation.
+<code class="docutils literal notranslate"><span class="pre">useRafScheduler</span></code> + <code class="docutils literal notranslate"><span class="pre">useVisibilityGate</span></code> suspend rendering when the tab
+is hidden.</p>
+<ul class="simple">
+<li><p>Feed commands: <code class="docutils literal notranslate"><span class="pre">step_to_cycle</span></code>, <code class="docutils literal notranslate"><span class="pre">analyze_roofline</span></code>, <code class="docutils literal notranslate"><span class="pre">fetch_trace_payload</span></code></p></li>
+</ul>
+</section>
+<section id="canvasview-tsx-canvasview">
+<h3><code class="docutils literal notranslate"><span class="pre">CanvasView.tsx</span></code> — <code class="docutils literal notranslate"><span class="pre">CanvasView</span></code><a class="headerlink" href="#canvasview-tsx-canvasview" title="Link to this heading">¶</a></h3>
+<p>Three.js instanced-mesh 3D heatmap of the 32×32 MAC array.  Each cell
+maps a [0,1] utilisation value to an HSL colour (blue=idle, green=active,
+red=hot).  The <code class="docutils literal notranslate"><span class="pre">ResourceHeatmap</span></code> JSON returned by <code class="docutils literal notranslate"><span class="pre">synth_heatmap</span></code> is
+uploaded to the instanced colour buffer, minimising GPU draw calls.
+<code class="docutils literal notranslate"><span class="pre">useVisibilityGate</span></code> halts the Three.js animation loop when the tab is
+hidden.</p>
+<ul class="simple">
+<li><p>Feed commands: <code class="docutils literal notranslate"><span class="pre">synth_heatmap</span></code></p></li>
+</ul>
+</section>
+<section id="synthstatuscard-tsx-synthstatuscard">
+<h3><code class="docutils literal notranslate"><span class="pre">SynthStatusCard.tsx</span></code> — <code class="docutils literal notranslate"><span class="pre">SynthStatusCard</span></code><a class="headerlink" href="#synthstatuscard-tsx-synthstatuscard" title="Link to this heading">¶</a></h3>
+<p>Parses Vivado <code class="docutils literal notranslate"><span class="pre">report_utilization</span></code> + <code class="docutils literal notranslate"><span class="pre">report_timing_summary</span></code> output and
+displays LUT / FF / DSP / BRAM usage counts and WNS/TNS slack as a card.
+Requires at least one of <code class="docutils literal notranslate"><span class="pre">load_synth_report</span></code> (utilisation+timing) or
+<code class="docutils literal notranslate"><span class="pre">load_timing_report</span></code> (timing only) to render.  Timing-met renders a
+green badge; timing-not-met renders red.</p>
+<ul class="simple">
+<li><p>Feed commands: <code class="docutils literal notranslate"><span class="pre">load_synth_report</span></code>, <code class="docutils literal notranslate"><span class="pre">load_timing_report</span></code>, <code class="docutils literal notranslate"><span class="pre">synth_heatmap</span></code></p></li>
+</ul>
+</section>
+<section id="nodeeditor-tsx-nodeeditor">
+<h3><code class="docutils literal notranslate"><span class="pre">NodeEditor.tsx</span></code> — <code class="docutils literal notranslate"><span class="pre">NodeEditor</span></code><a class="headerlink" href="#nodeeditor-tsx-nodeeditor" title="Link to this heading">¶</a></h3>
+<p>React Flow (<code class="docutils literal notranslate"><span class="pre">&#64;xyflow/react</span></code>) visual node editor.  Provides a
+drag-and-drop interactive canvas for connecting pccx pipeline stages,
+with custom node types (compute, memory, I/O, sequencer).  Not currently
+wired to trace commands; receives node-graph state via props from
+ScenarioFlow or App.</p>
+<ul class="simple">
+<li><p>Feed commands: none (graph editor)</p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="verification-reporting">
+<h2>Verification / reporting<a class="headerlink" href="#verification-reporting" title="Link to this heading">¶</a></h2>
+<section id="verificationsuite-tsx-verificationsuite">
+<h3><code class="docutils literal notranslate"><span class="pre">VerificationSuite.tsx</span></code> — <code class="docutils literal notranslate"><span class="pre">VerificationSuite</span></code><a class="headerlink" href="#verificationsuite-tsx-verificationsuite" title="Link to this heading">¶</a></h3>
+<p>Container panel that unifies the verification workflow under five tabs
+(ISA / API / UVM / Synth / Golden).  Calls <code class="docutils literal notranslate"><span class="pre">run_verification</span></code> to invoke
+<code class="docutils literal notranslate"><span class="pre">hw/sim/run_verification.sh</span></code> and parses <code class="docutils literal notranslate"><span class="pre">PASS</span></code>/<code class="docutils literal notranslate"><span class="pre">FAIL</span></code> lines into a
+per-testbench result table.  <code class="docutils literal notranslate"><span class="pre">merge_coverage</span></code> merges xsim coverage JSONL
+files; the resulting bin-hit table renders via <code class="docutils literal notranslate"><span class="pre">&#64;tanstack/react-virtual</span></code>.
+Embeds <code class="docutils literal notranslate"><span class="pre">SynthStatusCard</span></code>, <code class="docutils literal notranslate"><span class="pre">VerificationRunner</span></code>, <code class="docutils literal notranslate"><span class="pre">RooflineCard</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">BottleneckCard</span></code> as sub-components.</p>
+<ul class="simple">
+<li><p>Feed commands: <code class="docutils literal notranslate"><span class="pre">run_verification</span></code>, <code class="docutils literal notranslate"><span class="pre">merge_coverage</span></code>, <code class="docutils literal notranslate"><span class="pre">list_api_calls</span></code>,
+<code class="docutils literal notranslate"><span class="pre">validate_isa_trace</span></code></p></li>
+</ul>
+</section>
+<section id="verificationrunner-tsx-verificationrunner-goldendiffcard-sanitizecard">
+<h3><code class="docutils literal notranslate"><span class="pre">VerificationRunner.tsx</span></code> — <code class="docutils literal notranslate"><span class="pre">VerificationRunner</span></code>, <code class="docutils literal notranslate"><span class="pre">GoldenDiffCard</span></code>, <code class="docutils literal notranslate"><span class="pre">SanitizeCard</span></code><a class="headerlink" href="#verificationrunner-tsx-verificationrunner-goldendiffcard-sanitizecard" title="Link to this heading">¶</a></h3>
+<p>Three components embedded inside <code class="docutils literal notranslate"><span class="pre">VerificationSuite</span></code>.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">VerificationRunner</span></code>: renders <code class="docutils literal notranslate"><span class="pre">run_verification</span></code> output as a
+testbench-row table; clicking an individual <code class="docutils literal notranslate"><span class="pre">.pccx</span></code> path loads it into
+the Timeline.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">GoldenDiffCard</span></code>: calls <code class="docutils literal notranslate"><span class="pre">verify_golden_diff</span></code> to compare a candidate
+trace against a reference JSONL, then forwards the <code class="docutils literal notranslate"><span class="pre">verify_report</span></code>
+Markdown output to DiffView.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">SanitizeCard</span></code>: calls <code class="docutils literal notranslate"><span class="pre">verify_sanitize</span></code> to clean input content (NUL
+removal, BOM/CRLF normalisation, trailing-comma forgiveness) and
+displays the list of fixups applied.</p></li>
+<li><p>Feed commands: <code class="docutils literal notranslate"><span class="pre">run_verification</span></code>, <code class="docutils literal notranslate"><span class="pre">verify_golden_diff</span></code>, <code class="docutils literal notranslate"><span class="pre">verify_report</span></code>,
+<code class="docutils literal notranslate"><span class="pre">verify_sanitize</span></code></p></li>
+</ul>
+</section>
+<section id="diffview-tsx-diffview">
+<h3><code class="docutils literal notranslate"><span class="pre">DiffView.tsx</span></code> — <code class="docutils literal notranslate"><span class="pre">DiffView</span></code><a class="headerlink" href="#diffview-tsx-diffview" title="Link to this heading">¶</a></h3>
+<p>Side-by-side text diff viewer.  Computes a line-level Myers diff
+internally without a library dependency.  <code class="docutils literal notranslate"><span class="pre">&#64;tanstack/react-virtual</span></code>
+handles large files.  Rows are classified as <code class="docutils literal notranslate"><span class="pre">equal</span></code> / <code class="docutils literal notranslate"><span class="pre">added</span></code> /
+<code class="docutils literal notranslate"><span class="pre">removed</span></code> / <code class="docutils literal notranslate"><span class="pre">modified</span></code> and colour-coded accordingly.  <code class="docutils literal notranslate"><span class="pre">GoldenDiffCard</span></code>
+forwards <code class="docutils literal notranslate"><span class="pre">verify_golden_diff</span></code> results to this component.</p>
+<ul class="simple">
+<li><p>Feed commands: none (string injection from parent)</p></li>
+</ul>
+</section>
+<section id="reportbuilder-tsx-reportbuilder">
+<h3><code class="docutils literal notranslate"><span class="pre">ReportBuilder.tsx</span></code> — <code class="docutils literal notranslate"><span class="pre">ReportBuilder</span></code><a class="headerlink" href="#reportbuilder-tsx-reportbuilder" title="Link to this heading">¶</a></h3>
+<p>Section-selection UI that enables/disables report sections (executive
+summary, methodology, hardware configuration, timeline analysis, core
+utilisation, bottleneck analysis, roofline, per-kernel breakdown) and
+calls <code class="docutils literal notranslate"><span class="pre">generate_markdown_report</span></code> (Markdown) or <code class="docutils literal notranslate"><span class="pre">generate_report</span></code> (HTML)
+to produce the assembled report.  Uses <code class="docutils literal notranslate"><span class="pre">useLiveWindow</span></code> to populate
+section previews with live-window samples.</p>
+<ul class="simple">
+<li><p>Feed commands: <code class="docutils literal notranslate"><span class="pre">generate_markdown_report</span></code>, <code class="docutils literal notranslate"><span class="pre">generate_report</span></code></p></li>
+</ul>
+</section>
+<section id="reportgenerator-tsx-reportgenerator">
+<h3><code class="docutils literal notranslate"><span class="pre">ReportGenerator.tsx</span></code> — <code class="docutils literal notranslate"><span class="pre">ReportGenerator</span></code><a class="headerlink" href="#reportgenerator-tsx-reportgenerator" title="Link to this heading">¶</a></h3>
+<p>Minimal Radix UI Dialog trigger component.  Calls <code class="docutils literal notranslate"><span class="pre">generate_report</span></code> to
+request a report for the currently-cached trace and shows a loading
+spinner while the command runs.</p>
+<ul class="simple">
+<li><p>Feed commands: <code class="docutils literal notranslate"><span class="pre">generate_report</span></code></p></li>
+</ul>
+</section>
+<section id="testbenchauthor-tsx-testbenchauthor">
+<h3><code class="docutils literal notranslate"><span class="pre">TestbenchAuthor.tsx</span></code> — <code class="docutils literal notranslate"><span class="pre">TestbenchAuthor</span></code><a class="headerlink" href="#testbenchauthor-tsx-testbenchauthor" title="Link to this heading">¶</a></h3>
+<p>Cross-level authoring tool that displays an ISA instruction sequence in
+three synchronised views: ISA assembly, API TOML, and SystemVerilog UVM
+sequence.  Editing at the ISA or API level regenerates the SV pane
+(reverse direction not implemented).  <code class="docutils literal notranslate"><span class="pre">generate_uvm_sequence_cmd</span></code>
+produces SV UVM sequence stubs for named strategies (<code class="docutils literal notranslate"><span class="pre">l2_prefetch</span></code>,
+<code class="docutils literal notranslate"><span class="pre">barrier_reduction</span></code>).</p>
+<ul class="simple">
+<li><p>Feed commands: <code class="docutils literal notranslate"><span class="pre">generate_uvm_sequence_cmd</span></code>, <code class="docutils literal notranslate"><span class="pre">list_uvm_strategies</span></code></p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="editing-support">
+<h2>Editing / support<a class="headerlink" href="#editing-support" title="Link to this heading">¶</a></h2>
+<section id="codeeditor-tsx-codeeditor">
+<h3><code class="docutils literal notranslate"><span class="pre">CodeEditor.tsx</span></code> — <code class="docutils literal notranslate"><span class="pre">CodeEditor</span></code><a class="headerlink" href="#codeeditor-tsx-codeeditor" title="Link to this heading">¶</a></h3>
+<p>Monaco (VSCode editor engine) SystemVerilog source editor.  Applies SV
+highlighting via the Monarch grammar in <code class="docutils literal notranslate"><span class="pre">monarch_sv.ts</span></code>.  Four LSP
+commands — <code class="docutils literal notranslate"><span class="pre">sv_completions</span></code>, <code class="docutils literal notranslate"><span class="pre">lsp_hover</span></code>, <code class="docutils literal notranslate"><span class="pre">lsp_complete</span></code>,
+<code class="docutils literal notranslate"><span class="pre">lsp_diagnostics</span></code> — are wired to Monaco’s <code class="docutils literal notranslate"><span class="pre">registerCompletionItemProvider</span></code>,
+<code class="docutils literal notranslate"><span class="pre">registerHoverProvider</span></code>, and <code class="docutils literal notranslate"><span class="pre">setModelMarkers</span></code> APIs respectively.
+File I/O uses <code class="docutils literal notranslate"><span class="pre">read_text_file</span></code> / <code class="docutils literal notranslate"><span class="pre">write_text_file</span></code>.  Static analysis
+views use <code class="docutils literal notranslate"><span class="pre">parse_sv_file</span></code>, <code class="docutils literal notranslate"><span class="pre">generate_block_diagram</span></code>, <code class="docutils literal notranslate"><span class="pre">generate_fsm_diagram</span></code>,
+<code class="docutils literal notranslate"><span class="pre">generate_module_detail</span></code>, and <code class="docutils literal notranslate"><span class="pre">generate_sv_docs</span></code>.</p>
+<ul class="simple">
+<li><p>Feed commands: <code class="docutils literal notranslate"><span class="pre">sv_completions</span></code>, <code class="docutils literal notranslate"><span class="pre">lsp_hover</span></code>, <code class="docutils literal notranslate"><span class="pre">lsp_complete</span></code>,
+<code class="docutils literal notranslate"><span class="pre">lsp_diagnostics</span></code>, <code class="docutils literal notranslate"><span class="pre">read_text_file</span></code>, <code class="docutils literal notranslate"><span class="pre">write_text_file</span></code>,
+<code class="docutils literal notranslate"><span class="pre">parse_sv_file</span></code>, <code class="docutils literal notranslate"><span class="pre">generate_block_diagram</span></code>, <code class="docutils literal notranslate"><span class="pre">generate_fsm_diagram</span></code>,
+<code class="docutils literal notranslate"><span class="pre">generate_module_detail</span></code>, <code class="docutils literal notranslate"><span class="pre">generate_sv_docs</span></code></p></li>
+</ul>
+</section>
+<section id="scenarioflow-tsx-scenarioflow">
+<h3><code class="docutils literal notranslate"><span class="pre">ScenarioFlow.tsx</span></code> — <code class="docutils literal notranslate"><span class="pre">ScenarioFlow</span></code><a class="headerlink" href="#scenarioflow-tsx-scenarioflow" title="Link to this heading">¶</a></h3>
+<p>React Flow-based ISA execution scenario visualiser.  Renders ISA events
+(cycle / op / body / unit) and data-move edges as a flow graph.
+i18n-aware.  Does not invoke Tauri commands directly; receives scenario
+data via props or local state.</p>
+<ul class="simple">
+<li><p>Feed commands: none (props or local state)</p></li>
+</ul>
+</section>
+<section id="extensionmanager-tsx-extensionmanager">
+<h3><code class="docutils literal notranslate"><span class="pre">ExtensionManager.tsx</span></code> — <code class="docutils literal notranslate"><span class="pre">ExtensionManager</span></code><a class="headerlink" href="#extensionmanager-tsx-extensionmanager" title="Link to this heading">¶</a></h3>
+<p>Calls <code class="docutils literal notranslate"><span class="pre">get_extensions</span></code> to retrieve the <code class="docutils literal notranslate"><span class="pre">ai_copilot</span></code> extension list and
+presents it as a category-grouped card grid (Local LLM, Hardware
+Acceleration, Cloud Bridge, Analysis Plugins, Export Plugins).  The
+install-progress UI exists; the actual download logic is currently a
+stub.</p>
+<ul class="simple">
+<li><p>Feed commands: <code class="docutils literal notranslate"><span class="pre">get_extensions</span></code></p></li>
+</ul>
+</section>
+<section id="bottompanel-tsx-bottompanel">
+<h3><code class="docutils literal notranslate"><span class="pre">BottomPanel.tsx</span></code> — <code class="docutils literal notranslate"><span class="pre">BottomPanel</span></code><a class="headerlink" href="#bottompanel-tsx-bottompanel" title="Link to this heading">¶</a></h3>
+<p>Dockable bottom/side panel with Terminal Log, Live Activity, and Info
+tabs.  <code class="docutils literal notranslate"><span class="pre">useLiveWindow</span></code> polls at 2 Hz and appends MAC/DMA/stall activity
+to the log stream.  Log rows (22 px fixed height) render via
+<code class="docutils literal notranslate"><span class="pre">&#64;tanstack/react-virtual</span></code>.  The <code class="docutils literal notranslate"><span class="pre">dock</span></code> prop (<code class="docutils literal notranslate"><span class="pre">left</span></code> / <code class="docutils literal notranslate"><span class="pre">right</span></code> /
+<code class="docutils literal notranslate"><span class="pre">bottom</span></code>) switches the panel’s placement direction.</p>
+<ul class="simple">
+<li><p>Feed commands: <code class="docutils literal notranslate"><span class="pre">fetch_live_window</span></code> (via hook)</p></li>
+</ul>
+</section>
+<section id="maintoolbar-tsx-maintoolbar">
+<h3><code class="docutils literal notranslate"><span class="pre">MainToolbar.tsx</span></code> — <code class="docutils literal notranslate"><span class="pre">MainToolbar</span></code><a class="headerlink" href="#maintoolbar-tsx-maintoolbar" title="Link to this heading">¶</a></h3>
+<p>Top toolbar exposing play / pause / stop / step / refresh / layers /
+debug actions as 14 px icon buttons.  i18n-aware.  Does not call Tauri
+commands directly; delegates all events to <code class="docutils literal notranslate"><span class="pre">App.tsx</span></code> via the <code class="docutils literal notranslate"><span class="pre">onAction</span></code>
+callback.</p>
+<ul class="simple">
+<li><p>Feed commands: none (App.tsx delegation)</p></li>
+</ul>
+</section>
+<section id="menubar-tsx-menubar">
+<h3><code class="docutils literal notranslate"><span class="pre">MenuBar.tsx</span></code> — <code class="docutils literal notranslate"><span class="pre">MenuBar</span></code><a class="headerlink" href="#menubar-tsx-menubar" title="Link to this heading">¶</a></h3>
+<p>Native-style menu bar with File / View / Analyze / Tools / Help menus.
+File actions include opening <code class="docutils literal notranslate"><span class="pre">.pccx</span></code> (<code class="docutils literal notranslate"><span class="pre">Ctrl+O</span></code>), opening VCD
+(<code class="docutils literal notranslate"><span class="pre">Ctrl+Shift+O</span></code>), saving sessions, exporting the flat buffer, and
+generating a trace.  View actions include theme switching, panel
+visibility, and entering the extension manager.  All actions delegate to
+<code class="docutils literal notranslate"><span class="pre">App.tsx</span></code> via <code class="docutils literal notranslate"><span class="pre">onAction</span></code>.</p>
+<ul class="simple">
+<li><p>Feed commands: none (App.tsx delegation)</p></li>
+</ul>
+</section>
+<section id="statusbar-tsx-statusbar">
+<h3><code class="docutils literal notranslate"><span class="pre">StatusBar.tsx</span></code> — <code class="docutils literal notranslate"><span class="pre">StatusBar</span></code><a class="headerlink" href="#statusbar-tsx-statusbar" title="Link to this heading">¶</a></h3>
+<p>Bottom status bar.  Displays trace-load state, total cycle count, core
+count, the license string, and the active tab name.  In debug mode an
+rAF frame counter exposes the current FPS.  <code class="docutils literal notranslate"><span class="pre">get_license_info</span></code> is called
+at App level and passed as the <code class="docutils literal notranslate"><span class="pre">license</span></code> prop.</p>
+<ul class="simple">
+<li><p>Feed commands: none (props)</p></li>
+</ul>
+</section>
+<section id="filetree-tsx-filetree">
+<h3><code class="docutils literal notranslate"><span class="pre">FileTree.tsx</span></code> — <code class="docutils literal notranslate"><span class="pre">FileTree</span></code><a class="headerlink" href="#filetree-tsx-filetree" title="Link to this heading">¶</a></h3>
+<p>Renders the <code class="docutils literal notranslate"><span class="pre">FileNode</span></code> tree returned by <code class="docutils literal notranslate"><span class="pre">read_file_tree</span></code> as an Explorer
+sidebar.  Supports directory collapse/expand, per-type icons (SV, TOML,
+JSON, binary, etc.), and an <code class="docutils literal notranslate"><span class="pre">onFileOpen</span></code> callback.  Entries that fail to
+read (permissions, broken symlinks) are silently skipped.</p>
+<ul class="simple">
+<li><p>Feed commands: <code class="docutils literal notranslate"><span class="pre">read_file_tree</span></code></p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="cite-this-page">
+<h2>Cite this page<a class="headerlink" href="#cite-this-page" title="Link to this heading">¶</a></h2>
+<div class="highlight-bibtex notranslate"><div class="highlight"><pre><span></span><span class="nc">@misc</span><span class="p">{</span><span class="nl">pccx_lab_panels_2026</span><span class="p">,</span>
+<span class="w">  </span><span class="na">title</span><span class="w">        </span><span class="p">=</span><span class="w"> </span><span class="s">{pccx-lab UI panel catalogue: trace visualisation, analysis,</span>
+<span class="s">                  hardware view, verification, and editing components}</span><span class="p">,</span>
+<span class="w">  </span><span class="na">author</span><span class="w">       </span><span class="p">=</span><span class="w"> </span><span class="s">{Kim, Hyunwoo}</span><span class="p">,</span>
+<span class="w">  </span><span class="na">year</span><span class="w">         </span><span class="p">=</span><span class="w"> </span><span class="s">{2026}</span><span class="p">,</span>
+<span class="w">  </span><span class="na">howpublished</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">{\url{https://hwkim-dev.github.io/pccx/en/docs/Lab/panels.html}}</span><span class="p">,</span>
+<span class="w">  </span><span class="na">note</span><span class="w">         </span><span class="p">=</span><span class="w"> </span><span class="s">{Part of pccx: \url{https://hwkim-dev.github.io/pccx/}}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Panel sources live at
+<a class="reference external" href="https://github.com/hwkim-dev/pccx-lab/tree/main/ui/src/">https://github.com/hwkim-dev/pccx-lab/tree/main/ui/src/</a>.</p>
+</section>
+</section>
+
+    <script type="text/javascript">
+        function init() {
+            WaveDrom.ProcessAll();
+        }
+        window.onload = init;
+    </script>
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="ipc.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">Tauri IPC Contract</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="research.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">pccx-lab research lineage</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2026, hwkim
+            </div>
+            Made with 
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            <div class="last-updated">
+              Last updated on 2026-04-29</div>
+          </div>
+          <div class="right-details">
+            <div class="icons">
+              <a class="muted-link pccx-footer-icon" href="https://github.com/hkimw/pccx-FPGA-NPU-LLM-kv260" aria-label="RTL implementation — github.com/hkimw/pccx-FPGA-NPU-LLM-kv260"><svg fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="1.2"/><rect x="10" y="10" width="4" height="4" fill="currentColor" stroke="none"/><path d="M9 3v3M15 3v3M9 18v3M15 18v3M3 9h3M3 15h3M18 9h3M18 15h3"/></svg><span class="pccx-footer-icon__label">RTL</span></a>
+              <a class="muted-link pccx-footer-icon" href="https://hkimw.github.io/pccx/en/lab/" aria-label="pccx-lab — simulator & AI profiler"><svg fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><path d="M9 3h6"/><path d="M10 3v6.2L4.6 19a1 1 0 0 0 .86 1.5h13.08a1 1 0 0 0 .86-1.5L14 9.2V3"/><path d="M6.8 14h10.4"/></svg><span class="pccx-footer-icon__label">Lab</span></a>
+              <a class="muted-link pccx-footer-icon" href="https://github.com/hkimw/pccx" aria-label="Docs repository — github.com/hkimw/pccx"><svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16" width="1em" height="1em" aria-hidden="true"><path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg><span class="pccx-footer-icon__label">Docs</span></a>
+              <a class="muted-link pccx-footer-icon" href="https://hkimw.github.io/hkimw/" aria-label="Author portfolio — hkimw.github.io/hkimw"><svg fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" width="1em" height="1em" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M4.5 20.5c1-3.5 4-5.5 7.5-5.5s6.5 2 7.5 5.5"/></svg><span class="pccx-footer-icon__label">Blog</span></a>
+              
+            </div>
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">UI Panel Catalogue</a><ul>
+<li><a class="reference internal" href="#trace-visualisation">Trace visualisation</a><ul>
+<li><a class="reference internal" href="#timeline-tsx-timeline"><code class="docutils literal notranslate"><span class="pre">Timeline.tsx</span></code> — <code class="docutils literal notranslate"><span class="pre">Timeline</span></code></a></li>
+<li><a class="reference internal" href="#flamegraph-tsx-flamegraph"><code class="docutils literal notranslate"><span class="pre">FlameGraph.tsx</span></code> — <code class="docutils literal notranslate"><span class="pre">FlameGraph</span></code></a></li>
+<li><a class="reference internal" href="#waveformviewer-tsx-waveformviewer"><code class="docutils literal notranslate"><span class="pre">WaveformViewer.tsx</span></code> — <code class="docutils literal notranslate"><span class="pre">WaveformViewer</span></code></a></li>
+<li><a class="reference internal" href="#memorydump-tsx-memorydump"><code class="docutils literal notranslate"><span class="pre">MemoryDump.tsx</span></code> — <code class="docutils literal notranslate"><span class="pre">MemoryDump</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#analysis">Analysis</a><ul>
+<li><a class="reference internal" href="#roofline-tsx-roofline"><code class="docutils literal notranslate"><span class="pre">Roofline.tsx</span></code> — <code class="docutils literal notranslate"><span class="pre">Roofline</span></code></a></li>
+<li><a class="reference internal" href="#rooflinecard-tsx-rooflinecard"><code class="docutils literal notranslate"><span class="pre">RooflineCard.tsx</span></code> — <code class="docutils literal notranslate"><span class="pre">RooflineCard</span></code></a></li>
+<li><a class="reference internal" href="#bottleneckcard-tsx-bottleneckcard"><code class="docutils literal notranslate"><span class="pre">BottleneckCard.tsx</span></code> — <code class="docutils literal notranslate"><span class="pre">BottleneckCard</span></code></a></li>
+<li><a class="reference internal" href="#occupancycalculator-tsx-occupancycalculator"><code class="docutils literal notranslate"><span class="pre">OccupancyCalculator.tsx</span></code> — <code class="docutils literal notranslate"><span class="pre">OccupancyCalculator</span></code></a></li>
+<li><a class="reference internal" href="#pipelinediagram-tsx-pipelinediagram"><code class="docutils literal notranslate"><span class="pre">PipelineDiagram.tsx</span></code> — <code class="docutils literal notranslate"><span class="pre">PipelineDiagram</span></code></a></li>
+<li><a class="reference internal" href="#metrictree-tsx-metrictree"><code class="docutils literal notranslate"><span class="pre">MetricTree.tsx</span></code> — <code class="docutils literal notranslate"><span class="pre">MetricTree</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#hardware-view">Hardware view</a><ul>
+<li><a class="reference internal" href="#hardwarevisualizer-tsx-hardwarevisualizer"><code class="docutils literal notranslate"><span class="pre">HardwareVisualizer.tsx</span></code> — <code class="docutils literal notranslate"><span class="pre">HardwareVisualizer</span></code></a></li>
+<li><a class="reference internal" href="#canvasview-tsx-canvasview"><code class="docutils literal notranslate"><span class="pre">CanvasView.tsx</span></code> — <code class="docutils literal notranslate"><span class="pre">CanvasView</span></code></a></li>
+<li><a class="reference internal" href="#synthstatuscard-tsx-synthstatuscard"><code class="docutils literal notranslate"><span class="pre">SynthStatusCard.tsx</span></code> — <code class="docutils literal notranslate"><span class="pre">SynthStatusCard</span></code></a></li>
+<li><a class="reference internal" href="#nodeeditor-tsx-nodeeditor"><code class="docutils literal notranslate"><span class="pre">NodeEditor.tsx</span></code> — <code class="docutils literal notranslate"><span class="pre">NodeEditor</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#verification-reporting">Verification / reporting</a><ul>
+<li><a class="reference internal" href="#verificationsuite-tsx-verificationsuite"><code class="docutils literal notranslate"><span class="pre">VerificationSuite.tsx</span></code> — <code class="docutils literal notranslate"><span class="pre">VerificationSuite</span></code></a></li>
+<li><a class="reference internal" href="#verificationrunner-tsx-verificationrunner-goldendiffcard-sanitizecard"><code class="docutils literal notranslate"><span class="pre">VerificationRunner.tsx</span></code> — <code class="docutils literal notranslate"><span class="pre">VerificationRunner</span></code>, <code class="docutils literal notranslate"><span class="pre">GoldenDiffCard</span></code>, <code class="docutils literal notranslate"><span class="pre">SanitizeCard</span></code></a></li>
+<li><a class="reference internal" href="#diffview-tsx-diffview"><code class="docutils literal notranslate"><span class="pre">DiffView.tsx</span></code> — <code class="docutils literal notranslate"><span class="pre">DiffView</span></code></a></li>
+<li><a class="reference internal" href="#reportbuilder-tsx-reportbuilder"><code class="docutils literal notranslate"><span class="pre">ReportBuilder.tsx</span></code> — <code class="docutils literal notranslate"><span class="pre">ReportBuilder</span></code></a></li>
+<li><a class="reference internal" href="#reportgenerator-tsx-reportgenerator"><code class="docutils literal notranslate"><span class="pre">ReportGenerator.tsx</span></code> — <code class="docutils literal notranslate"><span class="pre">ReportGenerator</span></code></a></li>
+<li><a class="reference internal" href="#testbenchauthor-tsx-testbenchauthor"><code class="docutils literal notranslate"><span class="pre">TestbenchAuthor.tsx</span></code> — <code class="docutils literal notranslate"><span class="pre">TestbenchAuthor</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#editing-support">Editing / support</a><ul>
+<li><a class="reference internal" href="#codeeditor-tsx-codeeditor"><code class="docutils literal notranslate"><span class="pre">CodeEditor.tsx</span></code> — <code class="docutils literal notranslate"><span class="pre">CodeEditor</span></code></a></li>
+<li><a class="reference internal" href="#scenarioflow-tsx-scenarioflow"><code class="docutils literal notranslate"><span class="pre">ScenarioFlow.tsx</span></code> — <code class="docutils literal notranslate"><span class="pre">ScenarioFlow</span></code></a></li>
+<li><a class="reference internal" href="#extensionmanager-tsx-extensionmanager"><code class="docutils literal notranslate"><span class="pre">ExtensionManager.tsx</span></code> — <code class="docutils literal notranslate"><span class="pre">ExtensionManager</span></code></a></li>
+<li><a class="reference internal" href="#bottompanel-tsx-bottompanel"><code class="docutils literal notranslate"><span class="pre">BottomPanel.tsx</span></code> — <code class="docutils literal notranslate"><span class="pre">BottomPanel</span></code></a></li>
+<li><a class="reference internal" href="#maintoolbar-tsx-maintoolbar"><code class="docutils literal notranslate"><span class="pre">MainToolbar.tsx</span></code> — <code class="docutils literal notranslate"><span class="pre">MainToolbar</span></code></a></li>
+<li><a class="reference internal" href="#menubar-tsx-menubar"><code class="docutils literal notranslate"><span class="pre">MenuBar.tsx</span></code> — <code class="docutils literal notranslate"><span class="pre">MenuBar</span></code></a></li>
+<li><a class="reference internal" href="#statusbar-tsx-statusbar"><code class="docutils literal notranslate"><span class="pre">StatusBar.tsx</span></code> — <code class="docutils literal notranslate"><span class="pre">StatusBar</span></code></a></li>
+<li><a class="reference internal" href="#filetree-tsx-filetree"><code class="docutils literal notranslate"><span class="pre">FileTree.tsx</span></code> — <code class="docutils literal notranslate"><span class="pre">FileTree</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#cite-this-page">Cite this page</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script src="../../_static/documentation_options.js?v=98de157e"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/scripts/furo.js?v=46bd48cc"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/sg-tags.js?v=d80f6fa4"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="https://wavedrom.com/skins/default.js"></script>
+    <script src="https://wavedrom.com/wavedrom.min.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/image-lightbox.js?v=dec353f8"></script>
+    <script src="../../_static/language-switcher.js?v=118c9f35"></script>
+    </body>
+</html>

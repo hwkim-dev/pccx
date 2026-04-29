@@ -25,4 +25,4 @@ Pre-RTL bottleneck detection, UVM co-simulation, and LLM-driven testbench genera
    :gutter: 3
 
    .. grid-item-card:: Back to pccx main docs
-      :link: https://hwkim-dev.github.io/pccx/en/
+      :link: https://hkimw.github.io/pccx/en/

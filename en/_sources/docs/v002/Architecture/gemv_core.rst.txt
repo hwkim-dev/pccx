@@ -101,18 +101,19 @@ Each core's 32 partial products collapse to a single scalar through a
 5-stage adder tree, with a pipeline register between every stage for
 400 MHz closure.
 
-.. mermaid::
+.. _v002-gemv-reduction-fig:
+.. figure:: /_static/diagrams/v002_gemv_reduction.svg
+   :align: center
+   :width: 600px
+   :name: fig-gemv-reduction
 
-   flowchart TB
-     MAC["32 × partial products<br/>(LUT-based W × A)"]
-         --> S1["Stage 1 — DSP48E2<br/>16 × (a + b)<br/>32 → 16"]
-     S1  --> S2["Stage 2 — LUT<br/>16 → 8"]
-     S2  --> S3["Stage 3 — LUT<br/>8 → 4"]
-     S3  --> S4["Stage 4 — LUT<br/>4 → 2"]
-     S4  --> S5["Stage 5 — LUT<br/>2 → 1"]
-     S5  --> OUT[/Scalar/]
+   **Figure GEMV-Reduction.** GEMV uses a 32-lane reduction tree to
+   collapse partial products into a single scalar. Stage 1 uses DSP48E2
+   slices for high-speed addition; subsequent stages use LUT-based 
+   FP/Int adders.
 
 Stage 1 uses the DSP48E2 ``A:B + C`` (ONE48) mode purely to add two
+...
 adjacent partial products (16 DSP slices per core). Stages 2–5 use
 LUT-based adders to keep the DSP budget small. The implementation
 inherits from v001's ``GEMV_reduction.sv`` and

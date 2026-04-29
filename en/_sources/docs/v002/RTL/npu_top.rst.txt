@@ -21,7 +21,7 @@ here and connected through the shared L2 cache bus.
 .. admonition:: Last verified against
    :class: note
 
-   Commit ``773bd82`` @ ``hwkim-dev/pccx-FPGA-NPU-LLM-kv260`` (2026-04-21).
+   Commit ``773bd82`` @ ``hkimw/pccx-FPGA-NPU-LLM-kv260`` (2026-04-21).
 
 .. seealso::
 

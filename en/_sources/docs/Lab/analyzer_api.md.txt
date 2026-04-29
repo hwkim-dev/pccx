@@ -175,10 +175,10 @@ blog posts, or AI summaries, please cite:
   title        = {pccx-core plugin registry: the generic primitive every pccx-lab crate hangs its trait-object plugins off},
   author       = {Kim, Hyunwoo},
   year         = {2026},
-  howpublished = {\url{https://hwkim-dev.github.io/pccx/en/docs/Lab/analyzer_api.html}},
-  note         = {Part of pccx: \url{https://hwkim-dev.github.io/pccx/}}
+  howpublished = {\url{https://hkimw.github.io/pccx/en/docs/Lab/analyzer_api.html}},
+  note         = {Part of pccx: \url{https://hkimw.github.io/pccx/}}
 }
 ```
 
 The primitive lives at
-<https://github.com/hwkim-dev/pccx-lab/blob/main/crates/core/src/plugin.rs>.
+<https://github.com/hkimw/pccx-lab/blob/main/crates/core/src/plugin.rs>.

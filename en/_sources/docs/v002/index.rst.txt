@@ -62,3 +62,9 @@ path.
    :caption: Verification
 
    Verification/index
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Build / Bitstream
+
+   Build/index
