@@ -107,6 +107,7 @@ exclude_patterns = [
     "pccx_v002_extended_20toks_plan.md",
     "tinynpu_v003_gemma4_e4b_plan*.md",  # the (1) variant uses a paren
     "PCCX_Lab_Tasks_for_Claude_CLI.md",  # local task tracker, not user-facing
+    "pccx_gemini_*.md",                  # external review artifacts (gitignored)
     "todo.md",                            # local task list at repo root
     "CONTRIBUTING.md",                    # repo-level, not part of docs site
     "tools/**/*.md",       # phase0 audit / vivado plan etc.

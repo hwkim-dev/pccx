@@ -20,7 +20,8 @@ EAGLE 학습 파이프라인)을 상호 재사용한다.
 ## 2. Track 1 — v002 Extended (Gemma 3N E4B, 20 tok/s)
 
 현재 v002 active 구성 위에 sparsity 확장과 speculative decoding 스택을 얹어
-**약속된 20 tok/s 실측**을 달성하는 목표를 갖는다.
+KV260 보드에서 **Gemma 3N E4B 20 tok/s 디코딩 타겟**을 달성하는 것을 목표로
+한다. 보드 레벨 벤치마크 로그가 공개되기 전까지는 계획상 타겟이다.
 
 ### Tiered targets
 
@@ -28,7 +29,7 @@ EAGLE 학습 파이프라인)을 상호 재사용한다.
 |---|---|---|
 | Baseline | 5–6 | Phase A–F 완료 |
 | Viable | 10–12 | Phase G + H 완료 |
-| **Promise** | **20** | Phase G–K 완료 |
+| **Target** | **20** | Phase G–K 완료 |
 | Stretch | 25+ | Tree EAGLE (Phase J) 추가 |
 
 ### Phase 구성
@@ -233,7 +234,7 @@ ISCA / MICRO / HPCA / FCCM / FPGA 타겟.
 
 - [ ] Week 26 — Gemma 3N E4B 보드 코히런트 출력, 5+ tok/s
 - [ ] Week 38 — EAGLE-3 Gemma 3N checkpoint HF 공개 (세계 최초)
-- [ ] Week 47 — **Gemma 3N E4B 20 tok/s 공식 실측** ← 약속 이행
+- [ ] Week 47 — **Gemma 3N E4B 20 tok/s 디코딩 타겟 KV260 보드 달성**
 - [ ] Week 52 — Gemma 4 E4B 12+ tok/s 달성
 - [ ] Blog post / 논문 초안 (v002 결과 정리)
 

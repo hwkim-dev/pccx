@@ -111,7 +111,7 @@ Running at 400 MHz, this yields a **819 GMAC/s theoretical peak**.
 4. New Trade-offs
 ==================
 
-The speed gain is not free. v002 accepts the following constraints.
+v002 accepts the following constraints in exchange for the throughput gain.
 
 .. list-table::
    :header-rows: 1

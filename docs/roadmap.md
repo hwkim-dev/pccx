@@ -22,7 +22,8 @@ begins in Year 2 once both tracks are stable.
 ## 2. Track 1 — v002 Extended (Gemma 3N E4B, 20 tok/s)
 
 Layers FFN sparsity and a speculative-decoding stack on top of the active
-v002 to reach the **promised 20 tok/s measured throughput**.
+v002 to reach the **20 tok/s decode target on Gemma 3N E4B / KV260**.
+This is a planning target until a board-level benchmark log is published.
 
 ### Tiered targets
 
@@ -30,7 +31,7 @@ v002 to reach the **promised 20 tok/s measured throughput**.
 |---|---|---|
 | Baseline | 5–6 | Phase A–F done |
 | Viable | 10–12 | Phase G + H done |
-| **Promise** | **20** | Phase G–K done |
+| **Target** | **20** | Phase G–K done |
 | Stretch | 25+ | Add Tree EAGLE (Phase J) |
 
 ### Phase plan
@@ -237,7 +238,7 @@ target venues ISCA / MICRO / HPCA / FCCM / FPGA.
 
 - [ ] Week 26 — Coherent Gemma 3N E4B decode on board, 5+ tok/s
 - [ ] Week 38 — EAGLE-3 Gemma 3N checkpoint released on HF (first public)
-- [ ] Week 47 — **Gemma 3N E4B 20 tok/s officially measured** ← promise met
+- [ ] Week 47 — **Gemma 3N E4B 20 tok/s decode target met on KV260**
 - [ ] Week 52 — Gemma 4 E4B at 12+ tok/s
 - [ ] Blog post / paper draft (v002 results)
 

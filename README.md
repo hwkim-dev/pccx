@@ -20,7 +20,7 @@
 
 pccx is a hardware-software co-design framework that accelerates **autoregressive decoding** of Transformer-based LLMs on resource-constrained edge devices. The primary target is the **Xilinx Kria KV260** SOM.
 
-Rather than reusing a generic matrix accelerator, pccx is designed around the actual bottleneck of LLM decoding: **memory bandwidth-bound GEMV**, not compute-bound GEMM. The architecture separates matrix (GEMM) and vector (GEMV) datapaths, supplies weights through dedicated HP AXI ports, and uses a custom 64-bit VLIW ISA to eliminate dispatch stalls.
+Rather than reusing a generic matrix accelerator, pccx is sized around the dominant bottleneck of LLM decoding: **memory bandwidth-bound GEMV**, not compute-bound GEMM. The architecture separates matrix (GEMM) and vector (GEMV) datapaths, supplies weights through dedicated HP AXI ports, and uses a custom 64-bit VLIW ISA to reduce dispatch-side stalls.
 
 ---
 
@@ -128,7 +128,7 @@ begins once both tracks are stable.
 
 | Track | Target model | Goal | Horizon | Key phases |
 |-------|-------------|------|---------|------------|
-| **v002 Extended** | Gemma 3N E4B | **20 tok/s** measured | Week 1–49 | A–F baseline → G sparsity → H/H+ EAGLE-3 → I SSD → J Tree → K benchmark |
+| **v002 Extended** | Gemma 3N E4B | **20 tok/s** target | Week 1–49 | A–F baseline → G sparsity → H/H+ EAGLE-3 → I SSD → J Tree → K benchmark |
 | **v003** | Gemma 4 E4B | **12–15 tok/s** | Week 16–52 (parallel) | 1 foundation → 2 EAGLE linear → 3 Tree → 4 SSD → 5 P-EAGLE + LTD |
 | **Auto-Porting α** | Arbitrary Transformer | `config.json` → pccx ISA codegen | Week 53+ (Year 2) | Parser → Resolver → Feature plugin → C-stub emitter |
 
