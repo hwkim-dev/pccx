@@ -12,6 +12,11 @@ on:
       - "docs/**"
       - "ko/docs/**"
 
+# Opt JavaScript actions into the Node.js 24 runtime ahead of the
+# 2026-06-02 forced cutover.
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+
 jobs:
   file-set-symmetry:
     name: EN / KO file set must match
