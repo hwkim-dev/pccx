@@ -1,0 +1,28 @@
+cff-version: 1.2.0
+message: "If you use pccx, please cite it using the metadata in this file."
+title: "pccx — open FPGA-oriented LLM inference accelerator"
+abstract: >-
+  pccx is the canonical architecture and specification repository for an
+  FPGA-oriented LLM inference accelerator stack targeting Xilinx Kria
+  KV260 (Zynq UltraScale+ ZU5EV).  It defines the ISA, memory hierarchy,
+  documentation, roadmap, and release snapshots used by the
+  implementation and tooling repositories in the pccx ecosystem.
+type: software
+license: Apache-2.0
+repository-code: "https://github.com/hkimw/pccx"
+url: "https://hkimw.github.io/pccx/"
+authors:
+  - family-names: Kim
+    given-names: Hyunwoo
+    # TODO(hkimw): set orcid once registered
+    # orcid: "https://orcid.org/0000-0000-0000-0000"
+    # TODO(hkimw): fill in affiliation
+    # affiliation: ""
+keywords:
+  - FPGA
+  - LLM inference
+  - architecture exploration
+  - ISA
+  - Kria KV260
+  - W4A8 quantization
+  - SystemVerilog
