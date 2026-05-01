@@ -27,8 +27,10 @@ issues are welcome.
 | --- | --- |
 | Documentation | <https://pccxai.github.io/pccx/> |
 | Releases | <https://github.com/pccxai/pccx/releases> |
+| `v0.1.0-alpha` notes | [docs/releases/v0.1.0-alpha.md](docs/releases/v0.1.0-alpha.md) |
 | Roadmap (project board) | <https://github.com/orgs/pccxai/projects/1> |
 | Contributing | [CONTRIBUTING.md](CONTRIBUTING.md) |
+| How to cite | [CITATION.cff](CITATION.cff) |
 | Discussions | <https://github.com/pccxai/pccx/discussions> |
 | Good first issues | <https://github.com/pccxai/pccx/labels/good%20first%20issue> |
 
