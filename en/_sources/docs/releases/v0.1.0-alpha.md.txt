@@ -1,0 +1,86 @@
+---
+orphan: true
+---
+
+# pccx v0.1.0-alpha — release draft
+
+> **Draft only — do not publish.** No tag is created, no GitHub release
+> is published. This file is a planning document for human review and
+> will be turned into the actual release notes when the v0.1.0-alpha
+> tag is eventually pushed in a separately approved cycle.
+
+- **Target repo**: `pccxai/pccx`
+- **Target base SHA**: `f6247e3` (current `main` HEAD as of 2026-05-01,
+  immediately after the citation-metadata cleanup merge)
+- **Title (proposed)**: `pccx v0.1.0-alpha — first public architecture snapshot`
+- **Tag (proposed, NOT created)**: `v0.1.0-alpha`
+- **Pre-release**: yes
+
+## Highlights
+
+- First snapshot of the canonical pccx architecture, ISA, and
+  documentation site under the `pccxai` organization.
+- Bilingual (EN + KO) Sphinx site with `numfig`, MyST and MyST-NB,
+  multiversion publishing, and Furo dark/light theme; live at
+  `https://pccxai.github.io/pccx/`.
+- ISA package (`isa_pkg.sv`) cross-referenced from the docs through
+  `literalinclude` against the `codes/v002/` clone produced at build
+  time from the sibling RTL repository.
+- ISA preprint PDF build (`isa-pdf.yml`, `xelatex`) producing the
+  tracked `_static/downloads/pccx-isa-v002.pdf`.
+- Repo-validation CI (`repo-validate`) covering URL hygiene,
+  brand-name guard, Pages build sanity, and required-checks
+  enforcement on `main`.
+- Three-stage GitHub ruleset on `main` (force-push and branch-deletion
+  block, PR-required, required status checks). Direct push to `main`
+  is blocked.
+- Citation metadata in tree: `CITATION.cff` (with author and
+  `Independent researcher` affiliation), `CHANGELOG.md`, `RELEASING.md`.
+
+## Known limitations
+
+- W4A8 throughput numbers in the docs are framed as planning targets,
+  not measured silicon results.
+- v002 RTL is referenced from the `pccxai/pccx-FPGA-NPU-LLM-kv260`
+  sibling repo at build time; this repo does not contain a bitstream
+  or place-and-route closure.
+- The KV cache memory model section is documentation-level; the
+  on-chip layout is described, not benchmarked.
+- v003 architecture is roadmap only; no scaffolding has landed.
+- Localization beyond EN and KO is tracked under
+  `M2 — v0.3 Community Localization` and is not part of this snapshot.
+
+## Validation status
+
+- `make strict` builds clean (zero warnings) on EN and KO sources.
+- `make linkcheck` clean on the weekly cron.
+- `repo-validate` required check green on `main`.
+- ISA PDF build green on `main`.
+- Sphinx Pages deploy green; `https://pccxai.github.io/pccx/` returns
+  HTTP 200.
+- No standalone-vendor brand-token leaks in tracked sources
+  (word-boundary scan).
+
+## Citation
+
+Cite using the in-repo `CITATION.cff` (author: Hyunwoo Kim,
+Independent researcher; ORCID intentionally omitted until registered).
+This release does not mint a Zenodo DOI yet; that will follow once the
+v0.1.0-alpha tag is actually pushed in a later, separately approved
+cycle.
+
+## Not included in this release
+
+- Tag push or GitHub Release publication.
+- Zenodo DOI minting.
+- arXiv submission of the ISA preprint.
+- Localization launch (Spanish, Japanese, Chinese) — tracked as
+  `lang:*` labels for v0.3.
+
+## Next milestones
+
+- `v0.2.0` (subtitle: "Docs and KV cache"): deepen the KV cache
+  memory-model section, add measured-vs-target numbers, expand RTL
+  cross-references.
+- `v0.3.0` (subtitle: "Community localization"): open the
+  `lang:es / ja / zh` workflow, add a translation contribution guide.
