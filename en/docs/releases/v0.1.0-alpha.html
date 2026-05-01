@@ -3,23 +3,23 @@
   <head><meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta property="og:title" content="pccx v0.1.0-alpha — release draft" />
+<meta property="og:title" content="pccx v0.1.0-alpha — release notes" />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://pccxai.github.io/pccx/docs/releases/v0.1.0-alpha.html" />
 <meta property="og:site_name" content="pccx — Parallel Compute Core eXecutor" />
-<meta property="og:description" content="Draft only — do not publish. No tag is created, no GitHub release is published. This file is a planning document for human review and will be turned into the actual release notes when the v0.1.0-al..." />
+<meta property="og:description" content="Published prerelease. Tag v0.1.0-alpha is pushed and the GitHub Release is live as a prerelease (not marked latest). This page mirrors the release body and is kept here as the in-tree reference. Re..." />
 <meta property="og:image:width" content="1146" />
 <meta property="og:image:height" content="600" />
-<meta property="og:image" content="https://pccxai.github.io/pccx/_images/social_previews/summary_docs_releases_v0.1.0-alpha_5f4e79b0.png" />
-<meta property="og:image:alt" content="Draft only — do not publish. No tag is created, no GitHub release is published. This file is a planning document for human review and will be turned into the actual release notes when the v0.1.0-al..." />
-<meta name="description" content="Draft only — do not publish. No tag is created, no GitHub release is published. This file is a planning document for human review and will be turned into the actual release notes when the v0.1.0-al..." />
+<meta property="og:image" content="https://pccxai.github.io/pccx/_images/social_previews/summary_docs_releases_v0.1.0-alpha_c0fac044.png" />
+<meta property="og:image:alt" content="Published prerelease. Tag v0.1.0-alpha is pushed and the GitHub Release is live as a prerelease (not marked latest). This page mirrors the release body and is kept here as the in-tree reference. Re..." />
+<meta name="description" content="Published prerelease. Tag v0.1.0-alpha is pushed and the GitHub Release is live as a prerelease (not marked latest). This page mirrors the release body and is kept here as the in-tree reference. Re..." />
 <meta name="twitter:card" content="summary_large_image" />
 
-<script type="application/ld+json">[{"@context":"https://schema.org","@type":"WebSite","name":"pccx — Parallel Compute Core eXecutor","alternateName":"pccx","url":"https://pccxai.github.io/pccx/","inLanguage":["en","en","ko"],"author":{"@type":"Person","name":"Hyunwoo Kim","url":"https://hkimw.github.io/hkimw/"},"publisher":{"@type":"Person","name":"Hyunwoo Kim","url":"https://hkimw.github.io/hkimw/"},"description":"pccx is an open-source scalable NPU architecture for edge LLM inference.  W4A8KV4 quantisation on the Xilinx Kria KV260; v002 reference implementation in SystemVerilog.","keywords":["NPU","FPGA","LLM inference","edge AI","W4A8","KV cache","systolic array","Kria KV260","ZU5EV","Transformer accelerator","speculative decoding","FlashAttention","QServe","Gemma 3N","Matryoshka","Sail ISA","Sail language","formal ISA specification","ISA semantics","RISC-V Sail","Arm Sail","CHERI","Morello","Isabelle/HOL","Coq"]},{"@context":"https://schema.org","@type":"TechArticle","headline":"pccx v0.1.0-alpha — release draft","name":"pccx v0.1.0-alpha — release draft","url":"https://pccxai.github.io/pccx/en/docs/releases/v0.1.0-alpha.html","mainEntityOfPage":{"@type":"WebPage","@id":"https://pccxai.github.io/pccx/en/docs/releases/v0.1.0-alpha.html"},"isPartOf":{"@type":"WebSite","name":"pccx — Parallel Compute Core eXecutor","url":"https://pccxai.github.io/pccx/"},"author":{"@type":"Person","name":"Hyunwoo Kim","url":"https://hkimw.github.io/hkimw/"},"publisher":{"@type":"Organization","name":"pccx project","url":"https://pccxai.github.io/pccx/"},"datePublished":"2026-05-01","dateModified":"2026-05-01","description":"pccx documentation page: pccx v0.1.0-alpha — release draft. Open-source NPU architecture + pccx-lab profiler implementing research from QServe, FlashAttention, OpenPangu speculative decoding, and Matryoshka subnet swap.","inLanguage":"en","license":"https://www.apache.org/licenses/LICENSE-2.0","citation":{"@type":"CreativeWork","name":"pccx: Parallel Compute Core eXecutor","url":"https://pccxai.github.io/pccx/","author":"Hyunwoo Kim","datePublished":"2026"}}]</script><link rel="index" title="Index" href="../../genindex.html"><link rel="search" title="Search" href="../../search.html">
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"WebSite","name":"pccx — Parallel Compute Core eXecutor","alternateName":"pccx","url":"https://pccxai.github.io/pccx/","inLanguage":["en","en","ko"],"author":{"@type":"Person","name":"Hyunwoo Kim","url":"https://hkimw.github.io/hkimw/"},"publisher":{"@type":"Person","name":"Hyunwoo Kim","url":"https://hkimw.github.io/hkimw/"},"description":"pccx is an open-source scalable NPU architecture for edge LLM inference.  W4A8KV4 quantisation on the Xilinx Kria KV260; v002 reference implementation in SystemVerilog.","keywords":["NPU","FPGA","LLM inference","edge AI","W4A8","KV cache","systolic array","Kria KV260","ZU5EV","Transformer accelerator","speculative decoding","FlashAttention","QServe","Gemma 3N","Matryoshka","Sail ISA","Sail language","formal ISA specification","ISA semantics","RISC-V Sail","Arm Sail","CHERI","Morello","Isabelle/HOL","Coq"]},{"@context":"https://schema.org","@type":"TechArticle","headline":"pccx v0.1.0-alpha — release notes","name":"pccx v0.1.0-alpha — release notes","url":"https://pccxai.github.io/pccx/en/docs/releases/v0.1.0-alpha.html","mainEntityOfPage":{"@type":"WebPage","@id":"https://pccxai.github.io/pccx/en/docs/releases/v0.1.0-alpha.html"},"isPartOf":{"@type":"WebSite","name":"pccx — Parallel Compute Core eXecutor","url":"https://pccxai.github.io/pccx/"},"author":{"@type":"Person","name":"Hyunwoo Kim","url":"https://hkimw.github.io/hkimw/"},"publisher":{"@type":"Organization","name":"pccx project","url":"https://pccxai.github.io/pccx/"},"datePublished":"2026-05-01","dateModified":"2026-05-01","description":"pccx documentation page: pccx v0.1.0-alpha — release notes. Open-source NPU architecture + pccx-lab profiler implementing research from QServe, FlashAttention, OpenPangu speculative decoding, and Matryoshka subnet swap.","inLanguage":"en","license":"https://www.apache.org/licenses/LICENSE-2.0","citation":{"@type":"CreativeWork","name":"pccx: Parallel Compute Core eXecutor","url":"https://pccxai.github.io/pccx/","author":"Hyunwoo Kim","datePublished":"2026"}}]</script><link rel="index" title="Index" href="../../genindex.html"><link rel="search" title="Search" href="../../search.html">
         <link rel="canonical" href="https://pccxai.github.io/pccx/docs/releases/v0.1.0-alpha.html">
 
     <!-- Generated with Sphinx 7.4.7 and Furo 2025.12.19 -->
-        <title>pccx v0.1.0-alpha — release draft - pccx</title>
+        <title>pccx v0.1.0-alpha — release notes - pccx</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=7bdb33bb" />
     <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=fd3f3429" />
@@ -474,21 +474,19 @@
           </label>
         </div>
         <article role="main" id="furo-main-content">
-          <section class="tex2jax_ignore mathjax_ignore" id="pccx-v0-1-0-alpha-release-draft">
-<h1>pccx v0.1.0-alpha — release draft<a class="headerlink" href="#pccx-v0-1-0-alpha-release-draft" title="Link to this heading">¶</a></h1>
+          <section class="tex2jax_ignore mathjax_ignore" id="pccx-v0-1-0-alpha-release-notes">
+<h1>pccx v0.1.0-alpha — release notes<a class="headerlink" href="#pccx-v0-1-0-alpha-release-notes" title="Link to this heading">¶</a></h1>
 <blockquote>
-<div><p><strong>Draft only — do not publish.</strong> No tag is created, no GitHub release
-is published. This file is a planning document for human review and
-will be turned into the actual release notes when the v0.1.0-alpha
-tag is eventually pushed in a separately approved cycle.</p>
+<div><p><strong>Published prerelease.</strong> Tag <code class="docutils literal notranslate"><span class="pre">v0.1.0-alpha</span></code> is pushed and the GitHub
+Release is live as a prerelease (not marked latest). This page mirrors
+the release body and is kept here as the in-tree reference.</p>
 </div></blockquote>
 <ul class="simple">
-<li><p><strong>Target repo</strong>: <code class="docutils literal notranslate"><span class="pre">pccxai/pccx</span></code></p></li>
-<li><p><strong>Target base SHA</strong>: <code class="docutils literal notranslate"><span class="pre">f6247e3</span></code> (current <code class="docutils literal notranslate"><span class="pre">main</span></code> HEAD as of 2026-05-01,
-immediately after the citation-metadata cleanup merge)</p></li>
-<li><p><strong>Title (proposed)</strong>: <code class="docutils literal notranslate"><span class="pre">pccx</span> <span class="pre">v0.1.0-alpha</span> <span class="pre">—</span> <span class="pre">first</span> <span class="pre">public</span> <span class="pre">architecture</span> <span class="pre">snapshot</span></code></p></li>
-<li><p><strong>Tag (proposed, NOT created)</strong>: <code class="docutils literal notranslate"><span class="pre">v0.1.0-alpha</span></code></p></li>
+<li><p><strong>Repo</strong>: <code class="docutils literal notranslate"><span class="pre">pccxai/pccx</span></code></p></li>
+<li><p><strong>Tag</strong>: <code class="docutils literal notranslate"><span class="pre">v0.1.0-alpha</span></code></p></li>
+<li><p><strong>Title</strong>: <code class="docutils literal notranslate"><span class="pre">pccx</span> <span class="pre">v0.1.0-alpha</span> <span class="pre">—</span> <span class="pre">first</span> <span class="pre">public</span> <span class="pre">architecture</span> <span class="pre">snapshot</span></code></p></li>
 <li><p><strong>Pre-release</strong>: yes</p></li>
+<li><p><strong>Release link</strong>: <a class="reference external" href="https://github.com/pccxai/pccx/releases/tag/v0.1.0-alpha">https://github.com/pccxai/pccx/releases/tag/v0.1.0-alpha</a></p></li>
 </ul>
 <section id="highlights">
 <h2>Highlights<a class="headerlink" href="#highlights" title="Link to this heading">¶</a></h2>
@@ -545,14 +543,12 @@ HTTP 200.</p></li>
 <h2>Citation<a class="headerlink" href="#citation" title="Link to this heading">¶</a></h2>
 <p>Cite using the in-repo <code class="docutils literal notranslate"><span class="pre">CITATION.cff</span></code> (author: Hyunwoo Kim,
 Independent researcher; ORCID intentionally omitted until registered).
-This release does not mint a Zenodo DOI yet; that will follow once the
-v0.1.0-alpha tag is actually pushed in a later, separately approved
-cycle.</p>
+This release does not mint a Zenodo DOI yet; DOI minting is deferred
+to a later release.</p>
 </section>
 <section id="not-included-in-this-release">
 <h2>Not included in this release<a class="headerlink" href="#not-included-in-this-release" title="Link to this heading">¶</a></h2>
 <ul class="simple">
-<li><p>Tag push or GitHub Release publication.</p></li>
 <li><p>Zenodo DOI minting.</p></li>
 <li><p>arXiv submission of the ISA preprint.</p></li>
 <li><p>Localization launch (Spanish, Japanese, Chinese) — tracked as
@@ -620,7 +616,7 @@ cross-references.</p></li>
         <div class="toc-tree-container">
           <div class="toc-tree">
             <ul>
-<li><a class="reference internal" href="#">pccx v0.1.0-alpha — release draft</a><ul>
+<li><a class="reference internal" href="#">pccx v0.1.0-alpha — release notes</a><ul>
 <li><a class="reference internal" href="#highlights">Highlights</a></li>
 <li><a class="reference internal" href="#known-limitations">Known limitations</a></li>
 <li><a class="reference internal" href="#validation-status">Validation status</a></li>

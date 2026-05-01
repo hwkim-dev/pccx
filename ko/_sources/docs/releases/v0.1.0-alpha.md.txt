@@ -2,19 +2,18 @@
 orphan: true
 ---
 
-# pccx v0.1.0-alpha — 릴리스 초안
+# pccx v0.1.0-alpha — 릴리스 노트
 
-> **초안일 뿐입니다 — 배포하지 마세요.** 태그를 만들지 않으며,
-> GitHub Release도 발행하지 않습니다. 이 파일은 사람 검토를 위한
-> 계획 문서이며, v0.1.0-alpha 태그가 별도 승인 사이클에서 실제로
-> 푸시되는 시점에 릴리스 노트의 본문으로 사용됩니다.
+> **사전 릴리스(prerelease) 게시 완료.** `v0.1.0-alpha` 태그가
+> 푸시되었고, GitHub Release가 prerelease(latest 아님)로 게시되어
+> 있습니다. 이 페이지는 release body를 미러링하며 in-tree 참조용으로
+> 보관됩니다.
 
-- **대상 저장소**: `pccxai/pccx`
-- **기준 SHA**: `f6247e3` (2026-05-01 기준 `main` HEAD,
-  citation-metadata 정리 머지 직후)
-- **제안 제목**: `pccx v0.1.0-alpha — 첫 공개 아키텍처 스냅샷`
-- **제안 태그 (생성하지 않음)**: `v0.1.0-alpha`
+- **저장소**: `pccxai/pccx`
+- **태그**: `v0.1.0-alpha`
+- **제목**: `pccx v0.1.0-alpha — 첫 공개 아키텍처 스냅샷`
 - **사전 릴리스(pre-release)**: 예
+- **릴리스 링크**: <https://github.com/pccxai/pccx/releases/tag/v0.1.0-alpha>
 
 ## 주요 변경 사항
 
@@ -60,12 +59,11 @@ orphan: true
 
 저장소의 `CITATION.cff`를 사용해 인용해 주세요 (저자: Hyunwoo Kim,
 Independent researcher; ORCID는 등록 전이라 의도적으로 비워둠).
-본 릴리스에서는 Zenodo DOI를 발행하지 않으며, v0.1.0-alpha 태그가
-별도 승인 사이클에서 실제로 푸시될 때 발행 예정입니다.
+본 릴리스에서는 Zenodo DOI를 발행하지 않으며, DOI 발행은 향후
+릴리스로 미뤄둡니다.
 
 ## 본 릴리스에 포함되지 않는 것
 
-- 태그 푸시 또는 GitHub Release 발행.
 - Zenodo DOI 발행.
 - ISA preprint의 arXiv 제출.
 - 로컬라이제이션 런칭 (스페인어, 일본어, 중국어). v0.3에서 `lang:*`

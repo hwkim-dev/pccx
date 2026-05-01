@@ -2,19 +2,17 @@
 orphan: true
 ---
 
-# pccx v0.1.0-alpha — release draft
+# pccx v0.1.0-alpha — release notes
 
-> **Draft only — do not publish.** No tag is created, no GitHub release
-> is published. This file is a planning document for human review and
-> will be turned into the actual release notes when the v0.1.0-alpha
-> tag is eventually pushed in a separately approved cycle.
+> **Published prerelease.** Tag `v0.1.0-alpha` is pushed and the GitHub
+> Release is live as a prerelease (not marked latest). This page mirrors
+> the release body and is kept here as the in-tree reference.
 
-- **Target repo**: `pccxai/pccx`
-- **Target base SHA**: `f6247e3` (current `main` HEAD as of 2026-05-01,
-  immediately after the citation-metadata cleanup merge)
-- **Title (proposed)**: `pccx v0.1.0-alpha — first public architecture snapshot`
-- **Tag (proposed, NOT created)**: `v0.1.0-alpha`
+- **Repo**: `pccxai/pccx`
+- **Tag**: `v0.1.0-alpha`
+- **Title**: `pccx v0.1.0-alpha — first public architecture snapshot`
 - **Pre-release**: yes
+- **Release link**: <https://github.com/pccxai/pccx/releases/tag/v0.1.0-alpha>
 
 ## Highlights
 
@@ -65,13 +63,11 @@ orphan: true
 
 Cite using the in-repo `CITATION.cff` (author: Hyunwoo Kim,
 Independent researcher; ORCID intentionally omitted until registered).
-This release does not mint a Zenodo DOI yet; that will follow once the
-v0.1.0-alpha tag is actually pushed in a later, separately approved
-cycle.
+This release does not mint a Zenodo DOI yet; DOI minting is deferred
+to a later release.
 
 ## Not included in this release
 
-- Tag push or GitHub Release publication.
 - Zenodo DOI minting.
 - arXiv submission of the ISA preprint.
 - Localization launch (Spanish, Japanese, Chinese) — tracked as
