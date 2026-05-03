@@ -26,10 +26,10 @@ Ecosystem
       compute cores (GEMM / GEMV / CVO), memory hierarchy. Target device
       is the Xilinx Kria **KV260** (Zynq UltraScale+ ZU5EV).
 
-      **Currently supported (focus):** Gemma-3N E4B @ W4A8KV4 — tok/s
-      pending KV260 board run (see :doc:`docs/Evidence/index`).
-      Everything else (v003 / Gemma-4 / Llama) lives on the
-      :doc:`docs/roadmap`.
+      **Current focus:** Gemma-3N E4B @ W4A8KV4 remains an evidence-gated
+      target. Token-rate, board-run, and timing-closure results are pending
+      measured KV260 evidence (see :doc:`docs/Evidence/index`). Everything
+      else (v003 / Gemma-4 / Llama) lives on the :doc:`docs/roadmap`.
 
       Every v002 RTL reference page on this site links back to the exact
       ``.sv`` file in that repository.
@@ -64,12 +64,12 @@ Tooling & Lab
    .. grid-item-card:: :octicon:`beaker;1.2em;sd-mr-1` pccx-lab
       :link: https://pccxai.github.io/pccx/en/lab/
       :link-type: url
-      :link-alt: Open the pccx-lab simulator and profiler
+      :link-alt: Open the pccx-lab verification lab
       :class-card: pccx-lab-card
 
-      Performance simulator and AI-integrated profiler, built for the pccx NPU.
-      Pre-RTL bottleneck detection, UVM co-simulation, and LLM-driven testbench
-      generation in one workflow.
+      CLI-first verification lab for pccx traces, reports, diagnostics,
+      and workflow boundaries. GUI, IDE, launcher, and future MCP surfaces
+      should reuse the same CLI / core boundary instead of duplicating logic.
 
       :bdg-warning:`Work in Progress`
 
@@ -140,4 +140,4 @@ Tooling & Lab
    :maxdepth: 1
    :caption: Tools
 
-   pccx-lab — Simulator & AI Profiler <https://pccxai.github.io/pccx/en/lab/>
+   pccx-lab — Verification Lab <https://pccxai.github.io/pccx/en/lab/>
